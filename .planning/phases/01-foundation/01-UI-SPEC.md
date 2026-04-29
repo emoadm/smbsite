@@ -1,10 +1,11 @@
 ---
 phase: 1
 slug: foundation
-status: draft
+status: approved
 shadcn_initialized: false
 preset: new-york + slate (Tailwind v4 CSS variables) — to be initialized in Phase 1 plan-week-1
 created: 2026-04-29
+reviewed_at: 2026-04-29
 ---
 
 # Phase 1 — UI Design Contract
