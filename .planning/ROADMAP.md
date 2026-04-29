@@ -36,7 +36,22 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. The email sending domain has SPF, DKIM, and DMARC configured; the first transactional send (confirmation email) has been delivered and Google Postmaster Tools shows the domain as active — warm-up has begun
   5. The application is deployed to production (EU region), behind Cloudflare WAF, with Sentry error tracking and structured logging active; database backups and CI/CD pipeline are operational
 
-**Plans**: TBD
+**Plans**: 13 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Bootstrap Next.js + Payload + TypeScript scaffold (OPS-07)
+- [ ] 01-02-PLAN.md — Test scaffolding (Vitest + Playwright + i18n lint + Turnstile test keys) (PUB-05, PUB-06)
+- [ ] 01-03-PLAN.md — Drizzle schema + Neon connection + auth/consents tables + schema push (OPS-06)
+- [ ] 01-04-PLAN.md — i18n + Tailwind v4 theme + shadcn/ui registry + messages/bg.json + Payload Users (BRAND-01, BRAND-06, PUB-05)
+- [ ] 01-05-PLAN.md — Auth.js v5 setup + OTP hashing + email-verification middleware (AUTH-04, AUTH-05, AUTH-06, AUTH-07)
+- [ ] 01-06-PLAN.md — Anti-abuse stack: Turnstile + Upstash rate limit + disposable-email blocklist (AUTH-08, AUTH-09, AUTH-10)
+- [ ] 01-07-PLAN.md — Server Actions: register, requestOtp, verifyOtp, logout (AUTH-01, AUTH-02, AUTH-03, AUTH-05, AUTH-06)
+- [ ] 01-08-PLAN.md — Public surface scaffold + branding shell + draft legal pages + balancing-test doc (BRAND-02, BRAND-03, BRAND-06, PUB-05, PUB-06)
+- [ ] 01-09-PLAN.md — Auth UI: Registration, Login, OTP forms + end-to-end E2E coverage (AUTH-01, AUTH-02, AUTH-05, AUTH-06, AUTH-07, AUTH-08, PUB-06)
+- [ ] 01-10-PLAN.md — Email queue + Brevo worker + React Email templates (BullMQ + Upstash) (AUTH-03, NOTIF-08)
+- [ ] 01-11-PLAN.md — Observability: Sentry EU + pino structured logs + PII redaction (OPS-02, OPS-03)
+- [ ] 01-12-PLAN.md — Hosting infrastructure: Fly.io + Cloudflare WAF + GitHub Actions CI/CD + pg_dump backups (OPS-01, OPS-06, OPS-07)
+- [ ] 01-13-PLAN.md — Email domain warm-up + DNS records + Postmaster Tools + Phase 1 sign-off checklist (NOTIF-07)
 
 **UI hint**: yes
 
@@ -153,7 +168,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/TBD | Not started | - |
+| 1. Foundation | 0/13 | Not started | - |
 | 2. Public Surface + Attribution | 0/TBD | Not started | - |
 | 3. Idea Catalog + Voting | 0/TBD | Not started | - |
 | 4. User Submissions + Editorial | 0/TBD | Not started | - |
