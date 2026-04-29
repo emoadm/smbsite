@@ -183,17 +183,95 @@
 
 ## Traceability
 
-Празна засега — попълва се при създаване на ROADMAP.md.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (TBD) | (TBD) | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| AUTH-04 | Phase 1 | Pending |
+| AUTH-05 | Phase 1 | Pending |
+| AUTH-06 | Phase 1 | Pending |
+| AUTH-07 | Phase 1 | Pending |
+| AUTH-08 | Phase 1 | Pending |
+| AUTH-09 | Phase 1 | Pending |
+| AUTH-10 | Phase 1 | Pending |
+| PUB-05 | Phase 1 | Pending |
+| PUB-06 | Phase 1 | Pending |
+| NOTIF-07 | Phase 1 | Pending |
+| NOTIF-08 | Phase 1 | Pending |
+| OPS-01 | Phase 1 | Pending |
+| OPS-02 | Phase 1 | Pending |
+| OPS-03 | Phase 1 | Pending |
+| OPS-06 | Phase 1 | Pending |
+| OPS-07 | Phase 1 | Pending |
+| BRAND-01 | Phase 1 | Pending |
+| BRAND-02 | Phase 1 | Pending |
+| BRAND-03 | Phase 1 | Pending |
+| BRAND-06 | Phase 1 | Pending |
+| PUB-01 | Phase 2 | Pending |
+| PUB-02 | Phase 2 | Pending |
+| PUB-03 | Phase 2 | Pending |
+| PUB-04 | Phase 2 | Pending |
+| ATTR-01 | Phase 2 | Pending |
+| ATTR-02 | Phase 2 | Pending |
+| ATTR-03 | Phase 2 | Pending |
+| ATTR-04 | Phase 2 | Pending |
+| ATTR-05 | Phase 2 | Pending |
+| ATTR-06 | Phase 2 | Pending |
+| ATTR-07 | Phase 2 | Pending |
+| GDPR-01 | Phase 2 | Pending |
+| GDPR-02 | Phase 2 | Pending |
+| GDPR-03 | Phase 2 | Pending |
+| OPS-05 | Phase 2 | Pending |
+| IDEA-01 | Phase 3 | Pending |
+| IDEA-02 | Phase 3 | Pending |
+| IDEA-03 | Phase 3 | Pending |
+| IDEA-04 | Phase 3 | Pending |
+| IDEA-05 | Phase 3 | Pending |
+| IDEA-06 | Phase 3 | Pending |
+| IDEA-07 | Phase 3 | Pending |
+| IDEA-08 | Phase 3 | Pending |
+| MEMB-01 | Phase 3 | Pending |
+| MEMB-02 | Phase 3 | Pending |
+| MEMB-03 | Phase 3 | Pending |
+| EDIT-01 | Phase 3 | Pending |
+| EDIT-02 | Phase 3 | Pending |
+| OPS-04 | Phase 3 | Pending |
+| PROP-01 | Phase 4 | Pending |
+| PROP-02 | Phase 4 | Pending |
+| PROP-03 | Phase 4 | Pending |
+| PROP-04 | Phase 4 | Pending |
+| PROB-01 | Phase 4 | Pending |
+| PROB-02 | Phase 4 | Pending |
+| PROB-03 | Phase 4 | Pending |
+| PROB-04 | Phase 4 | Pending |
+| PROB-05 | Phase 4 | Pending |
+| EDIT-03 | Phase 4 | Pending |
+| EDIT-04 | Phase 4 | Pending |
+| EDIT-05 | Phase 4 | Pending |
+| EDIT-06 | Phase 4 | Pending |
+| EDIT-07 | Phase 4 | Pending |
+| NOTIF-01 | Phase 5 | Pending |
+| NOTIF-02 | Phase 5 | Pending |
+| NOTIF-03 | Phase 5 | Pending |
+| NOTIF-04 | Phase 5 | Pending |
+| NOTIF-05 | Phase 5 | Pending |
+| NOTIF-06 | Phase 5 | Pending |
+| NOTIF-09 | Phase 5 | Pending |
+| GDPR-04 | Phase 6 | Pending |
+| GDPR-05 | Phase 6 | Pending |
+| GDPR-06 | Phase 6 | Pending |
+| GDPR-07 | Phase 6 | Pending |
+| GDPR-08 | Phase 6 | Pending |
+| GDPR-09 | Phase 6 | Pending |
+| BRAND-04 | Phase 6 | Pending |
+| BRAND-05 | Phase 6 | Pending |
 
 **Coverage:**
-- v1 requirements: 87 total
-- Mapped to phases: 0
-- Unmapped: 87 ⚠️ (ще бъде запълнено от roadmapper)
+- v1 requirements: 81 total (metadata initially stated 87; actual enumeration = 81)
+- Mapped to phases: 81
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-29*
-*Last updated: 2026-04-29 after initial definition*
+*Last updated: 2026-04-29 — traceability populated after ROADMAP.md created*
