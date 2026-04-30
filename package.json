@@ -29,10 +29,13 @@
     "@payloadcms/richtext-lexical": "3.84.1",
     "drizzle-orm": "0.45.2",
     "next": "15.3.9",
+    "next-intl": "4.11.0",
     "payload": "3.84.1",
     "react": "19.0.1",
     "react-dom": "19.0.1",
-    "ws": "8.18.0"
+    "ws": "8.18.0",
+    "zod": "3.24.2",
+    "zod-i18n-map": "2.27.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.2.0",
