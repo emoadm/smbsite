@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 plan 05 complete (Auth.js v5 + OTP + middleware; Task 1.04.5 Payload migrate still deferred)
-last_updated: "2026-04-30T13:42:00.000Z"
-last_activity: 2026-04-30 -- Plan 01-05 complete (Auth.js v5 + HMAC OTP + member-route gate)
+stopped_at: Phase 1 plan 06 complete (anti-abuse stack — Turnstile + Upstash + disposable-email; Task 1.04.5 Payload migrate still deferred)
+last_updated: "2026-04-30T13:46:00.000Z"
+last_activity: 2026-04-30 -- Plan 01-06 complete (Turnstile + 5 rate-limit policies + disposable-email)
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 13
-  completed_plans: 5
-  percent: 38
+  completed_plans: 6
+  percent: 46
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: 6 of 13 (next: 01-06 anti-abuse stack — Turnstile + Upstash rate limit + disposable-email)
-Status: Plan 01-05 complete (Auth.js v5 + HMAC OTP utilities + email-verification middleware)
-Last activity: 2026-04-30 -- Plan 01-05 complete
+Plan: 7 of 13 (next: 01-07 Server Actions — register/requestOtp/verifyOtp/logout)
+Status: Plan 01-06 complete (Turnstile siteverify + 5 D-07 rate-limit policies + disposable-email blocklist + IP/subnet helpers)
+Last activity: 2026-04-30 -- Plan 01-06 complete
 
-Progress: [████░░░░░░] 38% (5/13 plans complete)
+Progress: [█████░░░░░] 46% (6/13 plans complete)
 
 ## Performance Metrics
 
