@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" width="120" height="40">
+  <rect width="120" height="40" rx="6" fill="#004A79"/>
+  <text x="60" y="26" text-anchor="middle" font-family="Roboto Slab, Georgia, serif"
+        font-size="20" font-weight="600" fill="#FFFFFF">СБ</text>
+</svg>
