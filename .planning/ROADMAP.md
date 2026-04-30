@@ -45,7 +45,7 @@ Plans:
 - [x] 01-04-PLAN.md — i18n + Tailwind v4 theme + shadcn/ui registry + messages/bg.json + Payload Users (BRAND-01, BRAND-06, PUB-05) — Task 1.04.5 (live Payload migrate) deferred until Neon provisioned
 - [x] 01-05-PLAN.md — Auth.js v5 setup + OTP hashing + email-verification middleware (AUTH-04, AUTH-05, AUTH-06, AUTH-07)
 - [x] 01-06-PLAN.md — Anti-abuse stack: Turnstile + Upstash rate limit + disposable-email blocklist (AUTH-08, AUTH-09, AUTH-10)
-- [ ] 01-07-PLAN.md — Server Actions: register, requestOtp, verifyOtp, logout (AUTH-01, AUTH-02, AUTH-03, AUTH-05, AUTH-06)
+- [x] 01-07-PLAN.md — Server Actions: register, requestOtp, verifyOtp, logout (AUTH-01, AUTH-02, AUTH-03, AUTH-05, AUTH-06)
 - [ ] 01-08-PLAN.md — Public surface scaffold + branding shell + draft legal pages + balancing-test doc (BRAND-02, BRAND-03, BRAND-06, PUB-05, PUB-06)
 - [ ] 01-09-PLAN.md — Auth UI: Registration, Login, OTP forms + end-to-end E2E coverage (AUTH-01, AUTH-02, AUTH-05, AUTH-06, AUTH-07, AUTH-08, PUB-06)
 - [ ] 01-10-PLAN.md — Email queue + Brevo worker + React Email templates (BullMQ + Upstash) (AUTH-03, NOTIF-08)
