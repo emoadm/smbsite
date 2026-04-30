@@ -35,6 +35,9 @@ importers:
       clsx:
         specifier: 2.1.1
         version: 2.1.1
+      disposable-email-domains-js:
+        specifier: 1.20.0
+        version: 1.20.0
       drizzle-orm:
         specifier: 0.45.2
         version: 0.45.2(@neondatabase/serverless@0.10.4)(@types/pg@8.20.0)(pg@8.20.0)
@@ -3285,6 +3288,9 @@ packages:
 
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
+
+  disposable-email-domains-js@1.20.0:
+    resolution: {integrity: sha512-Dfj1ZM13ZbifEi39zHXQyoFLBfMjlF1TIspdz4BDxhoiZTYckQkGBVGQM5NyGAGio0ty0MZlZgI7AFjPCmEfVg==}
 
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
@@ -8703,6 +8709,8 @@ snapshots:
   devlop@1.1.0:
     dependencies:
       dequal: 2.0.3
+
+  disposable-email-domains-js@1.20.0: {}
 
   doctrine@2.1.0:
     dependencies:
