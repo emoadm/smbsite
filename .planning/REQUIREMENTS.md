@@ -12,18 +12,18 @@
 - [ ] **PUB-03**: Посетител може да навигира между няколко агитационни страници (агитация на различни аспекти/проблеми)
 - [ ] **PUB-04**: Видимо присъства call-to-action "присъедини се към общността" на всяка страница
 - [ ] **PUB-05**: Сайтът е напълно на български език (UI, грешки, имейл шаблони, документация за потребителя)
-- [ ] **PUB-06**: Сайтът е responsive (работи на мобилно, таблет, десктоп)
+- [x] **PUB-06**: Сайтът е responsive (работи на мобилно, таблет, десктоп)
 
 ### Authentication (AUTH) — Регистрация и достъп
 
-- [ ] **AUTH-01**: Посетител може да се регистрира с име и имейл
-- [ ] **AUTH-02**: Регистрацията изисква cookie consent + съгласие за политика за поверителност
+- [x] **AUTH-01**: Посетител може да се регистрира с име и имейл
+- [x] **AUTH-02**: Регистрацията изисква cookie consent + съгласие за политика за поверителност
 - [ ] **AUTH-03**: След регистрация потребителят получава имейл за потвърждение
 - [ ] **AUTH-04**: Достъп до членските функции се отключва САМО след потвърждение на имейла
-- [ ] **AUTH-05**: Член може да влиза през magic link / OTP по имейл (без парола за v1)
-- [ ] **AUTH-06**: Член може да излезе от всяка страница
-- [ ] **AUTH-07**: Сесията се запазва между обновявания на браузъра
-- [ ] **AUTH-08**: Регистрационната форма е защитена с CAPTCHA (Cloudflare Turnstile или Friendly Captcha)
+- [x] **AUTH-05**: Член може да влиза през magic link / OTP по имейл (без парола за v1)
+- [x] **AUTH-06**: Член може да излезе от всяка страница
+- [x] **AUTH-07**: Сесията се запазва между обновявания на браузъра
+- [x] **AUTH-08**: Регистрационната форма е защитена с CAPTCHA (Cloudflare Turnstile или Friendly Captcha)
 - [ ] **AUTH-09**: Регистрацията е rate-limited (защита срещу масова злоупотреба)
 - [ ] **AUTH-10**: Имейли от еднократни/disposable домейни се блокират при регистрация
 
@@ -185,18 +185,18 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete (Plan 01-09) |
+| AUTH-02 | Phase 1 | Complete (Plan 01-09) |
 | AUTH-03 | Phase 1 | Pending |
 | AUTH-04 | Phase 1 | Pending |
-| AUTH-05 | Phase 1 | Pending |
-| AUTH-06 | Phase 1 | Pending |
-| AUTH-07 | Phase 1 | Pending |
-| AUTH-08 | Phase 1 | Pending |
+| AUTH-05 | Phase 1 | Complete (Plan 01-09) |
+| AUTH-06 | Phase 1 | Complete (Plan 01-09) |
+| AUTH-07 | Phase 1 | Complete (Plan 01-09) |
+| AUTH-08 | Phase 1 | Complete (Plan 01-09) |
 | AUTH-09 | Phase 1 | Pending |
 | AUTH-10 | Phase 1 | Pending |
 | PUB-05 | Phase 1 | Pending |
-| PUB-06 | Phase 1 | Pending |
+| PUB-06 | Phase 1 | Complete (Plan 01-09) |
 | NOTIF-07 | Phase 1 | Pending |
 | NOTIF-08 | Phase 1 | Pending |
 | OPS-01 | Phase 1 | Pending |

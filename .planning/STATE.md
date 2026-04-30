@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 plan 10 complete (BullMQ + Brevo + React Email templates; plan 09 Auth UI is the last offline plan; Task 1.04.5 Payload migrate still deferred)
-last_updated: "2026-04-30T14:20:00.000Z"
-last_activity: 2026-04-30 -- Plan 01-10 complete (real queue replaces 01-07 stub; templates + worker + Brevo client)
+stopped_at: Phase 1 plan 09 complete (Auth UI forms + 4 real Playwright specs; Task 1.04.5 Payload migrate still deferred until Neon provisioned)
+last_updated: "2026-04-30T11:30:00.000Z"
+last_activity: 2026-04-30 -- Plan 01-09 complete (RegistrationForm + LoginForm + OtpForm + 4 real E2E specs)
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 13
-  completed_plans: 10
-  percent: 77
+  completed_plans: 11
+  percent: 85
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: pending — 01-09 Auth UI + E2E is the LAST offline plan; plans 12 + 13 are user-side checkpoints (Fly.io / Cloudflare / Brevo DNS / Postmaster)
-Status: Plan 01-10 complete (real BullMQ queue + Brevo client + React Email templates + worker)
-Last activity: 2026-04-30 -- Plan 01-10 complete
+Plan: pending — plans 12 + 13 are user-side checkpoints (Fly.io / Cloudflare / Brevo DNS / Postmaster)
+Status: Plan 01-09 complete (RegistrationForm + LoginForm + OtpForm wired via useActionState; 4 real Playwright specs replace plan 1.02 fixme stubs)
+Last activity: 2026-04-30 -- Plan 01-09 complete
 
-Progress: [████████░░] 77% (10/13 plans complete)
+Progress: [█████████░] 85% (11/13 plans complete)
 
 ## Performance Metrics
 
@@ -84,5 +84,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Phase 1 plans APPROVED — ready for `/gsd-execute-phase 1`
-Resume file: .planning/phases/01-foundation/01-PLAN-CHECK.md (verdict + outstanding warnings)
+Stopped at: Plan 01-09 complete — auth UI client forms + E2E coverage shipped
+Resume file: .planning/phases/01-foundation/01-09-SUMMARY.md (per-task commits + verification gates)
