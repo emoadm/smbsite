@@ -1,20 +1,18 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-test.describe('PUB-06 — responsive layout (D-28 viewport matrix)', () => {
-  test.fixme('register form usable at 360px (Samsung A)', async ({ page }) => {
-    // Implement in plan 1.09
-    await page.goto('/register');
-  });
-  test.fixme('register form usable at 375px (iPhone SE)', async ({ page }) => {
-    // Implement in plan 1.09
-    await page.goto('/register');
-  });
-  test.fixme('register form usable at 768px (iPad)', async ({ page }) => {
-    // Implement in plan 1.09
-    await page.goto('/register');
-  });
-  test.fixme('register form usable at 1440px (desktop)', async ({ page }) => {
-    // Implement in plan 1.09
-    await page.goto('/register');
-  });
+const ROUTES = ['/register', '/login', '/auth/otp', '/legal/privacy', '/legal/terms'];
+
+/** Runs against each viewport project (375, 360, 768, 1440) defined in playwright.config.ts. */
+test.describe('PUB-06 — no horizontal scroll', () => {
+  for (const path of ROUTES) {
+    test(`no horizontal scroll on ${path}`, async ({ page }) => {
+      await page.goto(path);
+      const body = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      // Allow 1px rounding tolerance
+      expect(body.scrollWidth).toBeLessThanOrEqual(body.clientWidth + 1);
+    });
+  }
 });
