@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 ## Current Position
 
 Phase: 1 of 6 (Foundation)
-Plan: 0 of TBD in current phase
-Status: Phase 1 context gathered — ready to plan
-Last activity: 2026-04-29 — Phase 1 context captured (28 implementation decisions across Login UX, MSB verification, Consents, Email warm-up)
+Plan: 0 of 13 in current phase
+Status: Phase 1 plans approved — ready to execute
+Last activity: 2026-04-30 — Plan-check re-pass APPROVED (17/17 fixes applied; 2 non-blocking findings documented)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -55,6 +55,7 @@ None yet.
 - **Phase 3 blocker**: GDPR Article 9 legal opinion (political opinion as special-category data) must be obtained from external legal counsel before voting phase begins. Coalition must commission this in parallel with Phase 1-2 development.
 - **Phase 1 dependency**: Coalition must confirm email sender domain before Phase 1 completes so warm-up starts on time (must be 4+ weeks before QR mail drop).
 - **Open decisions**: Name visibility on votes/proposals (decision required before Phase 3) — still open; MSB status verification approach — RESOLVED in Phase 1 CONTEXT.md (no BULSTAT in v1; sector + role dropdowns serve as soft self-identification).
+- **Phase 1 plan-check warnings (non-blocking)**: N-1 anonymous cookie-consent persistence deferred to Phase 6 schema migration (CookieYes first-party cookie satisfies D-20 in interim); N-2 stale "Note on Auth.js signIn" paragraph in plan 07 line 505 (verify command makes it harmless). See `.planning/phases/01-foundation/01-PLAN-CHECK.md` § 2.
 
 ## Deferred Items
 
@@ -64,6 +65,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-29
-Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-foundation/01-CONTEXT.md
+Last session: 2026-04-30
+Stopped at: Phase 1 plans APPROVED — ready for `/gsd-execute-phase 1`
+Resume file: .planning/phases/01-foundation/01-PLAN-CHECK.md (verdict + outstanding warnings)
