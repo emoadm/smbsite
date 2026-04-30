@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { CookieBanner } from '@/components/layout/CookieBanner';
 import '@/styles/globals.css';
 
 const roboto = Roboto({
@@ -38,6 +39,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Header />
           <main className="min-h-[calc(100vh-14rem)]">{children}</main>
           <Footer />
+          <CookieBanner />
         </NextIntlClientProvider>
       </body>
     </html>
