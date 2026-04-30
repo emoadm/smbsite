@@ -1,6 +1,8 @@
 import { Roboto, Roboto_Slab } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 import '@/styles/globals.css';
 
 const roboto = Roboto({
@@ -33,7 +35,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang={locale} className={`${roboto.variable} ${robotoSlab.variable}`}>
       <body className="bg-background text-foreground font-sans antialiased">
         <NextIntlClientProvider locale={locale} messages={messages} timeZone="Europe/Sofia">
-          <main>{children}</main>
+          <Header />
+          <main className="min-h-[calc(100vh-14rem)]">{children}</main>
+          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>
