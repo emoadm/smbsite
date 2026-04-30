@@ -42,7 +42,7 @@ Plans:
 - [ ] 01-01-PLAN.md — Bootstrap Next.js + Payload + TypeScript scaffold (OPS-07)
 - [ ] 01-02-PLAN.md — Test scaffolding (Vitest + Playwright + i18n lint + Turnstile test keys) (PUB-05, PUB-06)
 - [ ] 01-03-PLAN.md — Drizzle schema + Neon connection + auth/consents tables + schema push (OPS-06)
-- [ ] 01-04-PLAN.md — i18n + Tailwind v4 theme + shadcn/ui registry + messages/bg.json + Payload Users (BRAND-01, BRAND-06, PUB-05)
+- [x] 01-04-PLAN.md — i18n + Tailwind v4 theme + shadcn/ui registry + messages/bg.json + Payload Users (BRAND-01, BRAND-06, PUB-05) — Task 1.04.5 (live Payload migrate) deferred until Neon provisioned
 - [ ] 01-05-PLAN.md — Auth.js v5 setup + OTP hashing + email-verification middleware (AUTH-04, AUTH-05, AUTH-06, AUTH-07)
 - [ ] 01-06-PLAN.md — Anti-abuse stack: Turnstile + Upstash rate limit + disposable-email blocklist (AUTH-08, AUTH-09, AUTH-10)
 - [ ] 01-07-PLAN.md — Server Actions: register, requestOtp, verifyOtp, logout (AUTH-01, AUTH-02, AUTH-03, AUTH-05, AUTH-06)

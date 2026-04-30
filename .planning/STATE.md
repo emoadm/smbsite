@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: executing
+stopped_at: Phase 1 plan 04 complete (4/5 tasks done; Task 1.04.5 Payload migrate deferred until Neon provisioned)
+last_updated: "2026-04-30T13:30:00.000Z"
+last_activity: 2026-04-30 -- Plan 01-04 complete (i18n + Tailwind + shadcn + Payload Users; live migrate deferred)
+progress:
+  total_phases: 6
+  completed_phases: 0
+  total_plans: 13
+  completed_plans: 4
+  percent: 31
+---
+
 # Project State
 
 ## Project Reference
@@ -5,20 +21,21 @@
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Когато един собственик на МСП види сайта, разбира идеята достатъчно, за да даде името и имейла си — и след това продължава да се връща, защото гласът му се вижда и брои.
-**Current focus:** Phase 1 — Foundation
+**Current focus:** Phase 01 — foundation
 
 ## Current Position
 
-Phase: 1 of 6 (Foundation)
-Plan: 0 of 13 in current phase
-Status: Phase 1 plans approved — ready to execute
-Last activity: 2026-04-30 — Plan-check re-pass APPROVED (17/17 fixes applied; 2 non-blocking findings documented)
+Phase: 01 (foundation) — EXECUTING
+Plan: 5 of 13 (next: 01-05 Auth.js v5 setup)
+Status: Plan 01-04 complete (4/5 tasks; Task 1.04.5 Payload migrate deferred — same Neon-provisioning deferral as plan 01-03 Task 1.03.3)
+Last activity: 2026-04-30 -- Plan 01-04 complete
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [███░░░░░░░] 31% (4/13 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 0
 - Average duration: -
 - Total execution time: 0 hours
@@ -30,6 +47,7 @@ Progress: [░░░░░░░░░░] 0%
 | - | - | - | - |
 
 **Recent Trend:**
+
 - Last 5 plans: -
 - Trend: Not started
 
