@@ -1,9 +1,12 @@
 import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MainContainer } from '@/components/layout/MainContainer';
+import { RegistrationForm } from '@/components/forms/RegistrationForm';
+import { signFormStamp } from '@/lib/forms/honeypot';
 
 export default async function RegisterPage() {
   const t = await getTranslations('auth.register');
+  const formStamp = signFormStamp();
   return (
     <MainContainer width="form">
       <Card>
@@ -11,8 +14,7 @@ export default async function RegisterPage() {
           <CardTitle className="font-display text-3xl">{t('title')}</CardTitle>
         </CardHeader>
         <CardContent>
-          {/* RegistrationForm wired in plan 1.09 */}
-          <p className="text-base text-muted-foreground">…</p>
+          <RegistrationForm formStamp={formStamp} />
         </CardContent>
       </Card>
     </MainContainer>
