@@ -20,7 +20,9 @@
     "lint:i18n": "node scripts/lint-i18n.mjs",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
-    "db:check": "drizzle-kit check"
+    "db:check": "drizzle-kit check",
+    "worker": "tsx scripts/start-worker.ts",
+    "worker:dev": "tsx watch scripts/start-worker.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "1.11.2",
@@ -30,15 +32,19 @@
     "@payloadcms/db-postgres": "3.84.1",
     "@payloadcms/next": "3.84.1",
     "@payloadcms/richtext-lexical": "3.84.1",
+    "@react-email/components": "0.1.0",
+    "@react-email/render": "1.1.0",
     "@sentry/nextjs": "10.51.0",
     "@tailwindcss/postcss": "4.2.4",
     "@upstash/ratelimit": "2.0.8",
     "@upstash/redis": "1.37.0",
+    "bullmq": "5.76.4",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "disposable-email-domains-js": "1.20.0",
     "drizzle-orm": "0.45.2",
     "input-otp": "^1.4.2",
+    "ioredis": "5.10.1",
     "lucide-react": "0.469.0",
     "next": "15.3.9",
     "next-auth": "5.0.0-beta.31",
@@ -74,6 +80,7 @@
     "jsdom": "25.0.1",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "0.6.9",
+    "tsx": "4.19.2",
     "typescript": "5.7.3",
     "vitest": "2.1.8"
   }
