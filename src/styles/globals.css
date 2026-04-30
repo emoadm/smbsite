@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette — Sinya Bulgaria (BRAND-01, UI-SPEC § Color) */
+  --color-background: #FFFFFF;
+  --color-surface: #F1F5F9;
+  --color-foreground: #0F172A;
+  --color-muted-foreground: #475569;
+  --color-border: #E2E8F0;
+  --color-accent: #004A79;
+  --color-destructive: #E72E4D;
+  --color-success: #009F54;
+  --color-sky: #00B7ED;
+
+  /* Typography scale — locked to 4 sizes (UI-SPEC § Typography) */
+  --text-sm: 14px;     /* label */
+  --text-base: 16px;   /* body */
+  --text-xl: 20px;     /* heading */
+  --text-3xl: 28px;    /* display */
+
+  /* Layout containers (UI-SPEC § Layout Shell) */
+  --container-form: 480px;
+  --container-legal: 720px;
+  --container-page: 1140px;
+
+  /* Font families (BRAND-06) — actual face loaded via next/font in layout */
+  --font-sans: var(--font-roboto), system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+  --font-display: var(--font-roboto-slab), Georgia, serif;
+}
+
+/* OTP digit slots: tabular-nums for unambiguous reading (UI-SPEC § Typography rule 2) */
+[data-slot="input-otp-slot"] {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
