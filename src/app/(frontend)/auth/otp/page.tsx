@@ -1,6 +1,8 @@
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MainContainer } from '@/components/layout/MainContainer';
+import { OtpForm } from '@/components/forms/OtpForm';
 
 export default async function OtpPage() {
   const t = await getTranslations('auth.otp');
@@ -11,8 +13,9 @@ export default async function OtpPage() {
           <CardTitle className="font-display text-3xl">{t('title')}</CardTitle>
         </CardHeader>
         <CardContent>
-          {/* OtpForm wired in plan 1.09 */}
-          <p className="text-base text-muted-foreground">…</p>
+          <Suspense>
+            <OtpForm />
+          </Suspense>
         </CardContent>
       </Card>
     </MainContainer>

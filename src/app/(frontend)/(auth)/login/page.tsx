@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MainContainer } from '@/components/layout/MainContainer';
+import { LoginForm } from '@/components/forms/LoginForm';
 
 export default async function LoginPage() {
   const t = await getTranslations('auth.login');
@@ -11,8 +12,7 @@ export default async function LoginPage() {
           <CardTitle className="font-display text-3xl">{t('title')}</CardTitle>
         </CardHeader>
         <CardContent>
-          {/* LoginForm wired in plan 1.09 */}
-          <p className="text-base text-muted-foreground">…</p>
+          <LoginForm />
         </CardContent>
       </Card>
     </MainContainer>
