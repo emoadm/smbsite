@@ -30,6 +30,8 @@
     "@payloadcms/next": "3.84.1",
     "@payloadcms/richtext-lexical": "3.84.1",
     "@tailwindcss/postcss": "4.2.4",
+    "@upstash/ratelimit": "2.0.8",
+    "@upstash/redis": "1.37.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "disposable-email-domains-js": "1.20.0",
