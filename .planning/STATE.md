@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 plan 04 complete (4/5 tasks done; Task 1.04.5 Payload migrate deferred until Neon provisioned)
-last_updated: "2026-04-30T13:30:00.000Z"
-last_activity: 2026-04-30 -- Plan 01-04 complete (i18n + Tailwind + shadcn + Payload Users; live migrate deferred)
+stopped_at: Phase 1 plan 05 complete (Auth.js v5 + OTP + middleware; Task 1.04.5 Payload migrate still deferred)
+last_updated: "2026-04-30T13:42:00.000Z"
+last_activity: 2026-04-30 -- Plan 01-05 complete (Auth.js v5 + HMAC OTP + member-route gate)
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 13
-  completed_plans: 4
-  percent: 31
+  completed_plans: 5
+  percent: 38
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: 5 of 13 (next: 01-05 Auth.js v5 setup)
-Status: Plan 01-04 complete (4/5 tasks; Task 1.04.5 Payload migrate deferred — same Neon-provisioning deferral as plan 01-03 Task 1.03.3)
-Last activity: 2026-04-30 -- Plan 01-04 complete
+Plan: 6 of 13 (next: 01-06 anti-abuse stack — Turnstile + Upstash rate limit + disposable-email)
+Status: Plan 01-05 complete (Auth.js v5 + HMAC OTP utilities + email-verification middleware)
+Last activity: 2026-04-30 -- Plan 01-05 complete
 
-Progress: [███░░░░░░░] 31% (4/13 plans complete)
+Progress: [████░░░░░░] 38% (5/13 plans complete)
 
 ## Performance Metrics
 
