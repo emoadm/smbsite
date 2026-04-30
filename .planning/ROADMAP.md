@@ -49,7 +49,7 @@ Plans:
 - [x] 01-08-PLAN.md — Public surface scaffold + branding shell + draft legal pages + balancing-test doc (BRAND-02, BRAND-03, BRAND-06, PUB-05, PUB-06)
 - [ ] 01-09-PLAN.md — Auth UI: Registration, Login, OTP forms + end-to-end E2E coverage (AUTH-01, AUTH-02, AUTH-05, AUTH-06, AUTH-07, AUTH-08, PUB-06)
 - [ ] 01-10-PLAN.md — Email queue + Brevo worker + React Email templates (BullMQ + Upstash) (AUTH-03, NOTIF-08)
-- [ ] 01-11-PLAN.md — Observability: Sentry EU + pino structured logs + PII redaction (OPS-02, OPS-03)
+- [x] 01-11-PLAN.md — Observability: Sentry EU + pino structured logs + PII redaction (OPS-02, OPS-03)
 - [ ] 01-12-PLAN.md — Hosting infrastructure: Fly.io + Cloudflare WAF + GitHub Actions CI/CD + pg_dump backups (OPS-01, OPS-06, OPS-07)
 - [ ] 01-13-PLAN.md — Email domain warm-up + DNS records + Postmaster Tools + Phase 1 sign-off checklist (NOTIF-07)
 

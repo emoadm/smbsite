@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 plan 08 complete (public surface scaffold + branding shell + cookie banner; Task 1.04.5 Payload migrate still deferred)
+stopped_at: Phase 1 plan 11 complete (Sentry EU + pino + PII redact; plans 09 and 10 still pending in Wave 3; Task 1.04.5 Payload migrate still deferred)
 last_updated: "2026-04-30T14:20:00.000Z"
-last_activity: 2026-04-30 -- Plan 01-08 complete (Header/Footer + 7 page placeholders + draft legal + CookieYes + branding E2E)
+last_activity: 2026-04-30 -- Plan 01-11 complete (Sentry EU + pino logger + smoke spec; skipped ahead from 09/10)
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 13
-  completed_plans: 8
-  percent: 62
+  completed_plans: 9
+  percent: 69
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: 9 of 13 (next: 01-09 Auth UI forms + E2E coverage, OR 01-11 observability)
-Status: Plan 01-08 complete (Header/Footer/MainContainer + 7 page placeholders + draft legal + CookieYes banner + branding E2E)
-Last activity: 2026-04-30 -- Plan 01-08 complete
+Plan: pending — 01-09 Auth UI + E2E (Wave 3, depends on 07+08, both done) AND 01-10 Email queue + Brevo + React Email (Wave 3, depends on 05+07, both done)
+Status: Plan 01-11 complete (Sentry EU + pino redact + smoke spec) — executed out of order; plans 09 and 10 still remain
+Last activity: 2026-04-30 -- Plan 01-11 complete (skipped ahead from 09/10)
 
-Progress: [███████░░░] 62% (8/13 plans complete)
+Progress: [████████░░] 69% (9/13 plans complete) — but the largest UI/E2E plan and the email-queue plan remain
 
 ## Performance Metrics
 
