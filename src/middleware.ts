@@ -2,6 +2,12 @@ import createIntlMiddleware from 'next-intl/middleware';
 import { auth } from '@/lib/auth';
 import { routing } from '@/i18n/routing';
 
+// Node runtime: auth.ts pulls node:crypto via auth-utils (OTP HMAC) and the
+// DrizzleAdapter performs DB lookups for the database-strategy session (D-02).
+// Edge runtime cannot bundle either. Single-region Fly Frankfurt origin —
+// Edge buys nothing here.
+export const runtime = 'nodejs';
+
 const intlMiddleware = createIntlMiddleware(routing);
 
 type AuthRequest = Parameters<Parameters<typeof auth>[0]>[0];
