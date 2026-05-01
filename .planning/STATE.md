@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 plan 09 complete (Auth UI forms + 4 real Playwright specs; Task 1.04.5 Payload migrate still deferred until Neon provisioned)
-last_updated: "2026-04-30T11:30:00.000Z"
-last_activity: 2026-04-30 -- Plan 01-09 complete (RegistrationForm + LoginForm + OtpForm + 4 real E2E specs)
+stopped_at: Phase 1 plan 12 complete (Dockerfile + fly.toml + GitHub Actions CI/deploy/backup workflows + OPS-RUNBOOK with chastnik.eu substituted; Task 1.04.5 Payload migrate still deferred until Neon provisioned)
+last_updated: "2026-05-01T06:45:46.000Z"
+last_activity: 2026-05-01 -- Plan 01-12 complete (hosting infrastructure code artifacts + ops runbook)
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 13
-  completed_plans: 11
-  percent: 85
+  completed_plans: 12
+  percent: 92
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: pending — plans 12 + 13 are user-side checkpoints (Fly.io / Cloudflare / Brevo DNS / Postmaster)
-Status: Plan 01-09 complete (RegistrationForm + LoginForm + OtpForm wired via useActionState; 4 real Playwright specs replace plan 1.02 fixme stubs)
-Last activity: 2026-04-30 -- Plan 01-09 complete
+Plan: pending — plan 13 (Brevo DNS + Postmaster warm-up checklist) is the last Phase 1 plan
+Status: Plan 01-12 complete (Dockerfile + fly.toml [chastnik.eu] + 3 GitHub Actions workflows [ci/deploy/backup] + verify-eu-dsn.ts + backup-postgres.ts + OPS-RUNBOOK.md)
+Last activity: 2026-05-01 -- Plan 01-12 complete
 
-Progress: [█████████░] 85% (11/13 plans complete)
+Progress: [█████████░] 92% (12/13 plans complete)
 
 ## Performance Metrics
 
@@ -63,6 +63,9 @@ Recent decisions affecting current work:
 - Pre-roadmap: WhatsApp Business API forbidden for political parties — using WhatsApp Channels + Telegram links from site
 - Pre-roadmap: Email domain warm-up starts Phase 1 (blocks QR campaign launch)
 - Pre-roadmap: GDPR Art.9 legal opinion required before Phase 3 (voting) can begin — external dependency
+- Plan 01-12: Confirmed coalition sender domain = `chastnik.eu` (D-17 / Open Decision #5 resolved); pinned in fly.toml AUTH_URL and throughout OPS-RUNBOOK
+- Plan 01-12: Fly.io app declares two process groups (web + worker) sharing one image; worker entry `node --import tsx scripts/start-worker.ts` runs the same plan-01-10 BullMQ worker in production
+- Plan 01-12: deploy.yml splits into 3 jobs (verify-eu-dsn -> migrate -> deploy); destructive-migration human gate enforced via GitHub Actions `production` environment + required reviewers (D-23)
 
 ### Pending Todos
 
@@ -83,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-30
-Stopped at: Plan 01-09 complete — auth UI client forms + E2E coverage shipped
-Resume file: .planning/phases/01-foundation/01-09-SUMMARY.md (per-task commits + verification gates)
+Last session: 2026-05-01
+Stopped at: Plan 01-12 complete — hosting infrastructure code artifacts + ops runbook shipped (chastnik.eu interpolated throughout)
+Resume file: .planning/phases/01-foundation/01-12-SUMMARY.md (per-task commits + verification gates)
