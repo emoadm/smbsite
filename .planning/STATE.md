@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 plan 12 complete (Dockerfile + fly.toml + GitHub Actions CI/deploy/backup workflows + OPS-RUNBOOK with chastnik.eu substituted; Task 1.04.5 Payload migrate still deferred until Neon provisioned)
-last_updated: "2026-05-01T06:45:46.000Z"
-last_activity: 2026-05-01 -- Plan 01-12 complete (hosting infrastructure code artifacts + ops runbook)
+stopped_at: Phase 1 code-shipping complete — operator warmup + sign-off pending (tracked in 01-DELIVERABILITY-CHECKLIST.md)
+last_updated: "2026-05-01T17:40:00.000Z"
+last_activity: 2026-05-01 -- Plan 01-13 complete (deliverability checklist + warmup log skeleton + Phase 1 sign-off authority)
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 13
-  completed_plans: 12
-  percent: 92
+  completed_plans: 13
+  percent: 100
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: 01 (foundation) — EXECUTING
-Plan: pending — plan 13 (Brevo DNS + Postmaster warm-up checklist) is the last Phase 1 plan
-Status: Plan 01-12 complete (Dockerfile + fly.toml [chastnik.eu] + 3 GitHub Actions workflows [ci/deploy/backup] + verify-eu-dsn.ts + backup-postgres.ts + OPS-RUNBOOK.md)
-Last activity: 2026-05-01 -- Plan 01-12 complete
+Phase: 01 (foundation) — CODE-SHIPPING COMPLETE; operator warmup + sign-off pending
+Plan: all 13 plans shipped; Phase 1 wall-clock completion gated on operator's 4-week warmup ladder + final sign-off in 01-DELIVERABILITY-CHECKLIST.md Section H
+Status: Plan 01-13 complete (01-DELIVERABILITY-CHECKLIST.md + 01-WARMUP-LOG.md produced; chastnik.eu DNS live and verified end-to-end via Gmail SPF/DKIM/DMARC PASS)
+Last activity: 2026-05-01 -- Plan 01-13 complete
 
-Progress: [█████████░] 92% (12/13 plans complete)
+Progress: [██████████] 100% (13/13 plans complete)
 
 ## Performance Metrics
 
@@ -66,6 +66,9 @@ Recent decisions affecting current work:
 - Plan 01-12: Confirmed coalition sender domain = `chastnik.eu` (D-17 / Open Decision #5 resolved); pinned in fly.toml AUTH_URL and throughout OPS-RUNBOOK
 - Plan 01-12: Fly.io app declares two process groups (web + worker) sharing one image; worker entry `node --import tsx scripts/start-worker.ts` runs the same plan-01-10 BullMQ worker in production
 - Plan 01-12: deploy.yml splits into 3 jobs (verify-eu-dsn -> migrate -> deploy); destructive-migration human gate enforced via GitHub Actions `production` environment + required reviewers (D-23)
+- Plan 01-13: Brevo issues chained DKIM CNAMEs (4 records per subdomain — alias×2 + hop×2) instead of the older flat 2-CNAME pattern; checklist documents actual chain for both auth.chastnik.eu and news.chastnik.eu
+- Plan 01-13: Apex DMARC `rua=mailto:emoadm@gmail.com` (coalition operator inbox); subdomain DMARCs use Brevo-managed `rua@dmarc.brevo.com` aggregator
+- Plan 01-13: Production Payload admin bootstrapped via `/api/admin-bootstrap` HTTP route (now disabled) — fly-ssh procedure in OPS-RUNBOOK §2 hits payload@3.84+next@15.3 loadEnv incompatibility; patch-package fix deferred to phase 2
 
 ### Pending Todos
 
@@ -82,10 +85,13 @@ None yet.
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
-| *(none)* | | | |
+| ops | GitHub `production` environment required-reviewer protection (free-plan limitation) | resolves_phase: 3 | Plan 01-13 |
+| ops | Cloudflare WAF custom rule `(not ip.src in $cloudflare_ip_ranges) and (http.host eq "chastnik.eu")` (free-plan limitation on `$cloudflare_ip_ranges`) | resolves_phase: 2 | Plan 01-13 |
+| ops | Payload `loadEnv.js` patch-package fix for `payload migrate` CLI (payload@3.84 + next@15.3 incompat) | resolves_phase: 2 | Plan 01-13 |
+| ops | Operator-side: Postmaster Tools enrollment, 4-week warmup ladder execution, restore dry-run, first nightly backup verification, final Phase 1 sign-off signature | tracked in 01-DELIVERABILITY-CHECKLIST.md | Plan 01-13 |
 
 ## Session Continuity
 
 Last session: 2026-05-01
-Stopped at: Plan 01-12 complete — hosting infrastructure code artifacts + ops runbook shipped (chastnik.eu interpolated throughout)
-Resume file: .planning/phases/01-foundation/01-12-SUMMARY.md (per-task commits + verification gates)
+Stopped at: Plan 01-13 complete — Phase 1 code-shipping complete; operator warmup + sign-off pending in 01-DELIVERABILITY-CHECKLIST.md
+Resume file: .planning/phases/01-foundation/01-13-SUMMARY.md (per-task commits + verification gates)

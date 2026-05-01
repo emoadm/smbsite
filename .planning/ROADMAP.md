@@ -51,7 +51,7 @@ Plans:
 - [x] 01-10-PLAN.md — Email queue + Brevo worker + React Email templates (BullMQ + Upstash) (AUTH-03, NOTIF-08)
 - [x] 01-11-PLAN.md — Observability: Sentry EU + pino structured logs + PII redaction (OPS-02, OPS-03)
 - [x] 01-12-PLAN.md — Hosting infrastructure: Fly.io + Cloudflare WAF + GitHub Actions CI/CD + pg_dump backups (OPS-01, OPS-06, OPS-07)
-- [ ] 01-13-PLAN.md — Email domain warm-up + DNS records + Postmaster Tools + Phase 1 sign-off checklist (NOTIF-07)
+- [x] 01-13-PLAN.md — Email domain warm-up + DNS records + Postmaster Tools + Phase 1 sign-off checklist (NOTIF-07)
 
 **UI hint**: yes
 
@@ -168,7 +168,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 12/13 | In progress | - |
+| 1. Foundation | 13/13 | Code-shipping complete; operator warmup + sign-off pending | - |
 | 2. Public Surface + Attribution | 0/TBD | Not started | - |
 | 3. Idea Catalog + Voting | 0/TBD | Not started | - |
 | 4. User Submissions + Editorial | 0/TBD | Not started | - |

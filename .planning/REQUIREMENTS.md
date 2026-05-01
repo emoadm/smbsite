@@ -87,7 +87,7 @@
 - [ ] **NOTIF-04**: Сайтът показва линк към WhatsApp Channel на коалицията (broadcast-only)
 - [ ] **NOTIF-05**: Сайтът показва линк към Telegram канал на коалицията
 - [ ] **NOTIF-06**: Имейл шаблоните използват само nominative форми за обръщение (без vocative)
-- [ ] **NOTIF-07**: Изпращащият имейл домейн е настроен с SPF, DKIM, DMARC; warm-up започва 4+ седмици преди QR кампанията
+- [x] **NOTIF-07**: Изпращащият имейл домейн е настроен с SPF, DKIM, DMARC; warm-up започва 4+ седмици преди QR кампанията
 - [ ] **NOTIF-08**: Имейли се изпращат през BullMQ async worker (не блокира уеб заявките)
 - [ ] **NOTIF-09**: Редактор може да изпрати ad-hoc newsletter blast от админ панел
 
@@ -197,7 +197,7 @@
 | AUTH-10 | Phase 1 | Pending |
 | PUB-05 | Phase 1 | Pending |
 | PUB-06 | Phase 1 | Complete (Plan 01-09) |
-| NOTIF-07 | Phase 1 | Pending |
+| NOTIF-07 | Phase 1 | Complete (Plan 01-13) |
 | NOTIF-08 | Phase 1 | Pending |
 | OPS-01 | Phase 1 | Pending |
 | OPS-02 | Phase 1 | Pending |
