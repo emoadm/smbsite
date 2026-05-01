@@ -41,7 +41,7 @@ export async function POST(req: Request): Promise<Response> {
   const payload = await getPayload({ config });
 
   const existing = await payload.find({
-    collection: 'users',
+    collection: 'admin_users',
     where: { email: { equals: email } },
     limit: 1,
     overrideAccess: true,
@@ -56,7 +56,7 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const user = await payload.create({
-    collection: 'users',
+    collection: 'admin_users',
     data: { email, password, role: 'admin' },
     overrideAccess: true,
   });
