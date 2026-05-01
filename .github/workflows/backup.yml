@@ -1,0 +1,58 @@
+name: Daily Postgres backup
+on:
+  schedule:
+    - cron: '0 2 * * *'   # 02:00 UTC daily
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install postgres-client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - name: Run backup script
+        run: pnpm tsx scripts/backup-postgres.ts
+        env:
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+          BUNNY_STORAGE_ZONE: ${{ secrets.BUNNY_STORAGE_ZONE }}
+          BUNNY_STORAGE_PASSWORD: ${{ secrets.BUNNY_STORAGE_PASSWORD }}
+      # M-4 fix: alert on failure so the operator hears about it before the next nightly run.
+      # Sentry is the primary alert channel (D-21); Slack is a fallback if SLACK_WEBHOOK is set.
+      - name: Notify Sentry on failure
+        if: failure()
+        uses: actions/github-script@v7
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          GITHUB_RUN_URL: ${{ format('{0}/{1}/actions/runs/{2}', github.server_url, github.repository, github.run_id) }}
+        with:
+          script: |
+            const dsn = process.env.SENTRY_DSN;
+            if (!dsn) { core.warning('SENTRY_DSN not set; skipping Sentry alert'); return; }
+            // Minimal Sentry envelope POST — no @sentry/node dep needed for one-off alerts.
+            const m = dsn.match(/^https:\/\/([^@]+)@([^/]+)\/(\d+)$/);
+            if (!m) { core.error('Malformed SENTRY_DSN'); return; }
+            const [, key, host, projectId] = m;
+            const url = `https://${host}/api/${projectId}/store/?sentry_key=${key}&sentry_version=7`;
+            const body = JSON.stringify({
+              level: 'error',
+              logger: 'github-actions',
+              message: { formatted: `OPS-06 nightly backup FAILED — ${process.env.GITHUB_RUN_URL}` },
+              tags: { workflow: 'backup', repo: '${{ github.repository }}' },
+            });
+            const res = await fetch(url, { method: 'POST', body, headers: { 'content-type': 'application/json' } });
+            core.info(`Sentry response: ${res.status}`);
+      - name: Notify Slack on failure (optional)
+        if: failure() && env.SLACK_WEBHOOK != ''
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          GITHUB_RUN_URL: ${{ format('{0}/{1}/actions/runs/{2}', github.server_url, github.repository, github.run_id) }}
+        run: |
+          curl -fsS -X POST -H 'content-type: application/json' \
+            --data "{\"text\":\":rotating_light: OPS-06 nightly backup FAILED — $GITHUB_RUN_URL\"}" \
+            "$SLACK_WEBHOOK"

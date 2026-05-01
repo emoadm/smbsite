@@ -1,0 +1,64 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    # L-2 fix: spin up an ephemeral postgres so the E2E job can boot Next.js + Server Actions
+    # against a real DB. Drizzle migrations run before Playwright; the test DB lives only for
+    # the duration of the job.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: smbsite_ci
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U ci -d smbsite_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      # Pooled URL not required for CI — same DSN points to direct port.
+      DATABASE_URL: postgres://ci:ci@localhost:5432/smbsite_ci
+      DIRECT_URL: postgres://ci:ci@localhost:5432/smbsite_ci
+      PAYLOAD_DATABASE_URL: postgres://ci:ci@localhost:5432/smbsite_ci
+      PAYLOAD_SECRET: ci-payload-secret-do-not-use-in-prod-32b
+      AUTH_SECRET: ci-auth-secret-do-not-use-in-prod-32b
+      AUTH_URL: http://localhost:3000
+      OTP_HMAC_KEY: ci-hmac-key-do-not-use-in-prod-32bytes!!
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+      TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: i18n hardcoded-Cyrillic check
+        run: pnpm lint:i18n
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Drizzle schema drift check
+        run: pnpm db:check
+      - name: Unit tests (Vitest)
+        run: pnpm test:unit
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Drizzle migrate (apply schema to CI postgres — Pitfall C / DIRECT_URL)
+        run: pnpm drizzle-kit migrate
+      - name: Build
+        run: pnpm build
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      - name: Playwright smoke (chromium-desktop only — full matrix on deploy)
+        run: pnpm test:e2e --project=chromium-desktop --reporter=list
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:3000

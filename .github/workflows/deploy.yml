@@ -1,0 +1,53 @@
+name: Deploy
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  verify-eu-dsn:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - name: Verify EU Sentry DSN (Pitfall G)
+        run: pnpm verify:eu-dsn
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+
+  migrate:
+    needs: verify-eu-dsn
+    environment:
+      name: production    # GitHub Actions environment with required reviewers (destructive gate per D-23)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - name: Drizzle migrate (DIRECT_URL — Pitfall C)
+        run: pnpm drizzle-kit migrate
+        env:
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+      - name: Payload migrate
+        run: CI=true PAYLOAD_MIGRATING=true pnpm exec payload migrate
+        env:
+          PAYLOAD_DATABASE_URL: ${{ secrets.DIRECT_URL }}
+          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+
+  deploy:
+    needs: migrate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Deploy to Fly.io (rolling)
+        run: flyctl deploy --strategy rolling --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
