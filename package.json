@@ -22,7 +22,8 @@
     "db:push": "drizzle-kit push",
     "db:check": "drizzle-kit check",
     "worker": "tsx scripts/start-worker.ts",
-    "worker:dev": "tsx watch scripts/start-worker.ts"
+    "worker:dev": "tsx watch scripts/start-worker.ts",
+    "verify:eu-dsn": "tsx scripts/verify-eu-dsn.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "1.11.2",
