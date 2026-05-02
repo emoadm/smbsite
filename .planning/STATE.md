@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 EXECUTING — Wave 1 in flight (02-01 Gilroy/tokens + 02-02 bg.json scaffolding running in parallel worktrees)
+stopped_at: Phase 2 EXECUTING — Wave 1 ✓ done (02-01 Gilroy+tokens, 02-02 bg.json scaffolding); kicking off Wave 2 (02-03 components)
 last_updated: "2026-05-03T01:00:00.000Z"
 last_activity: 2026-05-03 -- Phase 2 plans created and verified. RESEARCH (1086 lines, bf826dc) + PATTERNS (26 files mapped) + 9 PLAN.md files + standalone 02-VALIDATION.md. Plan-checker: 0 blockers; revision pass fixed sleep-8 flakiness (02-04/05/06), Task 02.04.5 type misclassification, cf-ray threat model wording, RESOLVED markers in RESEARCH, extracted VALIDATION. New deferred item: D-CloudflareIPAllowlist (post-warmup hardening).
 progress:
