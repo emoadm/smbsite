@@ -1,7 +1,7 @@
 'use client';
 
 import Script from 'next/script';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 declare global {
   interface Window {
@@ -11,7 +11,8 @@ declare global {
         opts: {
           sitekey: string;
           callback?: (token: string) => void;
-          'error-callback'?: () => void;
+          'error-callback'?: (code?: string) => void;
+          'expired-callback'?: () => void;
           appearance?: 'always' | 'execute' | 'interaction-only';
         },
       ) => string;
@@ -20,15 +21,18 @@ declare global {
   }
 }
 
-/**
- * H-4 fix: invisible Turnstile populates the cf-turnstile-response field asynchronously.
- * Without coordination, fast submitters or users with privacy extensions blocking the script
- * silently fail Zod validation server-side. This widget exposes its load/ready/error state via
- * `onStatusChange` so the parent form can disable its submit button until the token is present
- * AND can render a recovery message when the script fails to load within the timeout.
- */
 export type TurnstileStatus = 'loading' | 'ready' | 'error';
 
+/**
+ * api.js is loaded with `?render=explicit` so Cloudflare does not auto-render any
+ * `<div class="cf-turnstile">`. We always call `window.turnstile.render()` ourselves
+ * once the script signals ready — that is the only reliable way to wire `callback`
+ * and `error-callback` into React state. Without explicit render, an auto-rendered
+ * widget would validate but never inform React, leaving the submit button disabled.
+ *
+ * `NEXT_PUBLIC_TURNSTILE_SITE_KEY` must be inlined at build time — see Dockerfile
+ * builder stage and scripts/deploy-fly.sh for how it's passed via Docker build args.
+ */
 export function TurnstileWidget({
   onStatusChange,
 }: {
@@ -42,39 +46,55 @@ export function TurnstileWidget({
     onStatusChange?.(status);
   }, [status, onStatusChange]);
 
-  useEffect(() => {
-    // Fail-loud timeout: if the script never loads (extension blocks it), surface a recoverable
-    // error to the user instead of letting the submit silently 401 server-side.
-    const timeout = setTimeout(() => {
-      if (status === 'loading') setStatus('error');
-    }, 5_000);
-    return () => clearTimeout(timeout);
-  }, [status]);
-
-  useEffect(() => {
-    if (!ref.current || !window.turnstile) return;
+  const renderWidget = useCallback(() => {
+    if (idRef.current || !ref.current || !window.turnstile) return;
+    const sitekey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    if (!sitekey) {
+      console.error('[turnstile] NEXT_PUBLIC_TURNSTILE_SITE_KEY missing — was build arg passed?');
+      setStatus('error');
+      return;
+    }
     idRef.current = window.turnstile.render(ref.current, {
-      sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+      sitekey,
       appearance: 'interaction-only',
       callback: () => setStatus('ready'),
-      'error-callback': () => setStatus('error'),
+      'error-callback': (code) => {
+        console.error('[turnstile] error-callback', { code });
+        setStatus('error');
+      },
+      'expired-callback': () => setStatus('loading'),
     });
   }, []);
+
+  // Cover the case where api.js is already cached and ready before mount.
+  useEffect(() => {
+    renderWidget();
+  }, [renderWidget]);
+
+  // Fail-loud timeout: a privacy extension blocked api.js, or the network is dead.
+  // 12s is generous — `interaction-only` mode legitimately takes a few seconds before
+  // showing the manual checkbox if Cloudflare's automatic challenge is inconclusive.
+  useEffect(() => {
+    if (status !== 'loading') return;
+    const timeout = setTimeout(() => {
+      if (status === 'loading') setStatus('error');
+    }, 12_000);
+    return () => clearTimeout(timeout);
+  }, [status]);
 
   return (
     <>
       <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
         async
         defer
-        onError={() => setStatus('error')}
+        onReady={renderWidget}
+        onError={() => {
+          console.error('[turnstile] api.js failed to load');
+          setStatus('error');
+        }}
       />
-      {/* The widget injects `<input name="cf-turnstile-response" ...>` into this container */}
-      <div
-        ref={ref}
-        className="cf-turnstile"
-        data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-      />
+      <div ref={ref} />
     </>
   );
 }
