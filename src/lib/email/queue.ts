@@ -54,9 +54,14 @@ export async function addEmailJob(payload: EmailJobPayload): Promise<void> {
       /* sink errors must not break the action */
     }
   }
-  // Test/dev shortcut: when UPSTASH_REDIS_URL is unset (vitest), no-op so unit tests work.
+  // Test/dev shortcut: when UPSTASH_REDIS_URL is unset, no-op so unit tests and CI
+  // Playwright runs work. The production-only throw guards real prod misconfig, but
+  // CI runs `pnpm start` with NODE_ENV=production — detect via the Cloudflare test
+  // sitekey (set in ci.yml, never used in real prod; same convention used to gate
+  // verifyTurnstile and src/lib/rate-limit.ts BYPASS).
   if (!process.env.UPSTASH_REDIS_URL) {
-    if (process.env.NODE_ENV === 'production') {
+    const isTestBuild = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY === '1x00000000000000000000AA';
+    if (process.env.NODE_ENV === 'production' && !isTestBuild) {
       throw new Error('UPSTASH_REDIS_URL must be set in production');
     }
     return;
