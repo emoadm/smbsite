@@ -1,34 +1,95 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand palette — Sinya Bulgaria (BRAND-01, UI-SPEC § Color) */
+  /* ============ BRAND PALETTE — Sinya Bulgaria (UI-SPEC §4.3) ============ */
+  /* Neutrals (60%) */
   --color-background: #FFFFFF;
-  --color-surface: #F1F5F9;
   --color-foreground: #0F172A;
+  --color-surface: #F1F5F9;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #0F172A;
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #0F172A;
+  --color-muted: #F1F5F9;
   --color-muted-foreground: #475569;
   --color-border: #E2E8F0;
+  --color-input: #E2E8F0;
+  --color-ring: #004A79;
+
+  /* Primary brand (10% — Sinya navy) */
+  --color-primary: #004A79;
+  --color-primary-foreground: #FFFFFF;
+
+  /* Secondary brand (sky — Sinya cyan) */
+  --color-secondary: #3AC7FF;
+  --color-secondary-foreground: #003A60;
+
+  /* Phase-1 backcompat alias (UI-SPEC §4.6 — DO NOT DELETE; Footer text-accent depends on it) */
   --color-accent: #004A79;
-  --color-destructive: #E72E4D;
-  --color-success: #009F54;
-  --color-sky: #00B7ED;
+  --color-accent-foreground: #FFFFFF;
 
-  /* Typography scale — locked to 4 sizes (UI-SPEC § Typography) */
-  --text-sm: 14px;     /* label */
-  --text-base: 16px;   /* body */
-  --text-xl: 20px;     /* heading */
-  --text-3xl: 28px;    /* display */
+  /* Sky alias retuned to canonical Sinya value (was #00B7ED in Phase 1) */
+  --color-sky: #3AC7FF;
 
-  /* Layout containers (UI-SPEC § Layout Shell) */
+  /* Semantic (status / banner) — retuned for AA contrast on white */
+  --color-destructive: #DC2626;            /* was #E72E4D in Phase 1 (UI-SPEC §4.6) */
+  --color-destructive-foreground: #FFFFFF;
+  --color-success: #059669;                /* was #009F54 in Phase 1 */
+  --color-success-foreground: #FFFFFF;
+  --color-warning: #D97706;                /* reserved; not used in Phase 2 */
+  --color-warning-foreground: #FFFFFF;
+
+  /* Hero/feature dark surface (when text is on imagery overlay) */
+  --color-hero-overlay: rgba(0, 74, 121, 0.65);
+  --color-hero-text: #FFFFFF;
+
+  /* Typography scale — 8 sizes (UI-SPEC §3.3) */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;       /* reserved; lint usage via plan 02-09 */
+  --text-6xl: 3.75rem;    /* hero display desktop */
+
+  /* Line-heights */
+  --leading-tight: 1.15;
+  --leading-snug: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6;
+
+  /* Layout containers */
   --container-form: 480px;
   --container-legal: 720px;
+  --container-prose: 768px;     /* NEW — /agenda */
   --container-page: 1140px;
+  --container-wide: 1280px;     /* NEW — forward-compat */
 
-  /* Font families (BRAND-06) — actual face loaded via next/font in layout */
+  /* Font families — actual face loaded via next/font in src/lib/fonts.ts */
   --font-sans: var(--font-roboto), system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
-  --font-display: var(--font-roboto-slab), Georgia, serif;
+  --font-display: var(--font-gilroy), var(--font-roboto), Georgia, serif;
 }
 
-/* OTP digit slots: tabular-nums for unambiguous reading (UI-SPEC § Typography rule 2) */
+/* Smooth scroll for anchor jumps; offset for sticky 80px header (UI-SPEC §10.4) */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+/* Reduced motion fallback (UI-SPEC §10.3, WCAG 2.1) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* OTP digit slots: tabular-nums for unambiguous reading (UI-SPEC §3.5 — Phase 1 carry-forward) */
 [data-slot="input-otp-slot"] {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
