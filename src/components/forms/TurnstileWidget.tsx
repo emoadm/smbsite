@@ -1,6 +1,5 @@
 'use client';
 
-import Script from 'next/script';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 declare global {
@@ -24,14 +23,22 @@ declare global {
 export type TurnstileStatus = 'loading' | 'ready' | 'error';
 
 /**
- * api.js is loaded with `?render=explicit` so Cloudflare does not auto-render any
- * `<div class="cf-turnstile">`. We always call `window.turnstile.render()` ourselves
- * once the script signals ready — that is the only reliable way to wire `callback`
- * and `error-callback` into React state. Without explicit render, an auto-rendered
- * widget would validate but never inform React, leaving the submit button disabled.
+ * api.js is loaded with `?render=explicit` by the Server Component at
+ * `src/app/(frontend)/(auth)/register/page.tsx` (raw <script async defer>).
+ * That ensures the script tag is in the initial SSR HTML, which (a) loads
+ * earlier than next/script's post-hydration injection in production, and
+ * (b) makes AUTH-08 (Playwright spec asserting script presence on /register)
+ * pass on first attempt without retries — see
+ * .planning/debug/d-ci-app-failures.md Cause 4.
  *
- * `NEXT_PUBLIC_TURNSTILE_SITE_KEY` must be inlined at build time — see Dockerfile
- * builder stage and scripts/deploy-fly.sh for how it's passed via Docker build args.
+ * We always call `window.turnstile.render()` ourselves (`?render=explicit`
+ * disables auto-render) — that is the only reliable way to wire `callback`
+ * and `error-callback` into React state. We poll `window.turnstile` until
+ * api.js finishes executing.
+ *
+ * `NEXT_PUBLIC_TURNSTILE_SITE_KEY` must be inlined at build time — see
+ * Dockerfile builder stage and scripts/deploy-fly.sh for how it's passed
+ * via Docker build args.
  */
 export function TurnstileWidget({
   onStatusChange,
@@ -82,19 +89,28 @@ export function TurnstileWidget({
     return () => clearTimeout(timeout);
   }, [status]);
 
-  return (
-    <>
-      <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-        async
-        defer
-        onReady={renderWidget}
-        onError={() => {
-          console.error('[turnstile] api.js failed to load');
-          setStatus('error');
-        }}
-      />
-      <div ref={ref} />
-    </>
-  );
+  // api.js is loaded by the parent Server Component
+  // (see src/app/(frontend)/(auth)/register/page.tsx). Poll for window.turnstile
+  // until the script finishes executing and exposes the global.
+  useEffect(() => {
+    if (idRef.current || window.turnstile) {
+      renderWidget();
+      return;
+    }
+    let attempts = 0;
+    const interval = setInterval(() => {
+      attempts += 1;
+      if (window.turnstile) {
+        clearInterval(interval);
+        renderWidget();
+      } else if (attempts >= 120) {
+        // 12s — matches the existing fail-loud timeout effect above.
+        clearInterval(interval);
+        // status will flip to 'error' via the timeout effect.
+      }
+    }, 100);
+    return () => clearInterval(interval);
+  }, [renderWidget]);
+
+  return <div ref={ref} />;
 }
