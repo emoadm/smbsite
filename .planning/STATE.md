@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 (Public Surface Pre-Warmup) context gathered — ready for /gsd-plan-phase 2; 5 coalition external dependencies tracked in deferred items
-last_updated: "2026-05-02T19:35:00.000Z"
-last_activity: 2026-05-02 -- Phase 2 context gathered (4 areas discussed: structure/content, brand, /member, auth+legal). 02-CONTEXT.md + 02-DISCUSSION-LOG.md written. 5 coalition external dependencies surfaced. Ready for /gsd-plan-phase 2.
+stopped_at: Phase 2 UI-SPEC approved (6/6 dimensions PASS, 4 non-blocking flags) — ready for /gsd-plan-phase 2 with binding design contract
+last_updated: "2026-05-03T00:00:00.000Z"
+last_activity: 2026-05-03 -- Phase 2 UI-SPEC.md written (860 lines, palette extracted from sinyabulgaria.bg: #004A79 navy + #3AC7FF sky) and verified by gsd-ui-checker (6/6 PASS). Frontmatter status flipped to approved. Ready for /gsd-plan-phase 2.
 progress:
   total_phases: 6
   completed_phases: 0
@@ -107,7 +107,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02
-Stopped at: Phase 2 context gathered. ROADMAP split: Phase 2 narrowed to "Public Surface (Pre-Warmup)" + Phase 2.1 inserted for "Attribution + Source Dashboard". Phase 2 CONTEXT.md captures 18 decisions (D-01..D-18) covering page structure, content authorship, hero media, FAQ scope, logo/palette/typography (Gilroy free + Roboto), /member welcome, auth-pages light rebrand, legal-text deferral. Five coalition external dependencies surfaced and tracked.
-Resume file: .planning/phases/02-public-surface-pre-warmup/02-CONTEXT.md
+Last session: 2026-05-03
+Stopped at: Phase 2 UI-SPEC.md approved (status: approved, 6/6 PASS, 4 non-blocking flags). Sinya palette canonicalized to #004A79 navy + #3AC7FF sky (extracted from sinyabulgaria.bg/media/elementor/css/post-{11,19}.css with frequency counts). Phase 1 backcompat retuned (--color-destructive, --color-success). 4-base-size typography ramp locked. CookieYes integration shape concrete with category mapping. Ready for /gsd-plan-phase 2 with UI-SPEC as binding design contract.
+Resume file: .planning/phases/02-public-surface-pre-warmup/02-UI-SPEC.md
 Next command: /gsd-plan-phase 2

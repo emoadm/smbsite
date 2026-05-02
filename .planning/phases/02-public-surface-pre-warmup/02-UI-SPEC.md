@@ -1,10 +1,17 @@
 ---
 phase: 02
 slug: public-surface-pre-warmup
-status: draft
+status: approved
 shadcn_initialized: true
 preset: new-york / slate (existing components.json)
 created: 2026-05-02
+reviewed_at: 2026-05-03
+review_dimensions: 6/6 PASS
+review_flags:
+  - "Typography ramp inflation watch — text-* utility tokens (5xl/6xl) declared but not bound; lint usage in plan-phase"
+  - "Phase 1 backcompat retunes destructive #E72E4D → #DC2626 + success #009F54 → #059669; visual regression check on /legal/* draft Alert"
+  - "Header height ~80px assumed for scroll-padding-top: 5rem; verify after /agenda + /faq nav links land"
+  - "CookieYes dual-source-of-truth: dashboard copy must match bg.json OR disable built-in copy; explicit plan task"
 ---
 
 # Phase 02 — UI Design Contract
