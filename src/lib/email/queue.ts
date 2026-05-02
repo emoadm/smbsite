@@ -54,14 +54,18 @@ export async function addEmailJob(payload: EmailJobPayload): Promise<void> {
       /* sink errors must not break the action */
     }
   }
-  // Test/dev shortcut: when UPSTASH_REDIS_URL is unset, no-op so unit tests and CI
-  // Playwright runs work. The production-only throw guards real prod misconfig, but
-  // CI runs `pnpm start` with NODE_ENV=production — detect via the Cloudflare test
-  // sitekey (set in ci.yml, never used in real prod; same convention used to gate
-  // verifyTurnstile and src/lib/rate-limit.ts BYPASS).
-  if (!process.env.UPSTASH_REDIS_URL) {
-    const isTestBuild = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY === '1x00000000000000000000AA';
-    if (process.env.NODE_ENV === 'production' && !isTestBuild) {
+  // Test/dev shortcut: no-op when there is no real Redis to talk to. CI Playwright
+  // runs `pnpm start` (NODE_ENV=production) but inherits .env.test (loaded by
+  // playwright.config.ts) which sets UPSTASH_REDIS_URL=redis://localhost:6379 — so
+  // checking just `unset` is not enough; we must also bypass on a localhost URL.
+  // The Cloudflare always-pass test sitekey is the canonical "this is a test build"
+  // signal (set in ci.yml, never used in real prod; same convention as
+  // src/lib/rate-limit.ts BYPASS and src/lib/turnstile.ts skip).
+  const url = process.env.UPSTASH_REDIS_URL;
+  const isTestBuild = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY === '1x00000000000000000000AA';
+  const isLocalUrl = !!url && (url.includes('localhost') || url.includes('127.0.0.1'));
+  if (!url || isLocalUrl || isTestBuild) {
+    if (process.env.NODE_ENV === 'production' && !isTestBuild && !isLocalUrl) {
       throw new Error('UPSTASH_REDIS_URL must be set in production');
     }
     return;
