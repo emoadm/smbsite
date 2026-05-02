@@ -16,7 +16,7 @@ const Schema = z.object({
 
 export type VerifyOtpState =
   | { ok: true; nextHref: string }
-  | { ok: false; error: 'auth.otp.invalid' | 'auth.otp.expired' | 'auth.otp.locked' };
+  | { ok: false; error?: 'auth.otp.invalid' | 'auth.otp.expired' | 'auth.otp.locked' };
 
 export async function verifyOtp(
   _prev: VerifyOtpState | null,
