@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { MainContainer } from '@/components/layout/MainContainer';
 import { RegistrationForm } from '@/components/forms/RegistrationForm';
 import { signFormStamp } from '@/lib/forms/honeypot';
@@ -11,7 +11,7 @@ export default async function RegisterPage() {
     <MainContainer width="form">
       <Card>
         <CardHeader>
-          <CardTitle className="font-display text-3xl">{t('title')}</CardTitle>
+          <h1 className="font-display text-3xl">{t('title')}</h1>
         </CardHeader>
         <CardContent>
           <RegistrationForm formStamp={formStamp} />
