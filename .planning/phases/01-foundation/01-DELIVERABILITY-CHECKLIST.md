@@ -37,9 +37,14 @@ All records added in Cloudflare DNS for the chosen sender domain.
 | Record       | Type  | Host                                    | Value                                        | Status                  |
 | ------------ | ----- | --------------------------------------- | -------------------------------------------- | ----------------------- |
 | DKIM alias 1 | CNAME | `mail._domainkey.news.chastnik.eu`      | `brevo1._domainkey.news.chastnik.eu`         | [x] added [x] verified  |
-| DKIM alias 2 | CNAME | `mail2._domainkey.news.chastnik.eu`     | `brevo2._domainkey.news.chastnik.eu`         | [x] added [x] verified  |
+| DKIM alias 2 | CNAME | `mail2._domainkey.news.chastnik.eu`     | `brevo2._domainkey.news.chastnik.eu`         | [ ] added [ ] verified  |
 | DKIM hop 1   | CNAME | `brevo1._domainkey.news.chastnik.eu`    | `b1.news-chastnik-eu.dkim.brevo.com`         | [x] added [x] verified  |
 | DKIM hop 2   | CNAME | `brevo2._domainkey.news.chastnik.eu`    | `b2.news-chastnik-eu.dkim.brevo.com`         | [x] added [x] verified  |
+
+> **Note (D-Phase5-prep):** `mail2._domainkey.news.chastnik.eu` not yet added — non-blocking for
+> Phase 1 (news.* is the Phase 5 newsletter sender, not the Phase 1 transactional path which
+> uses auth.*). Must be added in Cloudflare DNS before Phase 5 first send. Tracked in STATE.md
+> Deferred Items table with `resolves_phase: 5`.
 
 ### SPF (apex) — defensive include
 
@@ -103,7 +108,7 @@ Expected: each command returns the configured value within 15 minutes of any DNS
 - [x] Sender address `no-reply@auth.chastnik.eu` whitelisted as transactional sender
 - [x] Test send via Brevo dashboard "Send test" → received in operator's Gmail (subject Cyrillic-safe per Pitfall I)
   - **Evidence:** Real test email landed in `emoadm@gmail.com` Promotions tab with Gmail's authentication panel showing `spf=PASS, dkim=PASS dkim_domain=auth.chastnik.eu, dmarc=PASS`. From `no-reply@auth.chastnik.eu`. Confirmed UTF-8 Cyrillic body renders without artifacts.
-- [ ] Sender domain `news.chastnik.eu` authenticated (newsletter sender; configure in Brevo when Phase 5 ships, DNS already in place)
+- [ ] Sender domain `news.chastnik.eu` authenticated (newsletter sender; configure in Brevo when Phase 5 ships, DNS partially in place — `mail2._domainkey.news` deferred to pre-Phase-5)
 
 ## C. Google Postmaster Tools v2 (NOTIF-07)
 
@@ -173,7 +178,7 @@ before declaring Phase 1 complete. Evidence path = absolute repo path or externa
 > (confirmation email) has been delivered and Google Postmaster Tools shows the domain as active
 > — warm-up has begun."
 
-- [x] DNS records from Section A all green (DKIM chain ×4 for `auth.chastnik.eu`, ×4 for `news.chastnik.eu`, apex SPF, apex + 2 sub DMARCs)
+- [x] DNS records from Section A all green for the Phase 1 transactional path (DKIM chain ×4 for `auth.chastnik.eu`, ×3 currently for `news.chastnik.eu` — `mail2._domainkey.news` deferred to pre-Phase-5, apex SPF, apex + 2 sub DMARCs)
 - [x] First transactional send delivered: real email from `no-reply@auth.chastnik.eu` reached Gmail with `spf=PASS, dkim=PASS dkim_domain=auth.chastnik.eu, dmarc=PASS` (Section B evidence)
 - [ ] Postmaster Tools shows `auth.chastnik.eu` with at least 1 day of reputation data
 - [ ] Evidence: dig outputs from Section A + Postmaster screenshot at `postmaster-week1.png`
