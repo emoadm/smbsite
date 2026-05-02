@@ -23,11 +23,25 @@ export async function verifyTurnstile(
       body: body.toString(),
     });
     if (!res.ok) return { ok: false, errorCodes: [`http-${res.status}`] };
-    const json = (await res.json()) as { success: boolean; 'error-codes'?: string[] };
+    const json = (await res.json()) as {
+      success: boolean;
+      'error-codes'?: string[];
+      hostname?: string;
+      challenge_ts?: string;
+    };
+    if (!json.success) {
+      console.warn('[turnstile] siteverify rejected', {
+        errorCodes: json['error-codes'],
+        hostname: json.hostname,
+        secretLen: secret.length,
+        secretPrefix: secret.slice(0, 4),
+      });
+    }
     return json.success
       ? { ok: true }
       : { ok: false, errorCodes: json['error-codes'] ?? ['unknown'] };
-  } catch {
+  } catch (e) {
+    console.warn('[turnstile] siteverify fetch failed', { err: String(e) });
     return { ok: false, errorCodes: ['fetch-failed'] };
   }
 }

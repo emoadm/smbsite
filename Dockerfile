@@ -10,6 +10,15 @@ RUN corepack enable
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# NEXT_PUBLIC_* must be present at build time — Next inlines them into the
+# client bundle. These are NOT secrets (visible in browser anyway) but ARE
+# environment-specific. Pass via `flyctl deploy --build-arg KEY=value`.
+ARG NEXT_PUBLIC_TURNSTILE_SITE_KEY
+ARG NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+ARG NEXT_PUBLIC_COOKIEYES_SITE_KEY
+ENV NEXT_PUBLIC_TURNSTILE_SITE_KEY=$NEXT_PUBLIC_TURNSTILE_SITE_KEY
+ENV NEXT_PUBLIC_PLAUSIBLE_DOMAIN=$NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+ENV NEXT_PUBLIC_COOKIEYES_SITE_KEY=$NEXT_PUBLIC_COOKIEYES_SITE_KEY
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm build
 
