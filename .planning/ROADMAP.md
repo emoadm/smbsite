@@ -2,7 +2,7 @@
 
 ## Overview
 
-Six phases deliver a complete civic-advocacy platform for coalition Синя България. Phase 1 lays the authenticated foundation and starts email domain warm-up — a hard prerequisite for the QR direct-mail campaign. Phase 2 ships the public landing surface and attribution capture so the QR campaign can launch safely. Phase 3 adds the idea catalog and voting engine (gated on an external GDPR Art.9 legal opinion). Phase 4 enables member submissions and the full editorial moderation workflow. Phase 5 wires up the newsletter and channel notification infrastructure. Phase 6 completes GDPR self-service rights and hardens the platform with load testing before any large-scale campaign expansion.
+Six core phases (plus one inserted) deliver a complete civic-advocacy platform for coalition Синя България. Phase 1 lays the authenticated foundation and starts email domain warm-up — a hard prerequisite for the QR direct-mail campaign. Phase 2 ships the public landing surface (branded, explanatory) before the warmup ladder begins, so friends/family registering during warmup see real content, not a barebones form. Phase 2.1 (inserted) adds UTM/QR attribution capture and the Payload admin dashboard in parallel with warmup, gating the QR mail drop. Phase 3 adds the idea catalog and voting engine (gated on an external GDPR Art.9 legal opinion). Phase 4 enables member submissions and the full editorial moderation workflow. Phase 5 wires up the newsletter and channel notification infrastructure. Phase 6 completes GDPR self-service rights and hardens the platform with load testing before any large-scale campaign expansion.
 
 ## Phases
 
@@ -13,7 +13,8 @@ Six phases deliver a complete civic-advocacy platform for coalition Синя Б�
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation** - Project scaffolding, authentication, branding baseline, email domain warm-up, core ops infrastructure
-- [ ] **Phase 2: Public Surface + Attribution** - CDN-cached agitation pages, attribution capture, legal compliance pages — must ship before the QR mail campaign
+- [ ] **Phase 2: Public Surface (Pre-Warmup)** - Branded landing page, Sinya color tokens, real /member welcome page, cookie consent — must ship before warmup ladder begins
+- [ ] **Phase 2.1: Attribution + Source Dashboard** *(INSERTED)* - UTM/QR/oblast attribution capture + Payload admin dashboard — must complete before QR mail drop
 - [ ] **Phase 3: Idea Catalog + Voting** - Editor-published idea catalog, binary voting engine with full anti-abuse stack (requires GDPR Art.9 legal opinion)
 - [ ] **Phase 4: User Submissions + Editorial** - Member proposals, problem reports, full editorial moderation panel
 - [ ] **Phase 5: Notifications** - Async newsletter, WhatsApp/Telegram channel links, member notification preferences
@@ -57,26 +58,47 @@ Plans:
 
 ---
 
-### Phase 2: Public Surface + Attribution
+### Phase 2: Public Surface (Pre-Warmup)
 
-**Goal**: Anonymous visitors who scan the QR code from the direct-mail campaign land on fast, CDN-cached agitation pages; every registration event is attributed to its traffic source; legal compliance pages are live. This phase must be deployed and verified before the QR mail drop.
+**Goal**: Anonymous visitors who arrive at the site land on a fast, branded landing page that explains the coalition's mission and gives them a clear "join the community" CTA; the post-registration /member page welcomes them with what's coming next; cookie consent and legal pages are live. This phase MUST ship before the warmup ladder begins so friends/family registering during warmup see real explanatory content and Sinya brand identity, not a barebones registration form.
 
 **Depends on**: Phase 1
 
-**Requirements**: PUB-01, PUB-02, PUB-03, PUB-04, ATTR-01, ATTR-02, ATTR-03, ATTR-04, ATTR-05, ATTR-06, ATTR-07, GDPR-01, GDPR-02, GDPR-03, OPS-05
+**Requirements**: PUB-01, PUB-02, PUB-03, PUB-04, GDPR-01, GDPR-02, GDPR-03
 
 **Success Criteria** (what must be TRUE):
-  1. A visitor who scans the QR code lands on the landing page in under 2 seconds on simulated Slow 4G; the page is served from Cloudflare CDN cache and does not hit the origin database
-  2. Visitor can navigate between multiple agitation pages without registering; a visible "join the community" call-to-action is present on every page
-  3. A visitor who arrives via a UTM-tagged link or QR scan has their source (UTM params, HTTP referer, IP-derived region, QR flag) recorded in the attribution database — without raw IP being stored — and that data is visible to an editor in the admin attribution dashboard
-  4. The registration form includes a "where did you hear about us" field; answers are captured alongside the attribution event and linked to the user after email confirmation
-  5. The Privacy Policy, Terms of Use, and granular cookie consent banner are live and accessible to every visitor before any interaction is recorded
+  1. Visiting the root URL renders a public landing page within 2 seconds on simulated Slow 4G; the page is served from Cloudflare CDN cache and does not redirect anonymous visitors away from real content
+  2. Landing page communicates the coalition's mission, value proposition, and call-to-action clearly in Bulgarian; design uses the Sinya color palette and logo from sinyabulgaria.bg as required by PROJECT.md branding constraint
+  3. A registered, email-verified member who lands on /member sees a welcoming Bulgarian page that explains what comes next (community channels, Telegram/WhatsApp Channel links, what to expect from email updates) — not a placeholder
+  4. Privacy Policy, Terms of Use, and granular cookie consent banner are live and accessible to every visitor before any interaction is recorded
 
 **Plans**: TBD
 
 **UI hint**: yes
 
 ---
+
+### Phase 02.1: Attribution + Source Dashboard (INSERTED)
+
+**Goal**: Every visitor to the public site (especially those arriving via the QR mail drop or UTM-tagged links) has their source recorded — UTM params, HTTP referer, IP-derived Bulgarian oblast, QR flag — without raw IP being persisted; editors can see source breakdowns in an admin attribution dashboard inside Payload; the registration form captures a "where did you hear about us" answer that links to the attribution event after email confirmation. This phase MUST complete before the QR mail drop so the campaign is measurable.
+
+**Depends on**: Phase 2
+
+**Requirements**: ATTR-01, ATTR-02, ATTR-03, ATTR-04, ATTR-05, ATTR-06, ATTR-07, OPS-05
+
+**Success Criteria** (what must be TRUE):
+  1. A visitor who arrives via a UTM-tagged link or QR scan has their source (UTM params, HTTP referer, IP-derived oblast, QR flag) recorded in the attribution database; raw IP is never persisted, only the derived oblast string
+  2. The registration form includes a "where did you hear about us" field; the answer is captured alongside the most-recent attribution event for that session and linked to the user record after email confirmation
+  3. An editor logged into Payload admin can view a source-attribution dashboard showing aggregate counts per UTM source / oblast / QR flag for any chosen date range
+  4. Attribution writes are non-blocking on the request path (fire-and-forget or queued) so they cannot slow public-page TTFB
+  5. GDPR data subject access export includes the user's attribution row; account deletion cascades remove it
+
+**Plans**: TBD
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 02.1 to break down)
+
+**UI hint**: yes
 
 ### Phase 3: Idea Catalog + Voting
 
