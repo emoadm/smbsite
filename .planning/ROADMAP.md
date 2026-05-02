@@ -72,7 +72,18 @@ Plans:
   3. A registered, email-verified member who lands on /member sees a welcoming Bulgarian page that explains what comes next (community channels, Telegram/WhatsApp Channel links, what to expect from email updates) — not a placeholder
   4. Privacy Policy, Terms of Use, and granular cookie consent banner are live and accessible to every visitor before any interaction is recorded
 
-**Plans**: TBD
+**Plans**: 9 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Tailwind v4 Sinya tokens + Gilroy webfont (license A2 + Cyrillic A3 + woff2 generation + fonts.ts) (PUB-01)
+- [ ] 02-02-PLAN.md — bg.json content scaffolding (landing/agenda/faq/member.welcome/cookie/nav/a11y keys; coalition placeholders) (PUB-01, PUB-03, PUB-04, GDPR-01)
+- [ ] 02-03-PLAN.md — Build Phase 2 components (Hero, ValuePropGrid, CTASection, FAQAccordion, Timeline, MemberWelcomeBanner, etc.) + shadcn Accordion + MainContainer prose variant (PUB-01, PUB-04)
+- [ ] 02-04-PLAN.md — Pages: replace `/`, create `/agenda` + `/faq`; sitemap + robots; ISR with revalidate=3600 (PUB-01, PUB-02, PUB-03, PUB-04)
+- [ ] 02-05-PLAN.md — Replace /member placeholder with welcome page; expand Footer to 4-col grid; verify auth-pages light rebrand (PUB-04)
+- [ ] 02-06-PLAN.md — CookieBanner fix (afterInteractive→beforeInteractive) + Sinya CSS overrides + dashboard reconciliation runbook (GDPR-01)
+- [ ] 02-07-PLAN.md — Cloudflare WAF deferral resolution (middleware.ts) + next.config.ts cache headers + favicons + OG image (PUB-02)
+- [ ] 02-08-PLAN.md — Playwright specs (PUB-01..04 + GDPR-01) + Lighthouse CI + coalition-placeholder grep gate (PUB-01, PUB-02, PUB-03, PUB-04, GDPR-01, GDPR-02, GDPR-03)
+- [ ] 02-09-PLAN.md — UI-SPEC review_flag wrap-up + footer cookie-settings link + 02-VALIDATION.md sign-off (PUB-04, GDPR-02, GDPR-03)
 
 **UI hint**: yes
 

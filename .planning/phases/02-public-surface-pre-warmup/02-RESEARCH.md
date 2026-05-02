@@ -895,22 +895,27 @@ jobs:
 | A7 | CookieYes dashboard supports a "Bulgarian" language with full UI translation | Pattern 3 / dual-source-of-truth | If absent, write all category text in English in dashboard and override entirely via custom inline `<style>` and JS that injects Bulgarian text post-render. Adds complexity. |
 | A8 | The Phase 1 `loadEnv.js` Payload bug does NOT block static page generation in Phase 2 | Pitfall 9 | Phase 2 doesn't touch Payload collections, but the build step still imports Payload. If `next build` fails because of loadEnv, plan-phase must fix the patch-package as a P0 task. |
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+> All three open questions identified at research time were resolved during plan-phase. Resolutions are recorded inline below for traceability (revision 2026-05-02 per plan-checker recommendation 1).
 
 1. **Where does the hero image come from for v1 launch?**
    - What we know: D-03 says "still image sourced from coalition photo or stock-of-Bulgaria + logo overlay"
    - What's unclear: who is taking the photo / sourcing the stock; what licence applies to stock images
    - Recommendation: plan-phase ships a **placeholder hero** (Sinya navy gradient with logo + Bulgarian flag motif) generated programmatically, and adds a `D-CoalitionHeroImage` deferred item until coalition delivers final asset. Same placeholder pattern as the logo SVG.
+   - **RESOLVED:** Placeholder hero ships in plan 02-03 Task 02.03.1 (`public/hero.jpg` generated programmatically alongside the shadcn Accordion install + MainContainer extension). Coalition delivers the final image as a content-prop swap tracked under the `D-CoalitionContent-Hero` deferred item in STATE.md (no code change needed at swap time — `<Hero />` reads the asset path, coalition replaces `public/hero.jpg`).
 
 2. **Is there a staging URL for Lighthouse CI to hit?**
    - What we know: Production is `chastnik.eu`. Phase 1 OPS-RUNBOOK doesn't mention a staging environment.
    - What's unclear: Does Fly.io have a `smbsite-staging` app, or is staging implicit (PR preview deploys)?
    - Recommendation: plan-phase task either creates `smbsite-staging.fly.dev` (preferred — exercises the production deploy path), OR runs Lighthouse against a local `pnpm build && pnpm start` server in CI. Latter is simpler but doesn't test the Cloudflare layer.
+   - **RESOLVED:** Plan 02-08 Task 02.08.6 targets production `https://chastnik.eu` directly — no separate staging URL is created. Lighthouse runs against production after deploy, which gives an accurate measurement that includes the Cloudflare cache layer (the actual visitor path). The tradeoff is that Lighthouse runs post-merge rather than as a PR gate; this is acceptable for v1 because performance regressions surface within the post-deploy run window before warmup invitations go out.
 
 3. **What's the exact list of CookieYes dashboard configurations needed?**
    - What we know: Bulgarian text per category, custom CSS per UI-SPEC §9.2, "Reject All" button enabled, GDPR mode.
    - What's unclear: whether CookieYes "Multilingual" feature requires a paid tier, or if Bulgarian as primary language is on the free tier.
    - Recommendation: plan-phase task #1 = log into CookieYes dashboard with the existing `NEXT_PUBLIC_COOKIEYES_SITE_KEY`, screenshot the config UI, document gaps. If multilingual requires paid, configure Bulgarian as default / only language.
+   - **RESOLVED:** Plan 02-06 §1.1 of `02-OPS-RUNBOOK.md` codifies the exact dashboard configuration steps. The operator confirms the Bulgarian language tier (free or paid) during the dashboard reconciliation step (§1.1 — A7 verification). If the free tier doesn't include Bulgarian, the runbook documents fallback Option A (configure banner with Bulgarian text in the default English-language slot — sufficient for v1, no recurring cost). The full category-by-category Bulgarian copy + drift-prevention checklist live in §1.2–§1.6 of the runbook.
 
 ## Environment Availability
 
@@ -939,53 +944,7 @@ jobs:
 
 ## Validation Architecture
 
-> Phase 2 has tests via Playwright (E2E) and Vitest (unit). Existing infrastructure detected.
-
-### Test Framework
-
-| Property | Value |
-|----------|-------|
-| E2E Framework | Playwright 1.49.1 |
-| Unit Framework | Vitest 2.1.8 |
-| E2E Config | `playwright.config.ts` (root) |
-| Unit Config | `vitest.config.mts` (root) |
-| Quick run command | `pnpm test:unit` (Vitest, ~10s) |
-| Full E2E command | `pnpm test:e2e` (Playwright, multiple viewports) |
-| Specific spec | `pnpm exec playwright test tests/e2e/branding.spec.ts --project=chromium-desktop` |
-
-### Phase Requirements → Test Map
-
-| Req ID | Behavior | Test Type | Automated Command | File Exists? |
-|--------|----------|-----------|-------------------|-------------|
-| PUB-01 | Landing has text + image + (optional) video slot | E2E | `pnpm exec playwright test tests/e2e/landing.spec.ts -x` | ❌ Wave 0 |
-| PUB-02 | Landing is statically rendered + Cache-Control header set | E2E + Lighthouse CI | `pnpm exec playwright test tests/e2e/landing.spec.ts:has-cache-headers` + lighthouse CI on PR | ❌ Wave 0 |
-| PUB-03 | Navigation between `/`, `/agenda`, `/faq` works | E2E | `pnpm exec playwright test tests/e2e/landing.spec.ts:navigation` | ❌ Wave 0 |
-| PUB-04 | "Join" CTA visible on landing + agenda + faq + member | E2E | `pnpm exec playwright test tests/e2e/landing.spec.ts:cta-presence` | ❌ Wave 0 |
-| GDPR-01 | Cookie consent banner appears on first visit, granular categories | E2E | `pnpm exec playwright test tests/e2e/cookie-consent.spec.ts` | ❌ Wave 0 |
-| GDPR-02 | Privacy page renders Bulgarian text + draft marker | E2E (existing) | `pnpm exec playwright test tests/e2e/branding.spec.ts -g "draft marker"` | ✅ |
-| GDPR-03 | Terms page renders | E2E (existing) | covered by branding.spec.ts | ✅ |
-| BRAND-06 | Cyrillic glyphs render without fallback (extends to Gilroy) | E2E (existing, extend) | `pnpm exec playwright test tests/e2e/branding.spec.ts -g "Cyrillic"` | ✅ (extend) |
-| Visual regression | Hero h1 height with `Я Щ Ц` glyphs | E2E | new `tests/e2e/typography.spec.ts` | ❌ Wave 0 |
-| Performance budget | LCP ≤ 2.5s, Perf ≥ 90 | Lighthouse CI on PR | GitHub Action `treosh/lighthouse-ci-action@v12` | ❌ Wave 0 |
-| Sitemap | sitemap.xml returns 200 with all 3 public URLs | Unit (HTTP fetch in test) | `pnpm exec vitest tests/unit/sitemap.test.ts` | ❌ Wave 0 |
-| Robots | robots.txt allows /, disallows /member, /admin | Unit | `pnpm exec vitest tests/unit/robots.test.ts` | ❌ Wave 0 |
-
-### Sampling Rate
-
-- **Per task commit:** `pnpm test:unit` (10s) + `pnpm exec playwright test --project=chromium-desktop` (30s)
-- **Per wave merge:** `pnpm test` full (all viewports + unit) — ~3 minutes
-- **Phase gate:** Full suite green + Lighthouse CI assertions pass on PR
-
-### Wave 0 Gaps
-
-- [ ] `tests/e2e/landing.spec.ts` — PUB-01..04 coverage (hero, sections, CTA, navigation)
-- [ ] `tests/e2e/cookie-consent.spec.ts` — GDPR-01 banner appearance + category buttons
-- [ ] `tests/e2e/typography.spec.ts` — Cyrillic Я/Щ/Ц/Ъ/Ю rendering at hero size
-- [ ] `tests/unit/sitemap.test.ts` — sitemap returns expected URLs
-- [ ] `tests/unit/robots.test.ts` — robots disallows correct paths
-- [ ] `.lighthouserc.json` — Lighthouse CI config file
-- [ ] `.github/workflows/lighthouse.yml` — Lighthouse GitHub Action
-- [ ] Extend `tests/e2e/branding.spec.ts` BRAND-06 to assert Gilroy is loaded (`getComputedStyle h1`.fontFamily contains "gilroy")
+> Validation strategy now lives in 02-VALIDATION.md (Nyquist gate compliance — extracted 2026-05-03 per plan-checker recommendation 2).
 
 ## Security Domain
 

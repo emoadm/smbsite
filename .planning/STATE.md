@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 UI-SPEC approved (6/6 dimensions PASS, 4 non-blocking flags) — ready for /gsd-plan-phase 2 with binding design contract
-last_updated: "2026-05-03T00:00:00.000Z"
-last_activity: 2026-05-03 -- Phase 2 UI-SPEC.md written (860 lines, palette extracted from sinyabulgaria.bg: #004A79 navy + #3AC7FF sky) and verified by gsd-ui-checker (6/6 PASS). Frontmatter status flipped to approved. Ready for /gsd-plan-phase 2.
+stopped_at: Phase 2 plans complete (9 plans across 6 waves, 0 blockers, 4 warnings + 2 recommendations addressed via 1 revision pass) — ready for /gsd-execute-phase 2
+last_updated: "2026-05-03T01:00:00.000Z"
+last_activity: 2026-05-03 -- Phase 2 plans created and verified. RESEARCH (1086 lines, bf826dc) + PATTERNS (26 files mapped) + 9 PLAN.md files + standalone 02-VALIDATION.md. Plan-checker: 0 blockers; revision pass fixed sleep-8 flakiness (02-04/05/06), Task 02.04.5 type misclassification, cf-ray threat model wording, RESOLVED markers in RESEARCH, extracted VALIDATION. New deferred item: D-CloudflareIPAllowlist (post-warmup hardening).
 progress:
-  total_phases: 6
+  total_phases: 7
   completed_phases: 0
-  total_plans: 13
+  total_plans: 22
   completed_plans: 13
-  percent: 100
+  percent: 59
 ---
 
 # Project State
@@ -104,10 +104,19 @@ None yet.
 | coalition | `D-CoalitionContent-Agenda` — entire `/agenda` page text (political program, vision, ~800-2000 words). Coalition writes; placeholder mechanism until delivered. | resolves_phase: 2 | Phase 2 discuss |
 | coalition | `D-CoalitionChannels` — WhatsApp Channel + Telegram channel creation + URLs to swap into `/member`. **BLOCKING warmup launch.** Coalition creates; quick task swaps in URLs once available. | resolves_phase: 2 | Phase 2 discuss |
 | coalition | `D-LawyerReviewLegal` — final lawyer-reviewed Privacy Policy + Terms of Use text. Coalition has NOT started review. **BLOCKING warmup launch** (in addition to existing Phase 1 sign-off gates). | resolves_phase: 2 | Phase 2 discuss |
+| ops | `D-CloudflareIPAllowlist` — configure Fly.io `internal_port` allow-list to accept only Cloudflare IP ranges (true network-layer auth boundary). Phase 2 middleware checks `cf-ray` as a soft signal only — header is plain HTTP and trivially spoofable by an attacker who discovers the origin IP. | resolves_phase: post-warmup-hardening | Plan 02-07 |
 
 ## Session Continuity
 
 Last session: 2026-05-03
-Stopped at: Phase 2 UI-SPEC.md approved (status: approved, 6/6 PASS, 4 non-blocking flags). Sinya palette canonicalized to #004A79 navy + #3AC7FF sky (extracted from sinyabulgaria.bg/media/elementor/css/post-{11,19}.css with frequency counts). Phase 1 backcompat retuned (--color-destructive, --color-success). 4-base-size typography ramp locked. CookieYes integration shape concrete with category mapping. Ready for /gsd-plan-phase 2 with UI-SPEC as binding design contract.
-Resume file: .planning/phases/02-public-surface-pre-warmup/02-UI-SPEC.md
-Next command: /gsd-plan-phase 2
+Stopped at: Phase 2 fully planned (9 plans, 6 waves, 37 tasks). All 7 requirements (PUB-01..04, GDPR-01..03), all 4 success criteria, all 18 D-decisions, all 4 UI-SPEC review_flags, all 8 RESEARCH assumptions A1-A8 covered. Plan-checker pass with 0 blockers; targeted revision pass corrected sleep-8 flakiness, task-type misclassification, cf-ray threat model wording, RESOLVED markers, extracted standalone 02-VALIDATION.md.
+Resume file: .planning/phases/02-public-surface-pre-warmup/02-01-PLAN.md (Wave 1 entry point)
+Next command: /gsd-execute-phase 2
+
+**Coalition external dependencies status (run in parallel during execution):**
+- D-CoalitionLogoSVG (BLOCKING phase ship)
+- D-CoalitionContent-Hero (placeholder ships, content swaps in)
+- D-CoalitionContent-Agenda (placeholder ships, content swaps in)
+- D-CoalitionChannels (BLOCKING warmup)
+- D-LawyerReviewLegal (BLOCKING warmup)
+- D-CloudflareIPAllowlist (post-warmup hardening, NEW from plan 02-07 revision)
