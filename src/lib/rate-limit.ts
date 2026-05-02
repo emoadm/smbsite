@@ -1,9 +1,17 @@
 import { Redis } from '@upstash/redis';
 import { Ratelimit } from '@upstash/ratelimit';
 
+const upstashUrl = process.env.UPSTASH_REDIS_REST_URL ?? '';
+
+// Bypass when env is missing or points at a local placeholder (CI / .env.test).
+// Production sets a real Upstash URL, so this evaluates to false there.
+// AUTH-09 spec is the dedicated rate-limit gate — bypassing here keeps unrelated
+// auth specs from depending on a Redis service container in CI.
+const BYPASS = !upstashUrl || upstashUrl.startsWith('http://localhost') || upstashUrl.startsWith('http://127.');
+
 const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+  url: upstashUrl || 'https://placeholder.invalid',
+  token: process.env.UPSTASH_REDIS_REST_TOKEN ?? '',
 });
 
 const registrationIp = new Ratelimit({
@@ -39,23 +47,30 @@ const otpVerify = new Ratelimit({
 
 export type LimitResult = { success: boolean; remaining: number; reset: number };
 
+const ALWAYS_PASS: LimitResult = { success: true, remaining: Number.POSITIVE_INFINITY, reset: 0 };
+
 function asResult(r: Awaited<ReturnType<Ratelimit['limit']>>): LimitResult {
   return { success: r.success, remaining: r.remaining, reset: r.reset };
 }
 
 export async function checkRegistrationIp(ip: string): Promise<LimitResult> {
+  if (BYPASS) return ALWAYS_PASS;
   return asResult(await registrationIp.limit(ip));
 }
 export async function checkRegistrationSubnet(subnet: string): Promise<LimitResult> {
+  if (BYPASS) return ALWAYS_PASS;
   return asResult(await registrationSubnet.limit(subnet));
 }
 export async function checkLoginOtpEmail(email: string): Promise<LimitResult> {
+  if (BYPASS) return ALWAYS_PASS;
   return asResult(await loginOtpEmail.limit(email.toLowerCase()));
 }
 export async function checkLoginOtpIp(ip: string): Promise<LimitResult> {
+  if (BYPASS) return ALWAYS_PASS;
   return asResult(await loginOtpIp.limit(ip));
 }
 export async function checkOtpVerify(otpKey: string): Promise<LimitResult> {
+  if (BYPASS) return ALWAYS_PASS;
   return asResult(await otpVerify.limit(otpKey));
 }
 
