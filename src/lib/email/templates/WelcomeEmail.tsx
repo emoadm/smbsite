@@ -1,3 +1,4 @@
+import React from 'react';
 import { Html, Head, Body, Container, Heading, Text, Button } from '@react-email/components';
 
 export type WelcomeEmailT = (key: string, vars?: Record<string, string | number>) => string;

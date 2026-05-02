@@ -1,3 +1,4 @@
+import React from 'react';
 import { Html, Head, Body, Container, Heading, Text, Section } from '@react-email/components';
 
 export type LoginOtpEmailT = (key: string, vars?: Record<string, string | number>) => string;

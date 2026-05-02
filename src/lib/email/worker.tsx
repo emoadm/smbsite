@@ -1,3 +1,7 @@
+// React import required at runtime: this module is loaded by `tsx scripts/start-worker.ts`,
+// which uses esbuild's classic JSX transform — JSX compiles to `React.createElement(...)`,
+// so `React` must be in scope. Next.js's SWC uses the automatic runtime and would not need this.
+import React from 'react';
 import { Worker, type Job } from 'bullmq';
 import IORedis from 'ioredis';
 import { render } from '@react-email/render';
