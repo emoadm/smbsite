@@ -41,6 +41,9 @@ importers:
       '@tailwindcss/postcss':
         specifier: 4.2.4
         version: 4.2.4
+      '@types/pg':
+        specifier: ^8.20.0
+        version: 8.20.0
       '@upstash/ratelimit':
         specifier: 2.0.8
         version: 2.0.8(@upstash/redis@1.37.0)
@@ -80,6 +83,9 @@ importers:
       payload:
         specifier: 3.84.1
         version: 3.84.1(graphql@16.13.2)(typescript@5.7.3)
+      pg:
+        specifier: ^8.20.0
+        version: 8.20.0
       pino:
         specifier: 10.3.1
         version: 10.3.1
