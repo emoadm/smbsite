@@ -33,6 +33,9 @@ jobs:
       OTP_HMAC_KEY: ci-hmac-key-do-not-use-in-prod-32bytes!!
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
       TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA
+      # Placeholder so prebuild env validator (scripts/check-env.ts) passes — CookieYes
+      # script is fetched at runtime in browsers, never resolved during the build itself.
+      NEXT_PUBLIC_COOKIEYES_SITE_KEY: ci-cookieyes-placeholder-do-not-use
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
