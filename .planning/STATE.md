@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 1 code-shipping complete — operator warmup + sign-off pending (tracked in 01-DELIVERABILITY-CHECKLIST.md)
-last_updated: "2026-05-02T11:30:00.000Z"
-last_activity: 2026-05-02 -- Quick task 260502-jo0 complete (deploy hardening: prebuild env validator + post-deploy smoke gate + dropped unused input-otp)
+last_updated: "2026-05-02T13:42:00.000Z"
+last_activity: 2026-05-02 -- Quick task 260502-lhc complete-with-caveat (CI webServer regression fixed: 0/21 → 14/22 passing; surfaced 7 pre-existing app failures tracked as D-CI-app-failures for /gsd-debug). DKIM checklist row corrected.
 progress:
   total_phases: 6
   completed_phases: 0
@@ -86,6 +86,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260502-jo0 | deploy hardening: prebuild env validator, post-deploy smoke gate, drop unused input-otp | 2026-05-02 | be98b62 | [260502-jo0-deploy-hardening-prebuild-env-validator-](./quick/260502-jo0-deploy-hardening-prebuild-env-validator-/) |
+| 260502-lhc | CI webServer regression fix + DKIM mail2 checklist correction (complete-with-caveat: surfaced D-CI-app-failures) | 2026-05-02 | a5d47af | [260502-lhc-fix-ci-webserver-regression-correct-news](./quick/260502-lhc-fix-ci-webserver-regression-correct-news/) |
 
 ## Deferred Items
 
@@ -95,9 +96,11 @@ None yet.
 | ops | Cloudflare WAF custom rule `(not ip.src in $cloudflare_ip_ranges) and (http.host eq "chastnik.eu")` (free-plan limitation on `$cloudflare_ip_ranges`) | resolves_phase: 2 | Plan 01-13 |
 | ops | Payload `loadEnv.js` patch-package fix for `payload migrate` CLI (payload@3.84 + next@15.3 incompat) | resolves_phase: 2 | Plan 01-13 |
 | ops | Operator-side: Postmaster Tools enrollment, 4-week warmup ladder execution, restore dry-run, first nightly backup verification, final Phase 1 sign-off signature | tracked in 01-DELIVERABILITY-CHECKLIST.md | Plan 01-13 |
+| ops | `D-Phase5-prep` — `mail2._domainkey.news.chastnik.eu` CNAME not yet added in Cloudflare DNS (must add before Phase 5 first newsletter send; news.* is Phase 5 sender, Phase 1 transactional path uses auth.*) | resolves_phase: 5 | Quick 260502-lhc |
+| qa | `D-CI-app-failures` — 7 Playwright specs fail on a5d47af with real assertions (registration/login redirect, AUTH-08 Turnstile widget, SC-5 root render, BRAND-02/03/06, D-15 draft marker). Hypotheses: H1 NEXT_PUBLIC_TURNSTILE_SITE_KEY not in CI bundle, H2 NEXT_PUBLIC_COOKIEYES_SITE_KEY placeholder breaks hydration, H3 Server Actions throw on placeholder env. **BLOCKING** Phase 1 sign-off Section H. Resolve via `/gsd-debug` (single root cause likely → single fix). | resolves_phase: 1 | Quick 260502-lhc |
 
 ## Session Continuity
 
-Last session: 2026-05-01
-Stopped at: Plan 01-13 complete — Phase 1 code-shipping complete; operator warmup + sign-off pending in 01-DELIVERABILITY-CHECKLIST.md
-Resume file: .planning/phases/01-foundation/01-13-SUMMARY.md (per-task commits + verification gates)
+Last session: 2026-05-02
+Stopped at: Quick task 260502-lhc complete-with-caveat — webServer fix landed (CI now boots server: 14/22 passing vs 0/21 before), DKIM checklist corrected. Surfaced D-CI-app-failures blocking first-time-green CI on main (Phase 1 sign-off prerequisite).
+Resume file: .planning/quick/260502-lhc-fix-ci-webserver-regression-correct-news/260502-lhc-SUMMARY.md (frontmatter `deferred[1]` carries H1/H2/H3 hypotheses for /gsd-debug entry point)
