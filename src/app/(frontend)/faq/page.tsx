@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const tSite = await getTranslations('site');
   return {
     title: `${t('title')} — ${tSite('brandName')}`,
-    description: 'Как работи общността, какво следва от регистрацията и как се гласува.',
+    description: t('metadataDescription'),
     alternates: { canonical: '/faq' },
     openGraph: {
       type: 'website',
