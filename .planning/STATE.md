@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 1 code-shipping complete — operator warmup + sign-off pending (tracked in 01-DELIVERABILITY-CHECKLIST.md)
-last_updated: "2026-05-01T17:40:00.000Z"
-last_activity: 2026-05-01 -- Plan 01-13 complete (deliverability checklist + warmup log skeleton + Phase 1 sign-off authority)
+last_updated: "2026-05-02T11:30:00.000Z"
+last_activity: 2026-05-02 -- Quick task 260502-jo0 complete (deploy hardening: prebuild env validator + post-deploy smoke gate + dropped unused input-otp)
 progress:
   total_phases: 6
   completed_phases: 0
@@ -80,6 +80,12 @@ None yet.
 - **Phase 1 dependency**: Coalition must confirm email sender domain before Phase 1 completes so warm-up starts on time (must be 4+ weeks before QR mail drop).
 - **Open decisions**: Name visibility on votes/proposals (decision required before Phase 3) — still open; MSB status verification approach — RESOLVED in Phase 1 CONTEXT.md (no BULSTAT in v1; sector + role dropdowns serve as soft self-identification).
 - **Phase 1 plan-check warnings (non-blocking)**: N-1 anonymous cookie-consent persistence deferred to Phase 6 schema migration (CookieYes first-party cookie satisfies D-20 in interim); N-2 stale "Note on Auth.js signIn" paragraph in plan 07 line 505 (verify command makes it harmless). See `.planning/phases/01-foundation/01-PLAN-CHECK.md` § 2.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260502-jo0 | deploy hardening: prebuild env validator, post-deploy smoke gate, drop unused input-otp | 2026-05-02 | be98b62 | [260502-jo0-deploy-hardening-prebuild-env-validator-](./quick/260502-jo0-deploy-hardening-prebuild-env-validator-/) |
 
 ## Deferred Items
 
