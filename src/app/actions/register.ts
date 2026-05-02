@@ -45,24 +45,10 @@ export async function register(
   _prevState: ActionState | null,
   formData: FormData,
 ): Promise<ActionState> {
-  try {
-    return await registerInner(_prevState, formData);
-  } catch (err) {
-    console.error('[register-action] uncaught', err);
-    throw err;
-  }
-}
-
-async function registerInner(
-  _prevState: ActionState | null,
-  formData: FormData,
-): Promise<ActionState> {
-  console.error('[register-action] enter');
   if (isHoneypotTriggered(formData.get(HONEYPOT_FIELD))) {
     return { ok: true, nextHref: '/auth/otp' };
   }
   const stampStatus = checkFormStamp(formData.get('formStamp')?.toString());
-  console.error('[register-action] stampStatus', stampStatus);
   if (stampStatus !== 'ok') return { ok: true, nextHref: '/auth/otp' };
 
   const h = await headers();
@@ -81,18 +67,12 @@ async function registerInner(
   const raw = Object.fromEntries(formData.entries());
   const parsed = RegistrationSchema.safeParse(raw);
   if (!parsed.success) {
-    console.error('[register-action] schema parse failed', parsed.error.flatten().fieldErrors);
     return { ok: false, fieldErrors: parsed.error.flatten().fieldErrors };
   }
   const data = parsed.data;
-  console.error('[register-action] schema ok, calling verifyTurnstile');
 
   const tr = await verifyTurnstile(data['cf-turnstile-response'], ip ?? undefined);
-  if (!tr.ok) {
-    console.error('[register-action] turnstile fail', tr);
-    return { ok: false, error: 'auth.register.captchaFailed' };
-  }
-  console.error('[register-action] turnstile ok, calling db.select');
+  if (!tr.ok) return { ok: false, error: 'auth.register.captchaFailed' };
 
   const existing = await db
     .select({ id: users.id })
@@ -103,7 +83,6 @@ async function registerInner(
     return { ok: true, nextHref: '/auth/otp' };
   }
 
-  console.error('[register-action] db.select ok, beginning insert transaction');
   await db.transaction(async (tx) => {
     const inserted = await tx
       .insert(users)
@@ -139,10 +118,8 @@ async function registerInner(
     ]);
   });
 
-  console.error('[register-action] insert tx done, calling persistHashedOtp');
   const code = generateOtpCode();
   await persistHashedOtp(data.email, code, 'register');
-  console.error('[register-action] persistHashedOtp done, calling addEmailJob');
   await addEmailJob({
     to: data.email,
     kind: 'register-otp',
@@ -151,6 +128,5 @@ async function registerInner(
     fullName: data.full_name,
   });
 
-  console.error('[register-action] addEmailJob done, returning ok:true');
   return { ok: true, nextHref: `/auth/otp?email=${encodeURIComponent(data.email)}` };
 }
