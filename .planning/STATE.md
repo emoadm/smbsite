@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 code-shipping complete — operator warmup + sign-off pending (tracked in 01-DELIVERABILITY-CHECKLIST.md)
+stopped_at: Phase 2 (Public Surface Pre-Warmup) context gathered — ready for /gsd-plan-phase 2; 5 coalition external dependencies tracked in deferred items
 last_updated: "2026-05-02T19:35:00.000Z"
-last_activity: 2026-05-02 -- Quick task 260502-vau complete (Cause 4 of D-CI-app-failures: SSR Turnstile api.js eliminates AUTH-08 timing race; 3/3 anti-abuse specs green on first attempt with retries=0). D-CI-app-failures fully resolved and archived to .planning/debug/resolved/.
+last_activity: 2026-05-02 -- Phase 2 context gathered (4 areas discussed: structure/content, brand, /member, auth+legal). 02-CONTEXT.md + 02-DISCUSSION-LOG.md written. 5 coalition external dependencies surfaced. Ready for /gsd-plan-phase 2.
 progress:
   total_phases: 6
   completed_phases: 0
@@ -99,9 +99,15 @@ None yet.
 | ops | Payload `loadEnv.js` patch-package fix for `payload migrate` CLI (payload@3.84 + next@15.3 incompat) | resolves_phase: 2 | Plan 01-13 |
 | ops | Operator-side: Postmaster Tools enrollment, 4-week warmup ladder execution, restore dry-run, first nightly backup verification, final Phase 1 sign-off signature | tracked in 01-DELIVERABILITY-CHECKLIST.md | Plan 01-13 |
 | ops | `D-Phase5-prep` — `mail2._domainkey.news.chastnik.eu` CNAME not yet added in Cloudflare DNS (must add before Phase 5 first newsletter send; news.* is Phase 5 sender, Phase 1 transactional path uses auth.*) | resolves_phase: 5 | Quick 260502-lhc |
+| coalition | `D-CoalitionLogoSVG` — official high-res Sinya SVG logo asset. **BLOCKING** Phase 2 final ship. Phase 2 build can proceed with sinyabulgaria.bg live-site asset as placeholder. | resolves_phase: 2 | Phase 2 discuss |
+| coalition | `D-CoalitionContent-Hero` — hero headline + sub-headline copy (Bulgarian, formal-respectful). Coalition writes; Phase 2 ships with `[ТЕКСТ ОТ КОАЛИЦИЯ]` placeholder until delivered. | resolves_phase: 2 | Phase 2 discuss |
+| coalition | `D-CoalitionContent-Agenda` — entire `/agenda` page text (political program, vision, ~800-2000 words). Coalition writes; placeholder mechanism until delivered. | resolves_phase: 2 | Phase 2 discuss |
+| coalition | `D-CoalitionChannels` — WhatsApp Channel + Telegram channel creation + URLs to swap into `/member`. **BLOCKING warmup launch.** Coalition creates; quick task swaps in URLs once available. | resolves_phase: 2 | Phase 2 discuss |
+| coalition | `D-LawyerReviewLegal` — final lawyer-reviewed Privacy Policy + Terms of Use text. Coalition has NOT started review. **BLOCKING warmup launch** (in addition to existing Phase 1 sign-off gates). | resolves_phase: 2 | Phase 2 discuss |
 
 ## Session Continuity
 
 Last session: 2026-05-02
-Stopped at: Quick task 260502-vau complete — Cause 4 of D-CI-app-failures fixed (Turnstile api.js now SSR'd in /register Server Component, AUTH-08 passes first try with retries=0). Debug session archived to .planning/debug/resolved/d-ci-app-failures.md. All four causes now have resolution_commits recorded. CI on main green; Phase 1 wall-clock completion now gated only on operator-side warmup ladder + Section H sign-off in 01-DELIVERABILITY-CHECKLIST.md.
-Resume file: .planning/quick/260502-vau-fix-auth-08-turnstile-script-timing-race/260502-vau-SUMMARY.md
+Stopped at: Phase 2 context gathered. ROADMAP split: Phase 2 narrowed to "Public Surface (Pre-Warmup)" + Phase 2.1 inserted for "Attribution + Source Dashboard". Phase 2 CONTEXT.md captures 18 decisions (D-01..D-18) covering page structure, content authorship, hero media, FAQ scope, logo/palette/typography (Gilroy free + Roboto), /member welcome, auth-pages light rebrand, legal-text deferral. Five coalition external dependencies surfaced and tracked.
+Resume file: .planning/phases/02-public-surface-pre-warmup/02-CONTEXT.md
+Next command: /gsd-plan-phase 2
