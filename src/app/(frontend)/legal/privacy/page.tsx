@@ -16,9 +16,8 @@ export default async function PrivacyPolicyPage() {
           {tDraft('marker', { date: DRAFT_DATE })}
         </AlertDescription>
       </Alert>
-      <article className="prose prose-slate max-w-none text-base">
-        <p className="text-muted-foreground">{tDraft('marker', { date: DRAFT_DATE })}</p>
-      </article>
+      <article className="prose prose-slate max-w-none text-base" />
+
     </MainContainer>
   );
 }
