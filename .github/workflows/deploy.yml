@@ -57,3 +57,48 @@ jobs:
             --build-arg "NEXT_PUBLIC_COOKIEYES_SITE_KEY=${{ secrets.NEXT_PUBLIC_COOKIEYES_SITE_KEY }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      # Why GET (not HEAD) and why a 100-byte body floor:
+      #   The chastnik-eu-empty-page bug shipped a Next.js app that returned
+      #   200 + Content-Length: 0 — a HEAD probe would have green-lit it.
+      #   Working pages return 27k-58k bytes; a 100-byte floor cleanly
+      #   distinguishes "real HTML" from "empty Response", with no risk of
+      #   false negatives. Three retries × 10s sleep absorb rolling-deploy
+      #   readiness lag without masking a genuinely broken deploy.
+      #   See: .planning/debug/resolved/chastnik-eu-empty-page.md
+      #
+      # Why this step lives INSIDE the deploy job (not a separate `needs: deploy`
+      # job): there is no circular dependency on its own success — the step
+      # only runs because flyctl deploy returned exit 0, and a failure here
+      # fails the deploy job (and the workflow) loudly without needing an
+      # extra job-level gate.
+      - name: Post-deploy smoke (GET / /register /login, body > 100 bytes)
+        run: |
+          set -uo pipefail
+          BASE="https://chastnik.eu"
+          fail=0
+          for path in "/" "/register" "/login"; do
+            ok=0
+            for attempt in 1 2 3; do
+              out=$(curl -sS -o /tmp/body -w "%{http_code} %{size_download}" -L "${BASE}${path}" || echo "000 0")
+              code=${out%% *}
+              size=${out##* }
+              if [[ "$code" =~ ^(2|3)[0-9][0-9]$ ]] && [ "$size" -gt 100 ]; then
+                echo "OK ${path} (attempt ${attempt}): ${code} ${size}B"
+                ok=1
+                break
+              fi
+              echo "FAIL ${path} (attempt ${attempt}/3): code=${code} size=${size}B"
+              [ "$attempt" -lt 3 ] && sleep 10
+            done
+            if [ "$ok" -ne 1 ]; then
+              echo "::error::Smoke failed for ${path} after 3 attempts. Last body (first 500B):"
+              head -c 500 /tmp/body || true
+              echo
+              fail=1
+            fi
+          done
+          if [ "$fail" -ne 0 ]; then
+            exit 1
+          fi
+          echo "OK: post-deploy smoke gate passed (3 paths × ≤3 attempts)."
