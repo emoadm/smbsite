@@ -1,9 +1,23 @@
 # Phase 02 — Gilroy Free Webfont License Verification (A2)
 
 **Verified:** 2026-05-03
-**Status:** UNVERIFIED
+**Status:** UNVERIFIED — operator-accepted risk
 **Source repo:** https://github.com/repalash/gilroy-free-webfont
 **Repo metadata:** null (GitHub API `license` field returns `null`; no SPDX identifier set)
+
+## Operator Decision (2026-05-03)
+
+**Decision:** `a-gilroy-anyway` — ship Gilroy with explicit risk acceptance.
+
+**Rationale:** Coalition uses Gilroy free distribution in existing visual materials. Brand-fidelity continuity with sinyabulgaria.bg-era assets favors retaining Gilroy over swapping to a clean-licensed alternative. The visual identity argument outweighs the legal exposure for v1.
+
+**Risk acknowledged:** `repalash/gilroy-free-webfont` has no LICENSE file, no SPDX identifier, no commercial-use grant in readme; readme explicitly redirects to a commercial source (Tinkov / Monotype). If Tinkov or downstream rights-holders ever challenge use, mitigation is a one-CSS-variable swap to Manrope ExtraBold (OFL via Google Fonts) — the `--font-gilroy` token name is preserved in `globals.css` so the swap is mechanical.
+
+**Tracked as deferred item:** `D-GilroyLicenseRisk` — added to STATE.md by orchestrator. Revisit if challenge surfaces or if coalition obtains a paid Monotype/Tinkov license.
+
+**Continuation:** Plan 02-01 resumes at Task 02.01.1 STEP 2 (woff2 generation). License verification (STEP 1) is RESOLVED by this decision; no further investigation needed.
+
+---
 
 ## Evidence
 

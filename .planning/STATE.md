@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 plans complete (9 plans across 6 waves, 0 blockers, 4 warnings + 2 recommendations addressed via 1 revision pass) — ready for /gsd-execute-phase 2
+stopped_at: Phase 2 EXECUTING — Wave 1 in flight (02-01 Gilroy/tokens + 02-02 bg.json scaffolding running in parallel worktrees)
 last_updated: "2026-05-03T01:00:00.000Z"
 last_activity: 2026-05-03 -- Phase 2 plans created and verified. RESEARCH (1086 lines, bf826dc) + PATTERNS (26 files mapped) + 9 PLAN.md files + standalone 02-VALIDATION.md. Plan-checker: 0 blockers; revision pass fixed sleep-8 flakiness (02-04/05/06), Task 02.04.5 type misclassification, cf-ray threat model wording, RESOLVED markers in RESEARCH, extracted VALIDATION. New deferred item: D-CloudflareIPAllowlist (post-warmup hardening).
 progress:
@@ -105,6 +105,7 @@ None yet.
 | coalition | `D-CoalitionChannels` — WhatsApp Channel + Telegram channel creation + URLs to swap into `/member`. **BLOCKING warmup launch.** Coalition creates; quick task swaps in URLs once available. | resolves_phase: 2 | Phase 2 discuss |
 | coalition | `D-LawyerReviewLegal` — final lawyer-reviewed Privacy Policy + Terms of Use text. Coalition has NOT started review. **BLOCKING warmup launch** (in addition to existing Phase 1 sign-off gates). | resolves_phase: 2 | Phase 2 discuss |
 | ops | `D-CloudflareIPAllowlist` — configure Fly.io `internal_port` allow-list to accept only Cloudflare IP ranges (true network-layer auth boundary). Phase 2 middleware checks `cf-ray` as a soft signal only — header is plain HTTP and trivially spoofable by an attacker who discovers the origin IP. | resolves_phase: post-warmup-hardening | Plan 02-07 |
+| legal | `D-GilroyLicenseRisk` — operator-accepted IP exposure on Gilroy webfont (repalash/gilroy-free-webfont has no LICENSE file, no commercial-use grant; readme redirects to Tinkov commercial source). Mitigation = mechanical swap to Manrope ExtraBold (OFL) preserving `--font-gilroy` CSS variable name. Revisit if challenged or if coalition obtains paid license. | resolves_phase: post-warmup-hardening | Plan 02-01 / Wave 1 license checkpoint |
 
 ## Session Continuity
 
