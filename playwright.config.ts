@@ -31,12 +31,14 @@ export default defineConfig({
       use: { ...devices['Pixel 5'], viewport: { width: 360, height: 740 } },
     },
   ],
-  webServer: process.env.CI
-    ? undefined // CI starts the server explicitly before invoking playwright
-    : {
-        command: 'pnpm dev',
-        url: 'http://localhost:3000',
-        reuseExistingServer: true,
-        timeout: 60_000,
-      },
+  // Always boot a local server. In CI, `pnpm build` has already produced `.next/` so `pnpm start`
+  // is the production-equivalent boot; locally `pnpm dev` keeps HMR. All required env vars
+  // (`DATABASE_URL`, `AUTH_SECRET`, `OTP_HMAC_KEY`, Turnstile keys, etc.) are inherited from
+  // the GitHub Actions job-level `env:` block.
+  webServer: {
+    command: process.env.CI ? 'pnpm start' : 'pnpm dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
 });
