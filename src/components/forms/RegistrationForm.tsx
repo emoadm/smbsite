@@ -25,6 +25,7 @@ export function RegistrationForm({ formStamp }: { formStamp: string }) {
   const t = useTranslations('auth.register');
   const tSectors = useTranslations('auth.register.sectors');
   const tRoles = useTranslations('auth.register.roles');
+  const tSource = useTranslations('auth.register.source');
   const [state, formAction, pending] = useActionState(register, initialState);
   const router = useRouter();
   // H-4: track Turnstile readiness so we can disable Submit until the token is present and
@@ -32,6 +33,7 @@ export function RegistrationForm({ formStamp }: { formStamp: string }) {
   const [turnstileStatus, setTurnstileStatus] = useState<'loading' | 'ready' | 'error'>(
     'loading',
   );
+  const [sourceValue, setSourceValue] = useState<string>('');
 
   useEffect(() => {
     if (state.ok && state.nextHref) router.push(state.nextHref);
@@ -114,6 +116,40 @@ export function RegistrationForm({ formStamp }: { formStamp: string }) {
             <SelectItem value="other">{tRoles('other')}</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="self_reported_source">{tSource('label')}</Label>
+        <Select name="self_reported_source" required onValueChange={setSourceValue}>
+          <SelectTrigger id="self_reported_source">
+            <SelectValue placeholder={tSource('placeholder')} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="qr_letter">{tSource('qr_letter')}</SelectItem>
+            <SelectItem value="email_coalition">{tSource('email_coalition')}</SelectItem>
+            <SelectItem value="sinya_site">{tSource('sinya_site')}</SelectItem>
+            <SelectItem value="facebook">{tSource('facebook')}</SelectItem>
+            <SelectItem value="linkedin">{tSource('linkedin')}</SelectItem>
+            <SelectItem value="referral">{tSource('referral')}</SelectItem>
+            <SelectItem value="news_media">{tSource('news_media')}</SelectItem>
+            <SelectItem value="other">{tSource('other')}</SelectItem>
+          </SelectContent>
+        </Select>
+        {sourceValue === 'other' && (
+          <div className="flex flex-col gap-1">
+            <Input
+              id="self_reported_other"
+              name="self_reported_other"
+              type="text"
+              maxLength={300}
+              placeholder={tSource('otherPlaceholder')}
+              aria-describedby="self_reported_other_help"
+            />
+            <p id="self_reported_other_help" className="text-sm text-muted-foreground">
+              {tSource('otherMaxLengthHelp')}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* D-12: 4 consent checkboxes — none pre-ticked. Privacy/terms uses next-intl rich-text
