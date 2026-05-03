@@ -19,7 +19,7 @@ export default buildConfig({
     components: {
       views: {
         attribution: {
-          Component: '/src/app/(payload)/admin/views/attribution/page#AttributionView',
+          Component: '/src/app/(payload)/admin/views/attribution/AttributionView#AttributionView',
           path: '/views/attribution',
         },
       },
