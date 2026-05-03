@@ -57,4 +57,9 @@ describe('OPS-03 — pino logger redacts PII (D-21)', () => {
     const src = readFileSync('src/lib/logger.ts', 'utf8');
     for (const k of REDACT_LIST) expect(src).toContain(`'${k}'`);
   });
+
+  it('REDACT array includes raw_ip (Phase 2.1 D-19 belt-and-braces)', () => {
+    const src = readFileSync('src/lib/logger.ts', 'utf8');
+    expect(src).toMatch(/'raw_ip'/);
+  });
 });
