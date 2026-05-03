@@ -7,7 +7,14 @@ const upstashUrl = process.env.UPSTASH_REDIS_REST_URL ?? '';
 // Production sets a real Upstash URL, so this evaluates to false there.
 // AUTH-09 spec is the dedicated rate-limit gate — bypassing here keeps unrelated
 // auth specs from depending on a Redis service container in CI.
-const BYPASS = !upstashUrl || upstashUrl.startsWith('http://localhost') || upstashUrl.startsWith('http://127.');
+// Staging-only bypass for OPS-05 load tests. The k6 attribution-load.js
+// scenario hits a single fixture user thousands of times; per-key limits are
+// designed for real users (one budget per email/IP), not load-test reuse.
+// NEVER set on production — runtime check below also asserts NODE_ENV.
+const STAGING_BYPASS =
+  process.env.LOAD_TEST_BYPASS_RATE_LIMIT === 'true' &&
+  process.env.AUTH_URL?.includes('staging.');
+const BYPASS = !upstashUrl || upstashUrl.startsWith('http://localhost') || upstashUrl.startsWith('http://127.') || STAGING_BYPASS;
 
 const redis = new Redis({
   url: upstashUrl || 'https://placeholder.invalid',

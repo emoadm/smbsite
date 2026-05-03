@@ -163,29 +163,45 @@ export function registerHit() {
 // attribution_events.user_id linkage UPDATE actually fires. To guarantee
 // attr_sid is present in the jar, this exec function fires landing + attr_init
 // FIRST, then dispatches the verify-otp Server Action.
+
+// React Server Action multipart wire format (verified against staging
+// 2026-05-03 via Playwright capture). Plain form-encoded POSTs hit the route
+// but don't dispatch the action — Next returns 404 for URL-encoded and 500
+// for plain multipart without the React envelope. Each iteration generates
+// its own boundary so simultaneous VUs don't collide.
+function buildOtpVerifyBody(email, code, actionId) {
+  const boundary = '----k6FormBoundary' + Math.random().toString(36).slice(2, 18);
+  const part = (name, value) =>
+    `--${boundary}\r\nContent-Disposition: form-data; name="${name}"\r\n\r\n${value}\r\n`;
+  const body =
+    part('1_$ACTION_REF_2', '') +
+    part('1_$ACTION_2:0', JSON.stringify({ id: actionId, bound: '$@1' })) +
+    part('1_$ACTION_2:1', '[{"ok":false}]') +
+    part('1_$ACTION_KEY', 'k' + Math.floor(Math.random() * 1e10)) +
+    part('1_email', email) +
+    part('1_code', code) +
+    part('0', '[{"ok":false},"$K1"]') +
+    `--${boundary}--\r\n`;
+  return { body, contentType: `multipart/form-data; boundary=${boundary}` };
+}
+
 export function otpVerifyHit() {
   // Prime the cookie jar so attr_sid exists before the OTP submit
   http.get(`${BASE_URL}/${utmQuery}`, { tags: { name: 'landing_hit' } });
   http.get(`${BASE_URL}/api/attr/init${utmQuery}&path=%2F`, { tags: { name: 'attr_init' } });
 
-  // Submit the OTP. Two transport options depending on what the OtpForm wires:
-  //   (A) Plain <form action="/auth/otp" method="post"> → form-encoded POST works as-is.
-  //   (B) React Server Action via the `Next-Action` header → operator pastes
-  //       NEXT_ACTION_ID_OTP from DevTools Network tab capture.
-  // We attempt (A); if staging returns 200 with no Set-Cookie session-token
-  // header, switch to (B) by setting NEXT_ACTION_ID_OTP env.
-  const headers = {};
-  if (NEXT_ACTION_ID_OTP && NEXT_ACTION_ID_OTP !== 'OPERATOR_FILL_FROM_DEVTOOLS') {
-    headers['Next-Action'] = NEXT_ACTION_ID_OTP;
+  if (!NEXT_ACTION_ID_OTP || NEXT_ACTION_ID_OTP === 'OPERATOR_FILL_FROM_DEVTOOLS') {
+    throw new Error('NEXT_ACTION_ID_OTP env required for D-16 leg — capture from staging /auth/otp DevTools Network tab.');
   }
-  const res = http.post(
-    `${BASE_URL}/auth/otp`,
-    {
-      email: STAGING_TEST_EMAIL,
-      code: STAGING_TEST_OTP,
+
+  const { body, contentType } = buildOtpVerifyBody(STAGING_TEST_EMAIL, STAGING_TEST_OTP, NEXT_ACTION_ID_OTP);
+  const res = http.post(`${BASE_URL}/auth/otp?email=${encodeURIComponent(STAGING_TEST_EMAIL)}`, body, {
+    tags: { name: 'otp_verify' },
+    headers: {
+      'Next-Action': NEXT_ACTION_ID_OTP,
+      'Content-Type': contentType,
     },
-    { tags: { name: 'otp_verify' }, headers },
-  );
+  });
   check(res, {
     'otp_verify 200/302': (r) => r.status === 200 || r.status === 302,
   });
