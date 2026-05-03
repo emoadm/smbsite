@@ -8,6 +8,7 @@ const REDACT = [
   'cf-connecting-ip',
   'name',
   'full_name',
+  'raw_ip', // Phase 2.1 D-19 / D-21 belt-and-braces — see src/lib/attribution/worker.ts
 ];
 
 function buildOptions(): LoggerOptions {
