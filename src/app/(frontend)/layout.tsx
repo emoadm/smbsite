@@ -4,6 +4,7 @@ import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CookieBanner } from '@/components/layout/CookieBanner';
+import { AttrInit } from '@/components/attribution/AttrInit';
 import '@/styles/globals.css';
 
 export async function generateMetadata() {
@@ -33,6 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main id="main-content" className="min-h-[calc(100vh-14rem)]">{children}</main>
           <Footer />
           <CookieBanner />
+          <AttrInit />
         </NextIntlClientProvider>
       </body>
     </html>
