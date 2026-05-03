@@ -16,6 +16,19 @@ import { checkFormStamp, isHoneypotTriggered, HONEYPOT_FIELD } from '@/lib/forms
 
 const SectorEnum = z.enum(['it', 'trade', 'production', 'services', 'other']);
 const RoleEnum = z.enum(['owner', 'manager', 'employee', 'other']);
+// Phase 2.1 D-09 / D-10 / ATTR-06 — 8 locked Bulgarian dropdown options.
+// Internal values are English snake_case; display labels live in
+// messages/bg.json#auth.register.source.* (Plan 03).
+const SelfReportedSourceEnum = z.enum([
+  'qr_letter',
+  'email_coalition',
+  'sinya_site',
+  'facebook',
+  'linkedin',
+  'referral',
+  'news_media',
+  'other',
+]);
 
 const RegistrationSchema = z.object({
   full_name: z.string().min(2).max(120),
@@ -27,6 +40,9 @@ const RegistrationSchema = z.object({
     .refine((e) => !isDisposable(e), { message: 'auth.register.invalidEmail' }),
   sector: SectorEnum,
   role: RoleEnum,
+  // Phase 2.1 D-11 / ATTR-06
+  self_reported_source: SelfReportedSourceEnum,
+  self_reported_other: z.string().max(300).optional(),
   consent_privacy_terms: z.literal('on'),
   consent_cookies: z.literal('on'),
   consent_newsletter: z.union([z.literal('on'), z.literal('')]).optional(),
@@ -92,6 +108,9 @@ export async function register(
         full_name: data.full_name,
         sector: data.sector,
         role: data.role,
+        // Phase 2.1 D-11
+        self_reported_source: data.self_reported_source,
+        self_reported_other: data.self_reported_other ?? null,
       })
       .returning({ id: users.id });
     const userId = inserted[0]!.id;
