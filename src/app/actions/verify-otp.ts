@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 import { and, eq, gt } from 'drizzle-orm';
 import { z } from '@/lib/zod-i18n';
 import { db } from '@/db';
-import { users, verificationTokens, sessions } from '@/db/schema';
+import { users, verificationTokens, sessions, attribution_events } from '@/db/schema';
 import { hashOtp, verifyOtpHash, MAX_OTP_VERIFY_ATTEMPTS } from '@/lib/auth-utils';
 import { checkOtpVerify } from '@/lib/rate-limit';
 
@@ -90,6 +90,24 @@ export async function verifyOtp(
   await db.insert(sessions).values({ sessionToken, userId, expires: sessionExpires });
 
   const cookieJar = await cookies();
+
+  // Phase 2.1 D-07 / ATTR-05: link the anonymous attribution session to the
+  // now-confirmed user. The /api/attr/init endpoint set attr_sid on the
+  // visitor's first landing-page hit; here we attach it to user_id so the
+  // dashboard can join attribution_events ↔ users by user_id.
+  // Silent on miss: (a) visitor may have registered without ever hitting the
+  // landing page first (direct registration link), in which case no attr_sid
+  // cookie exists; (b) worker may not yet have INSERTed the row (eventual
+  // consistency — the attribution job is fire-and-forget). Both cases are
+  // acceptable; the user simply has no attribution row linked.
+  const attrSid = cookieJar.get('attr_sid')?.value ?? null;
+  if (attrSid) {
+    await db
+      .update(attribution_events)
+      .set({ user_id: userId })
+      .where(eq(attribution_events.attr_sid, attrSid));
+  }
+
   cookieJar.set('__Secure-next-auth.session-token', sessionToken, {
     httpOnly: true,
     sameSite: 'lax',
