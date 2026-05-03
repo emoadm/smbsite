@@ -1,6 +1,15 @@
 import { test, expect } from '@playwright/test';
 
-const ROUTES = ['/register', '/login', '/auth/otp', '/legal/privacy', '/legal/terms'];
+const ROUTES = [
+  '/', // NEW Phase 2
+  '/agenda', // NEW Phase 2
+  '/faq', // NEW Phase 2
+  '/register',
+  '/login',
+  '/auth/otp',
+  '/legal/privacy',
+  '/legal/terms',
+];
 
 /** Runs against each viewport project (375, 360, 768, 1440) defined in playwright.config.ts. */
 test.describe('PUB-06 — no horizontal scroll', () => {
