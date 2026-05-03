@@ -15,6 +15,9 @@ export const users = pgTable(
     full_name: text('full_name').notNull(),
     sector: text('sector').notNull(), // D-09
     role: text('role').notNull(), // D-10
+    // Phase 2.1 attribution extensions (D-11, ATTR-06)
+    self_reported_source: text('self_reported_source'), // qr_letter | email_coalition | sinya_site | facebook | linkedin | referral | news_media | other
+    self_reported_other: text('self_reported_other'), // nullable — populated only when self_reported_source = 'other'
     created_at: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     // Forward-compat for Phase 3 cooling period (D-04 / IDEA-07)
     email_verified_at: timestamp('email_verified_at', { mode: 'date', withTimezone: true }),
