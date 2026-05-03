@@ -104,10 +104,17 @@ Plans:
   4. Attribution writes are non-blocking on the request path (fire-and-forget or queued) so they cannot slow public-page TTFB
   5. GDPR data subject access export includes the user's attribution row; account deletion cascades remove it
 
-**Plans**: TBD
+**Plans**: 8 plans
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 02.1 to break down)
+- [ ] 02.1-01-PLAN.md — Drizzle schema (attribution_events table + users.self_reported_* additions) + schema-invariant grep test + drizzle-kit push to Neon (ATTR-02, ATTR-03..06, GDPR-09)
+- [ ] 02.1-02-PLAN.md — MaxMind GeoLite2 wrapper (lookupIp + OBLAST_NAMES) + Dockerfile mmdb download via Fly build-secret + CLAUDE.md ipapi.co footnote (ATTR-02)
+- [ ] 02.1-03-PLAN.md — Bulgarian copy in messages/bg.json: auth.register.source (8 D-10 enum labels) + attribution.dashboard namespace + tone-check tests (ATTR-06, ATTR-07)
+- [ ] 02.1-04-PLAN.md — BullMQ attribution producer + worker (mirrors email queue pattern) + scripts/start-worker.ts dual-worker registration + Pino redact extension (ATTR-01..04)
+- [ ] 02.1-05-PLAN.md — /api/attr/init Node-runtime endpoint (cookie set + UTM extract + fire-and-forget enqueue) + <AttrInit/> client mount in frontend layout (ATTR-01, ATTR-03..05)
+- [ ] 02.1-06-PLAN.md — register Server Action Zod enum + INSERT extension; verify-otp attr_sid → user_id linkage; RegistrationForm dropdown + conditional Други input + e2e (ATTR-05, ATTR-06)
+- [ ] 02.1-07-PLAN.md — Payload custom view at /admin/views/attribution: RSC role gate + Server Action aggregates + client dashboard (filters + tables + bar list + CSV) + payload.config.ts registration (ATTR-07)
+- [ ] 02.1-08-PLAN.md — k6 load-test scenario + Hetzner runner runbook + LOAD-TEST.md sign-off (BLOCKING) + STATE.md deferred items update (OPS-05)
 
 **UI hint**: yes
 
