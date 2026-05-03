@@ -194,6 +194,57 @@ curl -sI -H "Host: chastnik.eu" "http://${FLY_HOST}/"
 
 **CAVEAT (T-02-07-5):** the cf-ray check is a CASUAL-PROBE gate only. A determined attacker who sets `cf-ray: anything` in their direct-origin HTTP request will bypass the middleware. The strong network-layer authentication boundary (Cloudflare-IP allow-list on Fly.io's `internal_port`) is tracked under `D-CloudflareIPAllowlist` in STATE.md as a post-warmup hardening task. Until that lands, rely on (a) origin-IP obscurity and (b) Fly.io's default network ACL.
 
-## 3. (Reserved) — additional Phase 2 ops procedures
+## 3. Phase 2 launch-readiness checklist
 
-See plan 02-09 for footer cookie-settings link wiring + favicon refresh.
+Run BEFORE flipping warmup launch DNS or sending the first batch of warmup invitations. This is the operational gate between code-shipping-complete and visitors-arrive.
+
+### 3.1 Code + tests green
+
+- [ ] `pnpm typecheck && pnpm lint && pnpm build` exits 0
+- [ ] `pnpm exec playwright test --project=chromium-desktop` passes
+- [ ] `pnpm exec vitest run` passes
+- [ ] Lighthouse CI workflow shows green on the most recent main-branch deploy
+- [ ] `pnpm lint:tokens` exits 0 (UI-SPEC review_flag #1 — text-6xl bound by Hero.tsx)
+- [ ] `pnpm lint:i18n` exits 0 (no hardcoded Cyrillic in src/)
+
+### 3.2 Coalition deliverables (deferred items resolved)
+
+- [ ] **D-CoalitionLogoSVG** — high-res Sinya SVG dropped at `public/logo-placeholder.svg` (or new path) and referenced by Header + Footer
+- [ ] **D-CoalitionContent-Hero** — `landing.hero.headline` + `landing.hero.subheadline` no longer say `[ТЕКСТ ОТ КОАЛИЦИЯ]`
+- [ ] **D-CoalitionContent-Agenda** — `agenda.body` no longer says `[ТЕКСТ ОТ КОАЛИЦИЯ]`; agenda Alert removed (or kept if still in flux)
+- [ ] **D-CoalitionChannels** — WhatsApp Channel + Telegram URLs swapped into Footer's "Канали" column AND `/member` welcome timeline copy
+- [ ] **D-LawyerReviewLegal** — `/legal/privacy` + `/legal/terms` body content updated to lawyer-reviewed text; draft Alert removed
+- [ ] `pnpm check:placeholders` exits 0 (no `[ТЕКСТ ОТ КОАЛИЦИЯ]` remain)
+
+### 3.3 Infrastructure live
+
+- [ ] CookieYes dashboard configured per §1 (Bulgarian copy matches bg.json)
+- [ ] Cloudflare Cache Rules configured per §2 (cookie-vary'd anonymous cache)
+- [ ] Production smoke: `curl -sI https://chastnik.eu/ | grep cf-cache-status` returns HIT for second request
+- [ ] OG card preview on https://www.opengraph.xyz/?url=https://chastnik.eu/ shows Sinya branding
+- [ ] Favicon visible in browser tab on https://chastnik.eu/
+
+### 3.4 GDPR sign-off (Phase 2 scope only)
+
+- [ ] Privacy Policy + Terms of Use are live and readable in Bulgarian (lawyer-final per §3.2)
+- [ ] Cookie banner appears on first visit (incognito test)
+- [ ] Cookie banner offers granular Accept All / Reject All / Customize buttons
+- [ ] Plausible Analytics description explicitly states "без бисквитки"
+- [ ] /api/cookie-consent audit log captures decisions (verified in Phase 1)
+- [ ] Footer "Настройки за бисквитки" link reopens CookieYes banner via `window.revisitCkyConsent()` (UI-SPEC §9.2; plan 02-09 Task 02.09.3)
+
+### 3.5 UI-SPEC review_flag closure
+
+- [ ] **review_flag #1** — `pnpm lint:tokens` green (text-6xl bound by Hero.tsx)
+- [ ] **review_flag #2** — `pnpm exec playwright test tests/e2e/legal-visual-regression.spec.ts` green (--color-destructive #DC2626, --color-success #059669, --color-primary #004A79)
+- [ ] **review_flag #3** — operator clicks hero "Виж идеята" → `#vision` anchor; VisionSection h2 visible BELOW sticky header (NOT clipped). If clipped, bump `scroll-padding-top` in `src/styles/globals.css` from 5rem to 6rem and retest.
+- [ ] **review_flag #4** — CookieYes dashboard copy matches `messages/bg.json` `cookieBanner.*` keys (re-verify per §1.6 drift-prevention checklist)
+
+### 3.6 Sign-off
+
+Operator initials + date below indicate Phase 2 is cleared for warmup invitations:
+
+- Code-shipping sign-off: ___________ / __________
+- Coalition sign-off:     ___________ / __________
+- Final launch:           ___________ / __________
+
