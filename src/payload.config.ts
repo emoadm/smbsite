@@ -14,6 +14,16 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    // Phase 2.1 ATTR-07 / D-12 / D-13: custom attribution dashboard view.
+    // Payload's importMap auto-resolves the Component path at admin shell init.
+    components: {
+      views: {
+        attribution: {
+          Component: '/src/app/(payload)/admin/views/attribution/page#AttributionView',
+          path: '/views/attribution',
+        },
+      },
+    },
   },
   collections: [Users],
   editor: lexicalEditor(),
