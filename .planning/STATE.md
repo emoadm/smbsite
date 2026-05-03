@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 EXECUTING — Waves 1-3 ✓ done (02-01..02-06); 02-04 Task 02.04.5 resolved via Path A (PUB-02 origin cache deferred to 02-07 Cloudflare rules per RESEARCH §1 design); kicking off Wave 4 (02-07 middleware + cache + OG)
+stopped_at: Phase 2 EXECUTING — Waves 1-4 ✓ done (02-01..02-07); D-CloudflareWAF Phase 1 deferred item RESOLVED via 02-07 strict-Edge middleware; new deferred items D-CoalitionFaviconSet, D-CookieVaryCacheRule, D-CFPurgeOnDeploy; kicking off Wave 5 (02-08 E2E + Lighthouse)
 last_updated: "2026-05-03T01:00:00.000Z"
 last_activity: 2026-05-03 -- Phase 2 plans created and verified. RESEARCH (1086 lines, bf826dc) + PATTERNS (26 files mapped) + 9 PLAN.md files + standalone 02-VALIDATION.md. Plan-checker: 0 blockers; revision pass fixed sleep-8 flakiness (02-04/05/06), Task 02.04.5 type misclassification, cf-ray threat model wording, RESOLVED markers in RESEARCH, extracted VALIDATION. New deferred item: D-CloudflareIPAllowlist (post-warmup hardening).
 progress:
@@ -95,7 +95,7 @@ None yet.
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
 | ops | GitHub `production` environment required-reviewer protection (free-plan limitation) | resolves_phase: 3 | Plan 01-13 |
-| ops | Cloudflare WAF custom rule `(not ip.src in $cloudflare_ip_ranges) and (http.host eq "chastnik.eu")` (free-plan limitation on `$cloudflare_ip_ranges`) | resolves_phase: 2 | Plan 01-13 |
+| ops | ~~Cloudflare WAF custom rule~~ — RESOLVED via Plan 02-07 strict-Edge `src/middleware.ts` (cf-ray casual-probe gate, S5 pattern). Hard auth boundary tracked separately as `D-CloudflareIPAllowlist` (post-warmup-hardening). | resolved: Plan 02-07 (cebd636) | Plan 01-13 |
 | ops | Payload `loadEnv.js` patch-package fix for `payload migrate` CLI (payload@3.84 + next@15.3 incompat) | resolves_phase: 2 | Plan 01-13 |
 | ops | Operator-side: Postmaster Tools enrollment, 4-week warmup ladder execution, restore dry-run, first nightly backup verification, final Phase 1 sign-off signature | tracked in 01-DELIVERABILITY-CHECKLIST.md | Plan 01-13 |
 | ops | `D-Phase5-prep` — `mail2._domainkey.news.chastnik.eu` CNAME not yet added in Cloudflare DNS (must add before Phase 5 first newsletter send; news.* is Phase 5 sender, Phase 1 transactional path uses auth.*) | resolves_phase: 5 | Quick 260502-lhc |
@@ -106,6 +106,9 @@ None yet.
 | coalition | `D-LawyerReviewLegal` — final lawyer-reviewed Privacy Policy + Terms of Use text. Coalition has NOT started review. **BLOCKING warmup launch** (in addition to existing Phase 1 sign-off gates). | resolves_phase: 2 | Phase 2 discuss |
 | ops | `D-CloudflareIPAllowlist` — configure Fly.io `internal_port` allow-list to accept only Cloudflare IP ranges (true network-layer auth boundary). Phase 2 middleware checks `cf-ray` as a soft signal only — header is plain HTTP and trivially spoofable by an attacker who discovers the origin IP. | resolves_phase: post-warmup-hardening | Plan 02-07 |
 | legal | `D-GilroyLicenseRisk` — operator-accepted IP exposure on Gilroy webfont (repalash/gilroy-free-webfont has no LICENSE file, no commercial-use grant; readme redirects to Tinkov commercial source). Mitigation = mechanical swap to Manrope ExtraBold (OFL) preserving `--font-gilroy` CSS variable name. Revisit if challenged or if coalition obtains paid license. | resolves_phase: post-warmup-hardening | Plan 02-01 / Wave 1 license checkpoint |
+| coalition | `D-CoalitionFaviconSet` — true multi-resolution favicon.ico + branded apple-touch-icon (currently 32×32 PNG-as-ICO placeholder). Coalition delivers final branded asset set. | resolves_phase: post-warmup | Plan 02-07 |
+| ops | `D-CookieVaryCacheRule` — conditional follow-up: if Cloudflare free-tier A1 (cookie-presence Cache Rules) verification falsifies in production, fall back to vary-on-cookie cache strategy or upgrade plan. Covered by Plan 02-07 §2.4 fallback. | resolves_phase: 6 | Plan 02-07 |
+| ops | `D-CFPurgeOnDeploy` — automate Cloudflare cache purge on deploy via `.github/workflows/deploy.yml` (currently manual purge per OPS-RUNBOOK §2.6). Stale-content remediation only; not warmup-blocking. | resolves_phase: 6 | Plan 02-07 |
 
 ## Session Continuity
 
