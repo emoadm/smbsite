@@ -31,6 +31,7 @@
     "@auth/drizzle-adapter": "1.11.2",
     "@hookform/resolvers": "5.2.2",
     "@logtail/pino": "0.5.5",
+    "@maxmind/geoip2-node": "6.3.4",
     "@neondatabase/serverless": "0.10.4",
     "@payloadcms/db-postgres": "3.84.1",
     "@payloadcms/next": "3.84.1",

@@ -50,8 +50,12 @@ jobs:
       - name: Deploy to Fly.io (rolling)
         # NEXT_PUBLIC_* must be passed as Docker build args so `next build` inlines
         # them into the client bundle. Set these in GitHub repo secrets.
+        # Phase 2.1 (D-02): MAXMIND_LICENSE_KEY passed as a build-secret so the
+        # Dockerfile builder stage can download GeoLite2-City.mmdb without ever
+        # baking the key into an image layer.
         run: |
           flyctl deploy --strategy rolling --remote-only \
+            --build-secret "MAXMIND_LICENSE_KEY=${{ secrets.MAXMIND_LICENSE_KEY }}" \
             --build-arg "NEXT_PUBLIC_TURNSTILE_SITE_KEY=${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" \
             --build-arg "NEXT_PUBLIC_PLAUSIBLE_DOMAIN=${{ secrets.NEXT_PUBLIC_PLAUSIBLE_DOMAIN }}" \
             --build-arg "NEXT_PUBLIC_COOKIEYES_SITE_KEY=${{ secrets.NEXT_PUBLIC_COOKIEYES_SITE_KEY }}"
