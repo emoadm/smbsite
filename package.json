@@ -18,6 +18,7 @@
     "test:e2e": "playwright test",
     "test": "pnpm test:unit && pnpm test:e2e",
     "lint:i18n": "node scripts/lint-i18n.mjs",
+    "check:placeholders": "node scripts/check-coalition-placeholders.mjs",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:check": "drizzle-kit check",
