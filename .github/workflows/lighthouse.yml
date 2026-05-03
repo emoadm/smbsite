@@ -1,0 +1,19 @@
+name: Lighthouse CI
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'messages/**'
+      - 'next.config.ts'
+      - '.lighthouserc.json'
+jobs:
+  lhci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./.lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
