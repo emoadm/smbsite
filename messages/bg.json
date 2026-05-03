@@ -39,6 +39,20 @@
         "manager": "Управител",
         "employee": "Служител",
         "other": "Друго"
+      },
+      "source": {
+        "label": "Откъде научихте за нас?",
+        "placeholder": "Изберете вариант",
+        "qr_letter": "QR код в писмо",
+        "email_coalition": "Имейл от коалицията",
+        "sinya_site": "Сайт sinyabulgaria.bg",
+        "facebook": "Facebook",
+        "linkedin": "LinkedIn",
+        "referral": "Препоръка от приятел/колега",
+        "news_media": "Новина / медия",
+        "other": "Друго",
+        "otherPlaceholder": "Моля, уточнете",
+        "otherMaxLengthHelp": "До 300 символа."
       }
     },
     "login": {
@@ -293,6 +307,43 @@
       "greetingAnonymous": "Здравей!",
       "body": "Профилът ти е активен. Скоро ще можеш да гласуваш по политически идеи и да предлагаш решения. Ще ти пишем, когато стартираме гласуването.",
       "cta": "Към профила"
+    }
+  },
+  "attribution": {
+    "dashboard": {
+      "title": "Разпределение по канали",
+      "subtitle": "Откъде идват посетителите ни — UTM, QR и оператор „откъде научихте“.",
+      "filters": {
+        "dateRange": "Период",
+        "dateRangeDefault": "Последните 7 дни",
+        "utmSource": "Канал (UTM source)",
+        "oblast": "Област",
+        "qrFlag": "Само QR посещения",
+        "selfReportedSource": "Откъде са научили",
+        "applyFilters": "Приложи филтрите",
+        "clearFilters": "Изчисти"
+      },
+      "tables": {
+        "byUtmSource": "По UTM канал",
+        "byOblast": "По област",
+        "byQrFlag": "По QR флаг",
+        "bySelfReportedSource": "По „откъде научихте“"
+      },
+      "columns": {
+        "utmSource": "UTM канал",
+        "oblast": "Област",
+        "qrFlag": "QR флаг",
+        "selfReportedSource": "Откъде са научили",
+        "count": "Брой посетители",
+        "registered": "От тях регистрирани"
+      },
+      "export": "Изтегли CSV",
+      "unknown": "Неизвестен",
+      "noData": "Няма данни за избрания период.",
+      "denied": "Нямате права за достъп до тази страница.",
+      "loginRequired": "Необходим е вход в системата.",
+      "totalSessions": "Общо посетители",
+      "totalRegistered": "Регистрирани"
     }
   }
 }
