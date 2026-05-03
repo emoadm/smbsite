@@ -38,12 +38,16 @@ RUN pnpm build
 #
 # node:20-alpine ships without curl, so we install it just-in-time on the
 # builder stage (not the runner — the runner does not need curl at runtime).
-RUN apk add --no-cache curl
+RUN apk add --no-cache curl tar
 RUN --mount=type=secret,id=MAXMIND_LICENSE_KEY \
     MAXMIND_LICENSE_KEY="$(cat /run/secrets/MAXMIND_LICENSE_KEY)" && \
     curl -fsSL "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=${MAXMIND_LICENSE_KEY}&suffix=tar.gz" \
-    | tar -xz --strip-components=1 --wildcards "*/GeoLite2-City.mmdb" && \
-    mv GeoLite2-City.mmdb /app/GeoLite2-City.mmdb
+      -o /tmp/geolite.tar.gz && \
+    SIZE=$(stat -c%s /tmp/geolite.tar.gz) && \
+    if [ "$SIZE" -lt 1000000 ]; then echo "FAIL: GeoLite download is only ${SIZE} bytes (expected >30MB) — license key likely invalid or not yet active"; head -c 4096 /tmp/geolite.tar.gz; exit 1; fi && \
+    tar -xzf /tmp/geolite.tar.gz -C /tmp --strip-components=1 --wildcards "*/GeoLite2-City.mmdb" && \
+    mv /tmp/GeoLite2-City.mmdb /app/GeoLite2-City.mmdb && \
+    rm /tmp/geolite.tar.gz
 
 FROM node:20-alpine AS runner
 WORKDIR /app
