@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 EXECUTING — Waves 1-4 ✓ done (02-01..02-07); D-CloudflareWAF Phase 1 deferred item RESOLVED via 02-07 strict-Edge middleware; new deferred items D-CoalitionFaviconSet, D-CookieVaryCacheRule, D-CFPurgeOnDeploy; kicking off Wave 5 (02-08 E2E + Lighthouse)
+stopped_at: Phase 2 EXECUTING — Waves 1-5 ✓ done (02-01..02-08); kicking off Wave 6 (02-09 review_flag wrap-up + signoff)
 last_updated: "2026-05-03T01:00:00.000Z"
 last_activity: 2026-05-03 -- Phase 2 plans created and verified. RESEARCH (1086 lines, bf826dc) + PATTERNS (26 files mapped) + 9 PLAN.md files + standalone 02-VALIDATION.md. Plan-checker: 0 blockers; revision pass fixed sleep-8 flakiness (02-04/05/06), Task 02.04.5 type misclassification, cf-ray threat model wording, RESOLVED markers in RESEARCH, extracted VALIDATION. New deferred item: D-CloudflareIPAllowlist (post-warmup hardening).
 progress:
