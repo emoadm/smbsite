@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
+import { CookieSettingsLink } from './CookieSettingsLink';
 
 /**
  * Phase 2 Footer (UI-SPEC §5.6) — expanded from Phase 1's compact legal-links
@@ -8,12 +9,17 @@ import { getTranslations } from 'next-intl/server';
  * Channels column ships with "стартират скоро" placeholder per D-10; quick
  * task swaps in WhatsApp + Telegram URLs once coalition delivers.
  *
+ * The legal column also hosts the "Настройки за бисквитки" CookieSettingsLink
+ * (UI-SPEC §9.2 + plan 02-09 Task 02.09.3) — reopens the CookieYes banner via
+ * window.revisitCkyConsent() so users can revise consent without navigation.
+ *
  * Existing branding.spec.ts assertions for legal-link rendering still pass —
  * this is a superset layout, not a breaking change.
  */
 export async function Footer() {
   const t = await getTranslations('footer');
   const tSite = await getTranslations('site');
+  const tCookie = await getTranslations('cookieBanner');
   const year = new Date().getFullYear();
   const brand = tSite('brandName');
 
@@ -75,6 +81,9 @@ export async function Footer() {
                 <a href="mailto:contact@example.invalid" className="text-accent hover:underline">
                   {t('contact')}
                 </a>
+              </li>
+              <li>
+                <CookieSettingsLink label={tCookie('settingsLink')} />
               </li>
             </ul>
           </nav>
