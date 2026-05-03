@@ -53,10 +53,15 @@ function getQueue(): Queue<AttributionJobPayload> {
 }
 
 export async function addAttributionJob(payload: AttributionJobPayload): Promise<void> {
-  // Test/dev shortcut: same triple-guard as src/lib/email/queue.ts so unit
-  // tests with the always-pass Turnstile sitekey never try to hit Redis.
+  // Unit-test shortcut: same triple-guard as src/lib/email/queue.ts so vitest
+  // runs with the always-pass Turnstile sitekey never try to hit Redis. The
+  // NODE_ENV=test pin is critical — deployed staging uses the same sitekey
+  // (k6 cannot solve real CAPTCHA) and MUST exercise the real queue path so
+  // load tests can verify attribution_events.user_id linkage (D-16).
   const url = process.env.UPSTASH_REDIS_URL;
-  const isTestBuild = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY === '1x00000000000000000000AA';
+  const isTestBuild =
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY === '1x00000000000000000000AA' &&
+    process.env.NODE_ENV === 'test';
   const isLocalUrl = !!url && (url.includes('localhost') || url.includes('127.0.0.1'));
   if (!url || isLocalUrl || isTestBuild) {
     if (process.env.NODE_ENV === 'production' && !isTestBuild && !isLocalUrl) {

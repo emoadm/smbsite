@@ -62,7 +62,12 @@ export async function addEmailJob(payload: EmailJobPayload): Promise<void> {
   // signal (set in ci.yml, never used in real prod; same convention as
   // src/lib/rate-limit.ts BYPASS and src/lib/turnstile.ts skip).
   const url = process.env.UPSTASH_REDIS_URL;
-  const isTestBuild = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY === '1x00000000000000000000AA';
+  // NODE_ENV=test pin: deployed staging uses the always-pass sitekey too
+  // (k6 / Playwright cannot solve real CAPTCHA) and MUST exercise the real
+  // queue path so OPS-05 load tests can verify D-16 attribution linkage.
+  const isTestBuild =
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY === '1x00000000000000000000AA' &&
+    process.env.NODE_ENV === 'test';
   const isLocalUrl = !!url && (url.includes('localhost') || url.includes('127.0.0.1'));
   if (!url || isLocalUrl || isTestBuild) {
     if (process.env.NODE_ENV === 'production' && !isTestBuild && !isLocalUrl) {
