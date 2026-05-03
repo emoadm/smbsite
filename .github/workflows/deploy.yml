@@ -59,7 +59,8 @@ jobs:
             --build-arg "NEXT_PUBLIC_TURNSTILE_SITE_KEY=${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" \
             --build-arg "NEXT_PUBLIC_PLAUSIBLE_DOMAIN=${{ secrets.NEXT_PUBLIC_PLAUSIBLE_DOMAIN }}" \
             --build-arg "NEXT_PUBLIC_COOKIEYES_SITE_KEY=${{ secrets.NEXT_PUBLIC_COOKIEYES_SITE_KEY }}" \
-            --build-arg "EMAIL_FROM_TRANSACTIONAL=${{ secrets.EMAIL_FROM_TRANSACTIONAL }}"
+            --build-arg "EMAIL_FROM_TRANSACTIONAL=${{ secrets.EMAIL_FROM_TRANSACTIONAL }}" \
+            --build-arg "DATABASE_URL=${{ secrets.DATABASE_URL }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 

@@ -16,14 +16,17 @@ COPY . .
 ARG NEXT_PUBLIC_TURNSTILE_SITE_KEY
 ARG NEXT_PUBLIC_PLAUSIBLE_DOMAIN
 ARG NEXT_PUBLIC_COOKIEYES_SITE_KEY
-# Auth.js email provider validates `from` at module load. Next's "Collecting
-# page data" pass imports the route module during build, so the env var must
-# exist at build time even though it's only used at runtime.
+# Module-load env reads (Auth.js email provider's `from`, db client's
+# DATABASE_URL.includes() routing) crash Next's "Collecting page data" pass
+# when undefined. Must be present at build time even though they're consumed
+# at runtime via Fly secrets that override these defaults.
 ARG EMAIL_FROM_TRANSACTIONAL
+ARG DATABASE_URL
 ENV NEXT_PUBLIC_TURNSTILE_SITE_KEY=$NEXT_PUBLIC_TURNSTILE_SITE_KEY
 ENV NEXT_PUBLIC_PLAUSIBLE_DOMAIN=$NEXT_PUBLIC_PLAUSIBLE_DOMAIN
 ENV NEXT_PUBLIC_COOKIEYES_SITE_KEY=$NEXT_PUBLIC_COOKIEYES_SITE_KEY
 ENV EMAIL_FROM_TRANSACTIONAL=$EMAIL_FROM_TRANSACTIONAL
+ENV DATABASE_URL=$DATABASE_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm build
 
