@@ -66,6 +66,9 @@ COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/messages ./messages
 COPY --from=builder /app/package.json ./package.json
+# tsx needs tsconfig.json at runtime to resolve @/* path aliases used by
+# the worker imports (src/lib/attribution/worker.ts → @/db, etc).
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
 # Phase 2.1 (D-02): copy the GeoLite2 mmdb from the builder stage.
 # Worker reads it via @maxmind/geoip2-node Reader.open() at process start.
 # Path matches src/lib/geoip.ts default (process.cwd() + '/GeoLite2-City.mmdb').
