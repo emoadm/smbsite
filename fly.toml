@@ -27,7 +27,10 @@ kill_timeout = "30s"
   processes = ["web"]
 
 [[vm]]
-  memory = "256mb"
+  # Phase 02.1 D-WorkerOOM: bumped 256mb → 1024mb. tsx + MaxMind reader (65MB)
+  # + BullMQ + IORedis + Drizzle + Pino combined OOM the worker on 256mb.
+  # Same fix Plan 08 applied to staging on 2026-05-03 after run #3.
+  memory = "1024mb"
   cpu_kind = "shared"
   cpus = 1
   processes = ["worker"]
