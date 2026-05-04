@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 
-describe('ATTR-07 / D-13 — attribution dashboard role gate (page.tsx)', () => {
-  const src = readFileSync('src/app/(payload)/admin/views/attribution/page.tsx', 'utf8');
+describe('ATTR-07 / D-13 — attribution dashboard role gate (AttributionView.tsx)', () => {
+  const src = readFileSync('src/app/(payload)/admin/views/attribution/AttributionView.tsx', 'utf8');
 
   it('exports AttributionView async function with AdminViewServerProps signature', () => {
     expect(src).toMatch(/export async function AttributionView\(/);
@@ -65,8 +65,8 @@ describe('ATTR-07 — payload.config.ts custom view registration', () => {
     expect(src).toMatch(/attribution:\s*\{/);
   });
 
-  it('Component path points at page#AttributionView named export', () => {
-    expect(src).toMatch(/page#AttributionView/);
+  it('Component path points at AttributionView#AttributionView named export', () => {
+    expect(src).toMatch(/AttributionView#AttributionView/);
   });
 
   it('view path is /views/attribution', () => {
