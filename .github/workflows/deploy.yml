@@ -35,11 +35,17 @@ jobs:
         run: pnpm drizzle-kit migrate
         env:
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
-      - name: Payload migrate
-        run: CI=true PAYLOAD_MIGRATING=true pnpm exec payload migrate
-        env:
-          PAYLOAD_DATABASE_URL: ${{ secrets.DIRECT_URL }}
-          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+      # TEMPORARILY DISABLED — see .planning/todos/payload-tsx-esm-incompat.md
+      # `pnpm exec payload migrate` fails on Node 22 + tsx@4.21 because tsx
+      # removed the .js→.ts auto-rewrite. The only Payload migration
+      # (20260501_160443_init.ts) is already applied to prod, so skipping
+      # is safe for now. Re-enable after the tsx incompat is fixed and
+      # before merging any new Payload schema changes.
+      # - name: Payload migrate
+      #   run: CI=true PAYLOAD_MIGRATING=true pnpm exec payload migrate
+      #   env:
+      #     PAYLOAD_DATABASE_URL: ${{ secrets.DIRECT_URL }}
+      #     PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
 
   deploy:
     needs: migrate
