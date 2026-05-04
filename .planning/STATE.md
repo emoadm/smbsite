@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 02.1 context gathered
-last_updated: "2026-05-03T10:45:08.772Z"
-last_activity: 2026-05-03 -- Phase 02.1 planning complete
+status: ready-for-verify
+stopped_at: Phase 02.1 ship complete; OPS-05 passed; cleared for QR launch
+last_updated: "2026-05-04T08:00:00.000Z"
+last_activity: 2026-05-04 -- Phase 02.1 ship complete; OPS-05 passed; cleared for QR launch
 progress:
   total_phases: 7
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 30
-  completed_plans: 22
-  percent: 73
+  completed_plans: 30
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Когато един собственик на МСП види сайта, разбира идеята достатъчно, за да даде името и имейла си — и след това продължава да се връща, защото гласът му се вижда и брои.
-**Current focus:** Phase 02 — public surface (pre-warmup) — code-shipping complete; awaiting operator + coalition handoff
+**Current focus:** Phase 02.1 — attribution + source dashboard — CODE-SHIPPING COMPLETE; OPS-05 sign-off complete; cleared for QR mail drop launch
 
 ## Current Position
 
-Phase: 02 (public-surface-pre-warmup) — CODE-SHIPPING COMPLETE; awaiting operator (Cloudflare cache + CookieYes dashboard + Lighthouse PR + visual sign-off) and 5 coalition deliverables
-Plan: all 9 plans shipped (02-01..02-09); Phase 2 wall-clock completion gated on 02-SIGNOFF.md operator checklist + coalition deferred items (D-CoalitionLogoSVG, D-CoalitionContent-Hero, D-CoalitionContent-Agenda, D-CoalitionChannels, D-LawyerReviewLegal)
-Status: Ready to execute
-Last activity: 2026-05-03 -- Phase 02.1 planning complete
+Phase: 02.1 (attribution-source-dashboard) — CODE-SHIPPING COMPLETE; OPS-05 sign-off complete; cleared for QR mail drop launch
+Plan: all 8 plans shipped (02.1-01..02.1-08); k6 load test passed thresholds (p95 158ms, 0% failures, D-16 linkage verified); 02.1-LOAD-TEST.md signed 2026-05-04
+Status: Ready for /gsd-verify-work 02.1
+Last activity: 2026-05-04 -- Phase 02.1 ship complete; OPS-05 passed; cleared for QR launch
 
-Progress: [██████████] 100% (22/22 plans complete across Phase 1 + Phase 2; both phases code-shipping complete; both awaiting operator-side warmup/sign-off)
+Progress: [██████████] 100% (30/30 plans complete across Phase 1 + Phase 2 + Phase 02.1; all three code-shipping complete; Phase 02.1 OPS-05 signed off, Phase 1 + Phase 2 still awaiting operator-side warmup/sign-off + coalition deliverables)
 
 ## Performance Metrics
 
@@ -109,13 +109,17 @@ None yet.
 | coalition | `D-CoalitionFaviconSet` — true multi-resolution favicon.ico + branded apple-touch-icon (currently 32×32 PNG-as-ICO placeholder). Coalition delivers final branded asset set. | resolves_phase: post-warmup | Plan 02-07 |
 | ops | `D-CookieVaryCacheRule` — conditional follow-up: if Cloudflare free-tier A1 (cookie-presence Cache Rules) verification falsifies in production, fall back to vary-on-cookie cache strategy or upgrade plan. Covered by Plan 02-07 §2.4 fallback. | resolves_phase: 6 | Plan 02-07 |
 | ops | `D-CFPurgeOnDeploy` — automate Cloudflare cache purge on deploy via `.github/workflows/deploy.yml` (currently manual purge per OPS-RUNBOOK §2.6). Stale-content remediation only; not warmup-blocking. | resolves_phase: 6 | Plan 02-07 |
+| ops | `D-MaxMindLicenseKey` — operator must register a free MaxMind account, generate a GeoLite2 license key, and set `MAXMIND_LICENSE_KEY` in BOTH Fly.io build secrets (`fly secrets set MAXMIND_LICENSE_KEY=<key> -a smbsite-prod`) AND GitHub Actions repo secrets. Required for every Docker build that consumes Phase 2.1's mmdb download step. **Without it, deploys after Phase 02.1 ship will fail at builder stage.** | resolves_phase: ongoing-ops | Plan 02.1-02 |
+| feature | `D-ReferralMechanism` — per-user share-link generation, member dashboard share page, `users.referrer_id` column. Punted from Phase 02.1 (D-14) to a future phase. Rationale: Phase 02.1's gating purpose is QR/UTM measurement before the mail drop; referral is a distinct UX (member-side share page) and conflicts with deferred member self-service. | resolves_phase: future | Plan 02.1-08 |
+| feature | `D-ConsentsRegionPopulation` — Phase 02.1 GeoIP-derived oblast does not populate `consents.region`; deferred to Phase 6 (GDPR-04 / GDPR-05) so consents-audit-table writes stay scoped to the GDPR phase. | resolves_phase: 6 | Plan 02.1-08 |
+| ops | `D-Phase21Plan01-LiveNeonPush` — Plan 02.1-01 swapped `db:push` for `db:generate` (DIRECT_URL unavailable in worktree); migration `0001_grey_umar.sql` is committed but operator must apply against live Neon production via `pnpm db:migrate` (or CI deploy.yml's migrate job already running on push to main). Verify migration ran successfully before next staging/production deploy. | resolves_phase: 02.1-followup-ops | Plan 02.1-01 |
 
 ## Session Continuity
 
-Last session: 2026-05-03T08:17:56.397Z
-Stopped at: Phase 02.1 context gathered
-Resume file: .planning/phases/02.1-attribution-source-dashboard/02.1-CONTEXT.md
-Next command: /gsd-execute-phase 2
+Last session: 2026-05-04T08:00:00.000Z
+Stopped at: Phase 02.1 ship complete; awaiting /gsd-verify-work + warmup ladder + QR launch
+Resume file: .planning/phases/02.1-attribution-source-dashboard/02.1-LOAD-TEST.md
+Next command: /gsd-verify-work 02.1
 
 **Coalition external dependencies status (run in parallel during execution):**
 
