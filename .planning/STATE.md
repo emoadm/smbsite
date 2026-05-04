@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready-for-verify
-stopped_at: Phase 02.1 ship complete; OPS-05 passed; cleared for QR launch
-last_updated: "2026-05-04T08:00:00.000Z"
-last_activity: 2026-05-04 -- Phase 02.1 ship complete; OPS-05 passed; cleared for QR launch
+status: verifying
+stopped_at: Phase 02.1 ship complete; awaiting /gsd-verify-work + warmup ladder + QR launch
+last_updated: "2026-05-04T14:21:24.673Z"
+last_activity: 2026-05-04 -- learnings extracted for phase 02.1 (16 decisions, 12 lessons, 12 patterns, 8 surprises)
 progress:
   total_phases: 7
   completed_phases: 3
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 Phase: 02.1 (attribution-source-dashboard) — CODE-SHIPPING COMPLETE; OPS-05 sign-off complete; cleared for QR mail drop launch
 Plan: all 8 plans shipped (02.1-01..02.1-08); k6 load test passed thresholds (p95 158ms, 0% failures, D-16 linkage verified); 02.1-LOAD-TEST.md signed 2026-05-04
 Status: Ready for /gsd-verify-work 02.1
-Last activity: 2026-05-04 -- Phase 02.1 ship complete; OPS-05 passed; cleared for QR launch
+Last activity: 2026-05-04 -- learnings extracted for phase 02.1 (16 decisions, 12 lessons, 12 patterns, 8 surprises)
 
 Progress: [██████████] 100% (30/30 plans complete across Phase 1 + Phase 2 + Phase 02.1; all three code-shipping complete; Phase 02.1 OPS-05 signed off, Phase 1 + Phase 2 still awaiting operator-side warmup/sign-off + coalition deliverables)
 
