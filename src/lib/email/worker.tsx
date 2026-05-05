@@ -8,8 +8,14 @@ import { render } from '@react-email/render';
 import { OtpEmail } from './templates/OtpEmail';
 import { LoginOtpEmail } from './templates/LoginOtpEmail';
 import { WelcomeEmail } from './templates/WelcomeEmail';
+import { NewsletterEmail, type NewsletterTopic } from './templates/NewsletterEmail';
 import { sendBrevoEmail } from './brevo';
-import { EMAIL_QUEUE_NAME, type EmailJobPayload } from './queue';
+import { EMAIL_QUEUE_NAME, type EmailJobPayload, addEmailJob } from './queue';
+import { renderLexicalToHtml } from '../newsletter/lexical-to-html';
+import { signUnsubToken } from '../unsubscribe/hmac';
+import { getNewsletterRecipients } from '../newsletter/recipients';
+import { brevoBlocklist } from '../newsletter/brevo-sync';
+import { logger } from '../logger';
 import bg from '../../../messages/bg.json';
 
 function workerConnection(): IORedis {
@@ -45,7 +51,9 @@ function loadT(namespace: string): EmailT {
   };
 }
 
-async function processor(job: Job<EmailJobPayload>): Promise<{ messageId: string }> {
+type ProcessorResult = { messageId: string } | { fannedOut: number };
+
+async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
   const { to, kind, otpCode, fullName } = job.data;
   let subject = '';
   let html = '';
@@ -81,8 +89,207 @@ async function processor(job: Job<EmailJobPayload>): Promise<{ messageId: string
       text = await render(<WelcomeEmail {...props} />, { plainText: true });
       break;
     }
+
+    // Phase 5 D-05 / NOTIF-09 — fan-out trigger.
+    // Loads Payload doc → queries recipient list → enqueues one sub-job per recipient.
+    case 'newsletter-blast': {
+      const newsletterId = job.data.newsletterId!;
+      const { getPayload } = await import('payload');
+      const config = (await import('@/payload.config')).default;
+      const payloadInst = await getPayload({ config });
+      const doc = (await payloadInst.findByID({
+        collection: 'newsletters' as never,
+        id: newsletterId,
+      })) as { status?: string; topic?: string } | null;
+      // Pitfall 3 — skip if cancelled mid-flight.
+      if (!doc || doc.status === 'cancelled') {
+        return { fannedOut: 0 };
+      }
+      const topic = doc.topic as NewsletterTopic;
+      const recipients = await getNewsletterRecipients(topic);
+      // Update Payload status to 'sending' before fan-out.
+      await payloadInst.update({
+        collection: 'newsletters' as never,
+        id: newsletterId,
+        data: { status: 'sending' } as never,
+      });
+      // Fan out per-recipient sub-jobs.
+      for (const r of recipients) {
+        await addEmailJob({
+          to: r.email,
+          kind: 'newsletter-send-recipient',
+          userId: r.id,
+          topic,
+          newsletterId,
+          fullName: r.full_name,
+        });
+      }
+      // Mark sent (the per-recipient sub-jobs run async; for v1 we treat
+      // successful enqueue as success — failed sends will surface as failed
+      // BullMQ jobs in the queue dashboard).
+      await payloadInst.update({
+        collection: 'newsletters' as never,
+        id: newsletterId,
+        data: { status: 'sent' } as never,
+      });
+      logger.info(
+        { newsletterId, topic, fannedOut: recipients.length },
+        'newsletter-blast.fanout',
+      );
+      return { fannedOut: recipients.length };
+    }
+
+    // Phase 5 NOTIF-02 / NOTIF-06 / D-14 — per-recipient send with RFC 8058 headers.
+    case 'newsletter-send-recipient': {
+      const t = loadT('email.newsletter');
+      const userId = job.data.userId!;
+      const topic = job.data.topic as NewsletterTopic;
+      const newsletterId = job.data.newsletterId!;
+
+      // Re-load doc for subject/preview/body/topic — late-binds editor changes.
+      const { getPayload } = await import('payload');
+      const config = (await import('@/payload.config')).default;
+      const payloadInst = await getPayload({ config });
+      const doc = (await payloadInst.findByID({
+        collection: 'newsletters' as never,
+        id: newsletterId,
+      })) as
+        | {
+            status?: string;
+            subject?: string;
+            previewText?: string;
+            body?: unknown;
+          }
+        | null;
+      if (!doc || doc.status === 'cancelled') {
+        // Pitfall 3 — abort silently on cancel after fan-out.
+        return { messageId: 'skipped-cancelled' };
+      }
+
+      subject = String(doc.subject ?? '');
+      const previewText = String(doc.previewText ?? '');
+      const bodyHtml = renderLexicalToHtml(doc.body as never);
+
+      const token = signUnsubToken(userId);
+      const origin = process.env.SITE_ORIGIN ?? 'https://chastnik.eu';
+      const unsubUrl = `${origin}/api/unsubscribe?token=${token}`;
+      const preferencesUrl = `${origin}/member/preferences`;
+
+      const props = {
+        t,
+        fullName: fullName ?? '',
+        subject,
+        previewText,
+        topic,
+        bodyHtml,
+        unsubUrl,
+        preferencesUrl,
+        year: new Date().getFullYear(),
+      };
+      html = await render(<NewsletterEmail {...props} />);
+      text = await render(<NewsletterEmail {...props} />, { plainText: true });
+
+      // RFC 8058 + Pitfall 2 — explicit List-Unsubscribe overrides Brevo auto-injection.
+      const headers = {
+        'List-Unsubscribe': `<${unsubUrl}>, <mailto:unsubscribe@news.chastnik.eu?subject=unsubscribe>`,
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      };
+
+      const tFrom = loadT('email.from');
+      const result = await sendBrevoEmail({
+        to: { email: to, name: fullName },
+        subject,
+        htmlContent: html,
+        textContent: text,
+        from: {
+          email: process.env.EMAIL_FROM_NEWSLETTER ?? 'newsletter@news.chastnik.eu',
+          name: tFrom('name'),
+        },
+        headers,
+      });
+
+      // D-24 — log only non-PII identifiers.
+      logger.info(
+        { user_id: userId, newsletterId, brevo_message_id: result.messageId },
+        'newsletter-send-recipient.success',
+      );
+      return result;
+    }
+
+    // Phase 5 D-02 — single test send to editor's own email.
+    case 'newsletter-test': {
+      const t = loadT('email.newsletter');
+      const newsletterId = job.data.newsletterId!;
+      const topic = (job.data.topic ?? 'newsletter_general') as NewsletterTopic;
+
+      const { getPayload } = await import('payload');
+      const config = (await import('@/payload.config')).default;
+      const payloadInst = await getPayload({ config });
+      const doc = (await payloadInst.findByID({
+        collection: 'newsletters' as never,
+        id: newsletterId,
+      })) as { subject?: string; previewText?: string; body?: unknown } | null;
+      if (!doc) return { messageId: 'skipped-missing-doc' };
+
+      subject = `[ТЕСТ] ${String(doc.subject ?? '')}`;
+      const previewText = String(doc.previewText ?? '');
+      const bodyHtml = renderLexicalToHtml(doc.body as never);
+
+      // Sentinel unsub URL — test sends never modify suppression state.
+      const props = {
+        t,
+        fullName: fullName ?? '',
+        subject,
+        previewText,
+        topic,
+        bodyHtml,
+        unsubUrl: '#preview',
+        preferencesUrl: '#preview',
+        year: new Date().getFullYear(),
+      };
+      html = await render(<NewsletterEmail {...props} />);
+      text = await render(<NewsletterEmail {...props} />, { plainText: true });
+
+      const tFrom = loadT('email.from');
+      const result = await sendBrevoEmail({
+        to: { email: to, name: fullName },
+        subject,
+        htmlContent: html,
+        textContent: text,
+        from: {
+          email: process.env.EMAIL_FROM_NEWSLETTER ?? 'newsletter@news.chastnik.eu',
+          name: tFrom('name'),
+        },
+        // Test sends do NOT include List-Unsubscribe — they go to a single
+        // editor inbox; one-click unsub UX is not exercised here.
+      });
+      // Update Payload doc lastTestSentAt + clear lastEditedAfterTestAt.
+      await payloadInst.update({
+        collection: 'newsletters' as never,
+        id: newsletterId,
+        data: {
+          lastTestSentAt: new Date().toISOString(),
+          lastEditedAfterTestAt: false,
+        } as never,
+      });
+      logger.info(
+        { newsletterId, brevo_message_id: result.messageId },
+        'newsletter-test.success',
+      );
+      return result;
+    }
+
+    // Phase 5 D-14 — Brevo blocklist retry path when the inline-await in
+    // /api/unsubscribe (Plan 05-06) failed.
+    case 'unsubscribe-brevo-retry': {
+      const unsubEmail = job.data.unsubEmail!;
+      await brevoBlocklist(unsubEmail);
+      logger.info({}, 'unsubscribe-brevo-retry.success');
+      return { messageId: 'brevo-blocklist-ok' };
+    }
   }
 
+  // Phase 1 paths fall through to the existing send call.
   const tFrom = loadT('email.from');
   return sendBrevoEmail({
     to: { email: to, name: fullName },
@@ -97,7 +304,7 @@ async function processor(job: Job<EmailJobPayload>): Promise<{ messageId: string
 }
 
 export function startWorker() {
-  return new Worker<EmailJobPayload, { messageId: string }>(
+  return new Worker<EmailJobPayload, ProcessorResult>(
     EMAIL_QUEUE_NAME,
     processor,
     {
