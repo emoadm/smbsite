@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useDocumentInfo } from '@payloadcms/ui';
 import { LivePreviewIframe } from './LivePreviewIframe';
 import { SendBlastButton } from './SendBlastButton';
 import { Button } from '@/components/ui/button';
@@ -43,6 +44,18 @@ export interface NewsletterComposerProps {
 export function NewsletterComposer(props: NewsletterComposerProps) {
   const [tab, setTab] = React.useState<'edit' | 'preview'>('edit');
 
+  // Phase 5 hotfix — Plan 05-07 originally read newsletterId/subject/etc.
+  // from `props`, but Payload's `admin.components.edit.beforeDocumentControls`
+  // slot does NOT actually pass document data as plain props. The only
+  // reliable source for the current document ID is the `useDocumentInfo`
+  // hook from @payloadcms/ui (the slot is rendered inside DocumentInfoProvider).
+  // Without this, every `onSendTest`/`onCancelScheduled` call silently
+  // no-op'd because props.newsletterId was always undefined.
+  const docInfo = useDocumentInfo();
+  const docId = docInfo?.id;
+  const newsletterId =
+    docId !== undefined && docId !== null ? String(docId) : props.newsletterId;
+
   const previewArgs = {
     subject: props.subject ?? '',
     previewText: props.previewText ?? '',
@@ -55,9 +68,14 @@ export function NewsletterComposer(props: NewsletterComposerProps) {
   };
 
   const onSendTest = async () => {
-    if (!props.newsletterId) return;
-    const result = await sendTest({ newsletterId: props.newsletterId });
     const sonner = await import('sonner');
+    if (!newsletterId) {
+      // UX guardrail — previously this silently returned, now we surface
+      // the missing ID as an error so the operator knows to save first.
+      sonner.toast.error(t('testSend.toast.error'));
+      return;
+    }
+    const result = await sendTest({ newsletterId });
     if (result.ok) {
       sonner.toast.success(t('testSend.toast.success', { email: result.sentTo }));
     } else {
@@ -66,8 +84,8 @@ export function NewsletterComposer(props: NewsletterComposerProps) {
   };
 
   const onCancelScheduled = async () => {
-    if (!props.newsletterId) return;
-    const result = await cancelScheduled({ newsletterId: props.newsletterId });
+    if (!newsletterId) return;
+    const result = await cancelScheduled({ newsletterId });
     const sonner = await import('sonner');
     // D-22 — fallback toast text comes from messages/bg.json
     // (bg.admin.newsletters.toast.error === "Грешка"; added by Plan 05-03).
@@ -116,9 +134,9 @@ export function NewsletterComposer(props: NewsletterComposerProps) {
             {t('cancel.dialog.title')}
           </Button>
         )}
-        {props.newsletterId && (
+        {newsletterId && (
           <SendBlastButton
-            newsletterId={props.newsletterId}
+            newsletterId={newsletterId}
             scheduledAt={props.scheduledAt}
             lastTestSentAt={props.lastTestSentAt}
             lastEditedAfterTestAt={props.lastEditedAfterTestAt}
