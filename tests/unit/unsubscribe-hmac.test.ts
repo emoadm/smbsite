@@ -47,11 +47,22 @@ describe('Phase 5 D-16 — HMAC unsubscribe token', () => {
     expect(verifyUnsubToken('body.')).toEqual({ ok: false, reason: 'malformed' });
   });
 
-  it('returns bad-sig when signature is tampered (flipped last char)', async () => {
+  it('returns bad-sig when signature is tampered (replaces middle of sig)', async () => {
+    // Replace a chunk in the middle of the sig with deterministic non-equal
+    // characters. Single-char flips at the boundary can land in padding bits
+    // and decode to the same Buffer — causing intermittent "still valid" false
+    // positives (#flaky). Replacing 5 contiguous characters guarantees a real
+    // byte difference after base64url decode.
     const { signUnsubToken, verifyUnsubToken } = await import('@/lib/unsubscribe/hmac');
     const token = signUnsubToken('uid-xyz');
-    const lastChar = token.slice(-1);
-    const flipped = token.slice(0, -1) + (lastChar === 'A' ? 'B' : 'A');
+    const dotIdx = token.indexOf('.');
+    expect(dotIdx).toBeGreaterThan(0);
+    const sig = token.slice(dotIdx + 1);
+    expect(sig.length).toBeGreaterThan(20);
+    // Inject a fixed non-base64url-equivalent run at position 5..10 of the sig.
+    // 'AAAAA' is not byte-equivalent to any random 5-char base64url window.
+    const tamperedSig = sig.slice(0, 5) + 'AAAAA' + sig.slice(10);
+    const flipped = `${token.slice(0, dotIdx + 1)}${tamperedSig}`;
     const result = verifyUnsubToken(flipped);
     expect(result.ok).toBe(false);
     if (!result.ok) expect(['bad-sig', 'malformed']).toContain(result.reason);

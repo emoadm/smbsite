@@ -122,9 +122,30 @@ export async function register(
         version: POLICY_VERSION,
       },
       { user_id: userId, kind: 'cookies', granted: true, version: POLICY_VERSION },
+      // Phase 5 D-09 — single newsletter checkbox writes 4 topic rows simultaneously.
+      // Read-time backward compat for legacy 'newsletter' rows lives in
+      // src/lib/newsletter/recipients.ts (latest-per-(user,kind) precedence).
       {
         user_id: userId,
-        kind: 'newsletter',
+        kind: 'newsletter_general',
+        granted: data.consent_newsletter === 'on',
+        version: POLICY_VERSION,
+      },
+      {
+        user_id: userId,
+        kind: 'newsletter_voting',
+        granted: data.consent_newsletter === 'on',
+        version: POLICY_VERSION,
+      },
+      {
+        user_id: userId,
+        kind: 'newsletter_reports',
+        granted: data.consent_newsletter === 'on',
+        version: POLICY_VERSION,
+      },
+      {
+        user_id: userId,
+        kind: 'newsletter_events',
         granted: data.consent_newsletter === 'on',
         version: POLICY_VERSION,
       },
