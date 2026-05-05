@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BookOpen, HelpCircle } from 'lucide-react';
+import { Bell, BookOpen, HelpCircle, Users } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { MainContainer } from '@/components/layout/MainContainer';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -25,7 +25,7 @@ export default async function MemberPage() {
       </h2>
       <Timeline />
 
-      <div className="mt-16 grid gap-6 md:grid-cols-2">
+      <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader>
             <BookOpen className="h-6 w-6 text-primary" strokeWidth={1.5} />
@@ -53,6 +53,36 @@ export default async function MemberPage() {
               className="mt-4 inline-block text-primary underline-offset-4 hover:underline"
             >
               {t('cards.faq.title')} →
+            </Link>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <Bell className="h-6 w-6 text-primary" strokeWidth={1.5} />
+            <h3 className="mt-2 font-display text-xl">{t('cards.preferences.title')}</h3>
+          </CardHeader>
+          <CardContent>
+            <p className="text-base text-muted-foreground">{t('cards.preferences.body')}</p>
+            <Link
+              href="/member/preferences"
+              className="mt-4 inline-block text-primary underline-offset-4 hover:underline"
+            >
+              {t('cards.preferences.title')} →
+            </Link>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <Users className="h-6 w-6 text-primary" strokeWidth={1.5} />
+            <h3 className="mt-2 font-display text-xl">{t('cards.community.title')}</h3>
+          </CardHeader>
+          <CardContent>
+            <p className="text-base text-muted-foreground">{t('cards.community.body')}</p>
+            <Link
+              href="/community"
+              className="mt-4 inline-block text-primary underline-offset-4 hover:underline"
+            >
+              {t('cards.community.title')} →
             </Link>
           </CardContent>
         </Card>
