@@ -6,7 +6,6 @@ import {
   LinkFeature,
   UnorderedListFeature,
   OrderedListFeature,
-  UploadFeature,
   BoldFeature,
   ItalicFeature,
 } from '@payloadcms/richtext-lexical';
@@ -92,13 +91,21 @@ export const Newsletters: CollectionConfig = {
       type: 'richText',
       required: true,
       editor: lexicalEditor({
+        // Phase 5 hotfix — UploadFeature() was registered without any
+        // upload-target collection in payload.config.ts (no Media collection
+        // exists). At runtime Lexical fails to populate the upload picker
+        // and the entire body field crashes during mount, leaving the
+        // /admin/collections/newsletters/create form with no body field at
+        // all. Removed UploadFeature; newsletter v1 doesn't ship image
+        // uploads anyway. The lexical-to-html converter's `upload` node
+        // handler stays in place (dormant) for forward-compat if a Media
+        // collection is added later.
         features: () => [
           ParagraphFeature(),
           HeadingFeature({ enabledHeadingSizes: ['h2', 'h3'] }),
           LinkFeature(),
           UnorderedListFeature(),
           OrderedListFeature(),
-          UploadFeature(),
           BoldFeature(),
           ItalicFeature(),
         ],
