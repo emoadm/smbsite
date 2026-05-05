@@ -4,6 +4,8 @@ import path from 'path';
 import { buildConfig } from 'payload';
 import { fileURLToPath } from 'url';
 import { Users } from './collections/Users';
+import { Newsletters } from './collections/Newsletters';      // Phase 5 D-01
+import { CommunityChannels } from './globals/CommunityChannels'; // Phase 5 D-12
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -25,7 +27,8 @@ export default buildConfig({
       },
     },
   },
-  collections: [Users],
+  collections: [Users, Newsletters],           // Phase 5 D-01 adds Newsletters
+  globals: [CommunityChannels],                // Phase 5 D-12 adds CommunityChannels
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
