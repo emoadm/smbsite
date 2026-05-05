@@ -9,6 +9,8 @@ const REDACT = [
   'name',
   'full_name',
   'raw_ip', // Phase 2.1 D-19 / D-21 belt-and-braces — see src/lib/attribution/worker.ts
+  'to',              // Phase 5 D-24 — newsletter worker per-recipient send results
+  'recipient_email', // Phase 5 D-24 — alternative key in newsletter worker logs
 ];
 
 function buildOptions(): LoggerOptions {

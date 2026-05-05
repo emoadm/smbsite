@@ -37,8 +37,10 @@ describe('ATTR-07 / D-13 — attribution dashboard role gate (AttributionView.ts
 describe('ATTR-07 — attribution dashboard Server Action role re-check (actions.ts — defense in depth)', () => {
   const src = readFileSync('src/app/(payload)/admin/views/attribution/actions.ts', 'utf8');
 
-  it('declares assertEditorOrAdmin and calls it at the start of fetchAttributionAggregates', () => {
-    expect(src).toMatch(/async function assertEditorOrAdmin/);
+  it('uses assertEditorOrAdmin (imported from shared module per Phase 5 D-25) and calls it at the start of fetchAttributionAggregates', () => {
+    // Phase 5 D-25: helper extracted to src/lib/auth/role-gate.ts; actions.ts now imports it
+    expect(src).toMatch(/from\s+['"]@\/lib\/auth\/role-gate['"]/);
+    expect(src).toMatch(/assertEditorOrAdmin/);
     // Both exported actions must call the gate first.
     const aggMatch = src.match(/export async function fetchAttributionAggregates[\s\S]*?\{[\s\S]*?await assertEditorOrAdmin\(\)/);
     const csvMatch = src.match(/export async function fetchAttributionCsv[\s\S]*?\{[\s\S]*?await assertEditorOrAdmin\(\)/);
