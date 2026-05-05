@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 5 UI-SPEC approved
-last_updated: "2026-05-04T20:28:00.803Z"
-last_activity: 2026-05-04 -- Phase 05 planning complete
+last_updated: "2026-05-05T02:13:45.448Z"
+last_activity: 2026-05-05 -- Phase 05 execution started
 progress:
   total_phases: 7
   completed_phases: 3
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Когато един собственик на МСП види сайта, разбира идеята достатъчно, за да даде името и имейла си — и след това продължава да се връща, защото гласът му се вижда и брои.
-**Current focus:** Phase 02.1 — attribution + source dashboard — CODE-SHIPPING COMPLETE; OPS-05 sign-off complete; cleared for QR mail drop launch
+**Current focus:** Phase 05 — notifications
 
 ## Current Position
 
-Phase: 02.1 (attribution-source-dashboard) — CODE-SHIPPING COMPLETE; OPS-05 sign-off complete; cleared for QR mail drop launch
-Plan: all 8 plans shipped (02.1-01..02.1-08); k6 load test passed thresholds (p95 158ms, 0% failures, D-16 linkage verified); 02.1-LOAD-TEST.md signed 2026-05-04
-Status: Ready to execute
-Last activity: 2026-05-04 -- Phase 05 planning complete
+Phase: 05 (notifications) — EXECUTING
+Plan: 1 of 11
+Status: Executing Phase 05
+Last activity: 2026-05-05 -- Phase 05 execution started
 
 Progress: [██████████] 100% (30/30 plans complete across Phase 1 + Phase 2 + Phase 02.1; all three code-shipping complete; Phase 02.1 OPS-05 signed off, Phase 1 + Phase 2 still awaiting operator-side warmup/sign-off + coalition deliverables)
 
