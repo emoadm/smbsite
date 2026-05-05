@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import { getPayload } from 'payload';
 import config from '@/payload.config';
 import { auth } from '@/lib/auth';
+import { logger } from '@/lib/logger';
 import { MainContainer } from '@/components/layout/MainContainer';
 import { ChannelCard } from '@/components/community/ChannelCard';
 
@@ -38,10 +39,22 @@ export default async function CommunityPage() {
   const session = await auth();
   const isMember = !!session?.user;
 
-  const payloadInst = await getPayload({ config });
-  const channels = (await payloadInst.findGlobal({
-    slug: 'community-channels' as never,
-  })) as ChannelGlobalShape;
+  // Resilience: any failure (table missing, Payload boot error, DB outage)
+  // falls back to bothInvisible=true and renders the placeholder. Mirror of
+  // the Footer guard — same incident root cause (community_channels not yet
+  // DDL'd in prod).
+  let channels: ChannelGlobalShape = {};
+  try {
+    const payloadInst = await getPayload({ config });
+    channels = (await payloadInst.findGlobal({
+      slug: 'community-channels' as never,
+    })) as ChannelGlobalShape;
+  } catch (err) {
+    logger.error(
+      { err, page: '/community', global: 'community-channels' },
+      'community-channels lookup failed; rendering placeholder fallback',
+    );
+  }
 
   const whatsappActive =
     channels.whatsappVisible === true && !!channels.whatsappChannelUrl;

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { auth } from '@/lib/auth';
+import { logger } from '@/lib/logger';
 import { CookieSettingsLink } from './CookieSettingsLink';
 
 /**
@@ -31,20 +32,34 @@ export async function Footer() {
   const brand = tSite('brandName');
 
   // Phase 5 D-10 — read CommunityChannels Global + auth state for Column 4.
+  // Resilience: any failure (table missing, Payload boot error, DB outage)
+  // falls back to the both-channels-invisible branch and renders the
+  // `channelsPending` copy. Without this guard a Payload error in the
+  // Global lookup takes down every (frontend) page (incident: deploy of
+  // commit 3b4df52 — community_channels table not yet DDL'd in prod).
   const session = await auth();
   const isMember = !!session?.user;
 
-  const { getPayload } = await import('payload');
-  const config = (await import('@/payload.config')).default;
-  const payloadInst = await getPayload({ config });
-  const channels = (await payloadInst.findGlobal({
-    slug: 'community-channels' as never,
-  })) as {
+  type Channels = {
     whatsappChannelUrl?: string | null;
     whatsappVisible?: boolean;
     telegramChannelUrl?: string | null;
     telegramVisible?: boolean;
   };
+  let channels: Channels = {};
+  try {
+    const { getPayload } = await import('payload');
+    const config = (await import('@/payload.config')).default;
+    const payloadInst = await getPayload({ config });
+    channels = (await payloadInst.findGlobal({
+      slug: 'community-channels' as never,
+    })) as Channels;
+  } catch (err) {
+    logger.error(
+      { err, component: 'Footer', global: 'community-channels' },
+      'community-channels lookup failed; rendering channelsPending fallback',
+    );
+  }
   const whatsappActive =
     channels.whatsappVisible === true && !!channels.whatsappChannelUrl;
   const telegramActive =
