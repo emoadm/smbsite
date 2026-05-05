@@ -126,7 +126,9 @@ describe('Phase 5 NOTIF-03 — /api/unsubscribe runtime behavior (mocked depende
     expect(res.headers.get('location')).toContain('/unsubscribed');
     expect(res.headers.get('location')).not.toContain('reason=');
 
-    const { db } = (await import('@/db')) as { db: { insert: ReturnType<typeof vi.fn> } };
+    const { db } = (await import('@/db')) as unknown as {
+      db: { insert: ReturnType<typeof vi.fn> };
+    };
     expect(db.insert).toHaveBeenCalledTimes(1);
     const insertChain = db.insert.mock.results[0]!.value as {
       values: ReturnType<typeof vi.fn>;
@@ -147,7 +149,7 @@ describe('Phase 5 NOTIF-03 — /api/unsubscribe runtime behavior (mocked depende
       ]).toContain(row.kind);
     }
 
-    const { brevoBlocklist } = (await import('@/lib/newsletter/brevo-sync')) as {
+    const { brevoBlocklist } = (await import('@/lib/newsletter/brevo-sync')) as unknown as {
       brevoBlocklist: ReturnType<typeof vi.fn>;
     };
     expect(brevoBlocklist).toHaveBeenCalledWith('user@example.com');
@@ -160,7 +162,9 @@ describe('Phase 5 NOTIF-03 — /api/unsubscribe runtime behavior (mocked depende
     expect(res.status).toBe(303);
     expect(res.headers.get('location')).toContain('/unsubscribed?reason=expired');
 
-    const { db } = (await import('@/db')) as { db: { insert: ReturnType<typeof vi.fn> } };
+    const { db } = (await import('@/db')) as unknown as {
+      db: { insert: ReturnType<typeof vi.fn> };
+    };
     expect(db.insert).not.toHaveBeenCalled();
   });
 
@@ -183,7 +187,7 @@ describe('Phase 5 NOTIF-03 — /api/unsubscribe runtime behavior (mocked depende
     expect(res.headers.get('location')).toContain('/unsubscribed');
     expect(res.headers.get('location')).not.toContain('reason=');
 
-    const { addEmailJob } = (await import('@/lib/email/queue')) as {
+    const { addEmailJob } = (await import('@/lib/email/queue')) as unknown as {
       addEmailJob: ReturnType<typeof vi.fn>;
     };
     expect(addEmailJob).toHaveBeenCalledWith(
@@ -205,7 +209,9 @@ describe('Phase 5 NOTIF-03 — /api/unsubscribe runtime behavior (mocked depende
     const res = await route.POST(req);
     expect(res.status).toBe(303);
 
-    const { db } = (await import('@/db')) as { db: { insert: ReturnType<typeof vi.fn> } };
+    const { db } = (await import('@/db')) as unknown as {
+      db: { insert: ReturnType<typeof vi.fn> };
+    };
     expect(db.insert).toHaveBeenCalledTimes(1);
   });
 });
