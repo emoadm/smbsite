@@ -3,6 +3,11 @@ FROM node:20-alpine AS deps
 RUN corepack enable
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
+# scripts/ must be present before `pnpm install` because the postinstall
+# hook in package.json runs `node scripts/patch-payload-loadenv.mjs` to
+# rewrite payload@3.84.x's broken @next/env interop.
+# See .planning/todos/pending/2026-05-01-payload-loadenv-patch.md.
+COPY scripts ./scripts
 RUN pnpm install --frozen-lockfile
 
 FROM node:20-alpine AS builder

@@ -6,6 +6,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
+    "postinstall": "node scripts/patch-payload-loadenv.mjs",
     "dev": "next dev",
     "build": "tsx scripts/check-env.ts && next build",
     "start": "next start",
