@@ -15,6 +15,13 @@
       "when": 1777806123306,
       "tag": "0001_grey_umar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777947599124,
+      "tag": "0002_panoramic_ink",
+      "breakpoints": true
     }
   ]
 }
