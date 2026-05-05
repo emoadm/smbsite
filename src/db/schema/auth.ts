@@ -21,6 +21,9 @@ export const users = pgTable(
     created_at: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     // Forward-compat for Phase 3 cooling period (D-04 / IDEA-07)
     email_verified_at: timestamp('email_verified_at', { mode: 'date', withTimezone: true }),
+    // Phase 5 D-07 — informational off-site channel preference (whatsapp | telegram | none | NULL).
+    // Nullable: existing members keep NULL until they save a preference on /member/preferences.
+    preferred_channel: text('preferred_channel'),
   },
   (t) => ({
     emailIdx: index('users_email_idx').on(t.email),

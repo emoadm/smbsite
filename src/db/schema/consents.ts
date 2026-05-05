@@ -4,7 +4,11 @@ import { users } from './auth';
 export const CONSENT_KINDS = [
   'privacy_terms',
   'cookies',
-  'newsletter',
+  'newsletter',                  // legacy — Phase 1 single-checkbox-blanket-grant (D-09 backward compat)
+  'newsletter_general',          // Phase 5 D-08 — Общи обявявания
+  'newsletter_voting',           // Phase 5 D-08 — Нови гласувания
+  'newsletter_reports',          // Phase 5 D-08 — Отчети по инициативи
+  'newsletter_events',           // Phase 5 D-08 — Покани за събития
   'political_opinion',
 ] as const;
 export type ConsentKind = (typeof CONSENT_KINDS)[number];
