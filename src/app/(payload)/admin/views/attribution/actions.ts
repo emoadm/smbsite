@@ -1,8 +1,6 @@
 'use server';
 
-import { getPayload } from 'payload';
-import { headers } from 'next/headers';
-import config from '@/payload.config';
+import { assertEditorOrAdmin } from '@/lib/auth/role-gate';
 import { db } from '@/db';
 import { attribution_events, users } from '@/db/schema';
 import { sql, gte, lte, and, eq } from 'drizzle-orm';
@@ -28,16 +26,6 @@ export interface AttributionAggregates {
   bySelfReportedSource: Array<{ key: string; count: number }>;
   totalSessions: number;
   totalRegistered: number;
-}
-
-async function assertEditorOrAdmin(): Promise<void> {
-  const payload = await getPayload({ config });
-  const h = await headers();
-  const { user } = await payload.auth({ headers: h });
-  const role = (user as { role?: string } | null)?.role ?? '';
-  if (!['admin', 'editor'].includes(role)) {
-    throw new Error('Forbidden — editor or admin role required');
-  }
 }
 
 function buildWhere(filter: AttributionFilter) {

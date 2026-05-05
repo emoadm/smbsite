@@ -112,34 +112,65 @@ async function main(): Promise<void> {
   const drift = [...usedInSrc].filter((n) => !inExample.has(n)).sort();
   const missingInEnv = [...usedInSrc].filter((n) => !inEnv.has(n)).sort();
 
-  if (drift.length === 0 && missingInEnv.length === 0) {
-    console.log(`OK: NEXT_PUBLIC_* env validation passed (${usedInSrc.size} vars checked)`);
-    process.exit(0);
-  }
+  let hasErrors = false;
 
-  console.error('FAIL: NEXT_PUBLIC_* env validation');
-  console.error('');
-
-  if (drift.length > 0) {
-    console.error('  ADD TO .env.example:');
-    for (const name of drift) console.error(`    - ${name}`);
+  if (drift.length > 0 || missingInEnv.length > 0) {
+    hasErrors = true;
+    console.error('FAIL: NEXT_PUBLIC_* env validation');
     console.error('');
-  }
 
-  if (missingInEnv.length > 0) {
-    console.error('  MISSING IN ENV (referenced in src/ but missing or empty in process.env):');
-    for (const name of missingInEnv) {
-      console.error(`    - ${name}`);
-      const hits = hitsByVar.get(name) ?? [];
-      for (const h of hits) console.error(`        ${h.file}:${h.line}`);
+    if (drift.length > 0) {
+      console.error('  ADD TO .env.example:');
+      for (const name of drift) console.error(`    - ${name}`);
+      console.error('');
     }
-    console.error('');
-    console.error('  These vars MUST be set at build time so `next build` can inline them');
-    console.error('  into the client bundle. See: .planning/debug/resolved/registration-flow-cascade.md');
-    console.error('');
+
+    if (missingInEnv.length > 0) {
+      console.error('  MISSING IN ENV (referenced in src/ but missing or empty in process.env):');
+      for (const name of missingInEnv) {
+        console.error(`    - ${name}`);
+        const hits = hitsByVar.get(name) ?? [];
+        for (const h of hits) console.error(`        ${h.file}:${h.line}`);
+      }
+      console.error('');
+      console.error('  These vars MUST be set at build time so `next build` can inline them');
+      console.error('  into the client bundle. See: .planning/debug/resolved/registration-flow-cascade.md');
+      console.error('');
+    }
   }
 
-  process.exit(1);
+  // Phase 5 — newsletter pipeline + unsubscribe (NOTIF-02 / NOTIF-03 / NOTIF-09)
+  // Check required server-side vars in non-test production environments.
+  const isTestBuild =
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY === '1x00000000000000000000AA' &&
+    process.env.NODE_ENV === 'test';
+  const isProd = process.env.NODE_ENV === 'production' && !isTestBuild;
+
+  if (isProd) {
+    const phase5Required = [
+      'EMAIL_FROM_NEWSLETTER',
+      'UNSUBSCRIBE_HMAC_SECRET',
+      'SITE_ORIGIN',
+    ];
+    const missingPhase5 = phase5Required.filter(
+      (v) => !process.env[v] || process.env[v]!.trim() === '',
+    );
+    if (missingPhase5.length > 0) {
+      hasErrors = true;
+      console.error('FAIL: Phase 5 newsletter pipeline — required server-side vars missing:');
+      for (const name of missingPhase5) {
+        console.error(`    - ${name} (must be set via fly secrets set or .env.production)`);
+      }
+      console.error('');
+    }
+  }
+
+  if (hasErrors) {
+    process.exit(1);
+  }
+
+  console.log(`OK: NEXT_PUBLIC_* env validation passed (${usedInSrc.size} vars checked)`);
+  process.exit(0);
 }
 
 main().catch((err) => {
