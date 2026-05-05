@@ -177,10 +177,10 @@ Plans:
 **Plans**: 11 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Shared infra: role-gate extract, logger REDACT, EmailJobKind extension, Brevo headers param, env validator (no NOTIF-* — foundation)
-- [ ] 05-02-PLAN.md — HMAC unsubscribe lib + Drizzle schema (users.preferred_channel + CONSENT_KINDS extension) + migration (NOTIF-02, NOTIF-03)
-- [ ] 05-03-PLAN.md — NewsletterEmail master template + Lexical→HTML converter + 5 bg.json namespaces + i18n-direct loadT (NOTIF-06)
-- [ ] 05-04-PLAN.md — Payload Newsletters collection + CommunityChannels Global + payload.config registration (NOTIF-04, NOTIF-05, NOTIF-09)
+- [x] 05-01-PLAN.md — Shared infra: role-gate extract, logger REDACT, EmailJobKind extension, Brevo headers param, env validator (no NOTIF-* — foundation)
+- [x] 05-02-PLAN.md — HMAC unsubscribe lib + Drizzle schema (users.preferred_channel + CONSENT_KINDS extension) + migration (NOTIF-02, NOTIF-03)
+- [x] 05-03-PLAN.md — NewsletterEmail master template + Lexical→HTML converter + 5 bg.json namespaces + i18n-direct loadT (NOTIF-06)
+- [x] 05-04-PLAN.md — Payload Newsletters collection + CommunityChannels Global + payload.config registration (NOTIF-04, NOTIF-05, NOTIF-09)
 - [ ] 05-05-PLAN.md — BullMQ worker handlers (newsletter-blast/send-recipient/test/unsub-retry) + recipient query + Brevo blocklist sync (NOTIF-02, NOTIF-06, NOTIF-09)
 - [ ] 05-06-PLAN.md — /api/unsubscribe Node-runtime route + /unsubscribed page (NOTIF-02, NOTIF-03)
 - [ ] 05-07-PLAN.md — Newsletter composer custom Payload component + 4 admin Server Actions + live preview (NOTIF-09)
