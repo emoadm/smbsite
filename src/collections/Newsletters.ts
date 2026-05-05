@@ -8,6 +8,8 @@ import {
   OrderedListFeature,
   BoldFeature,
   ItalicFeature,
+  FixedToolbarFeature,
+  InlineToolbarFeature,
 } from '@payloadcms/richtext-lexical';
 
 /**
@@ -91,15 +93,18 @@ export const Newsletters: CollectionConfig = {
       type: 'richText',
       required: true,
       editor: lexicalEditor({
-        // Phase 5 hotfix — UploadFeature() was registered without any
-        // upload-target collection in payload.config.ts (no Media collection
-        // exists). At runtime Lexical fails to populate the upload picker
-        // and the entire body field crashes during mount, leaving the
-        // /admin/collections/newsletters/create form with no body field at
-        // all. Removed UploadFeature; newsletter v1 doesn't ship image
-        // uploads anyway. The lexical-to-html converter's `upload` node
-        // handler stays in place (dormant) for forward-compat if a Media
-        // collection is added later.
+        // Phase 5 — restricted Lexical features (Plan 05-04 D-01).
+        //
+        // UploadFeature was originally listed but removed: payload.config.ts
+        // has no upload-target collection, so registering UploadFeature()
+        // had no effect (and earlier was suspected of causing the body field
+        // crash; real cause was missing importMap.js entries for Lexical
+        // RSC components — see commit f6694c0).
+        //
+        // FixedToolbarFeature + InlineToolbarFeature must be added explicitly
+        // — Payload Lexical separates "format functionality" (Bold, Italic,
+        // Heading, etc.) from "toolbar UI". Without one of these features
+        // the editor renders as a plain contenteditable with no buttons.
         features: () => [
           ParagraphFeature(),
           HeadingFeature({ enabledHeadingSizes: ['h2', 'h3'] }),
@@ -108,6 +113,8 @@ export const Newsletters: CollectionConfig = {
           OrderedListFeature(),
           BoldFeature(),
           ItalicFeature(),
+          FixedToolbarFeature(),
+          InlineToolbarFeature(),
         ],
       }),
     },
