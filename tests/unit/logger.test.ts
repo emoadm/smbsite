@@ -3,6 +3,7 @@ import { Writable } from 'node:stream';
 import { readFileSync } from 'node:fs';
 import pino from 'pino';
 
+
 const REDACT_LIST = [
   'email',
   'password',
@@ -61,5 +62,15 @@ describe('OPS-03 — pino logger redacts PII (D-21)', () => {
   it('REDACT array includes raw_ip (Phase 2.1 D-19 belt-and-braces)', () => {
     const src = readFileSync('src/lib/logger.ts', 'utf8');
     expect(src).toMatch(/'raw_ip'/);
+  });
+});
+
+describe('Phase 5 D-24 — REDACT extended for newsletter worker', () => {
+  it('REDACT array includes "to" and "recipient_email"', () => {
+    const src = readFileSync('src/lib/logger.ts', 'utf8');
+    // Strip comments before assertion to avoid the "self-invalidating grep gate" pitfall
+    const codeOnly = src.split('\n').filter(l => !l.trim().startsWith('//')).join('\n');
+    expect(codeOnly).toMatch(/'to'/);
+    expect(codeOnly).toMatch(/'recipient_email'/);
   });
 });
