@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useDocumentInfo } from '@payloadcms/ui';
+import { Toaster } from 'sonner';
 import { LivePreviewIframe } from './LivePreviewIframe';
 import { SendBlastButton } from './SendBlastButton';
 import { Button } from '@/components/ui/button';
@@ -94,6 +95,17 @@ export function NewsletterComposer(props: NewsletterComposerProps) {
 
   return (
     <div className="newsletter-composer">
+      {/* Phase 5 hotfix — Sonner Toaster MUST be mounted somewhere in the
+          admin DOM tree for toast.error/success calls in this component to
+          actually render. The (payload)/layout.tsx wraps Payload's admin
+          shell and does NOT include a Toaster (the project's Toaster is
+          only mounted on /member/preferences). Mounting it here is the
+          cleanest scoped fix — toasts from sendTest, cancelScheduled, and
+          sendBlast all flow through Sonner's global queue and will render
+          via this Toaster as long as the composer is on screen. Using the
+          bare `sonner` Toaster (not the project's themed wrapper) to avoid
+          pulling in next-themes/ThemeProvider in the admin context. */}
+      <Toaster richColors position="bottom-right" />
       {/* ≥xl split-pane, <xl tab-toggle (UI-SPEC §5.4.1) */}
       <Tabs
         value={tab}
