@@ -41,6 +41,19 @@ export const Newsletters: CollectionConfig = {
     useAsTitle: 'subject',
     defaultColumns: ['subject', 'topic', 'status', 'scheduledAt'],
     description: 'Бюлетини — изпращат се през BullMQ опашката на newsletter темите.',
+    // Phase 5 NOTIF-09 — composer custom component renders above the document
+    // controls (Save / Publish buttons) on the Edit view. Payload 3.84 collection
+    // admin does NOT expose a generic `afterFields` — the closest seam for
+    // augmenting (not replacing) the edit view is `admin.components.edit.beforeDocumentControls`.
+    // Path resolves via importMap.js (Pitfall 7 — explicit string registration;
+    // payload.config.ts is NOT modified).
+    components: {
+      edit: {
+        beforeDocumentControls: [
+          '/src/components/payload/NewsletterComposer#NewsletterComposer',
+        ],
+      },
+    },
   },
   access: {
     read: isEditorOrAdmin,
