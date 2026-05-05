@@ -182,7 +182,7 @@ Plans:
 - [x] 05-03-PLAN.md — NewsletterEmail master template + Lexical→HTML converter + 5 bg.json namespaces + i18n-direct loadT (NOTIF-06)
 - [x] 05-04-PLAN.md — Payload Newsletters collection + CommunityChannels Global + payload.config registration (NOTIF-04, NOTIF-05, NOTIF-09)
 - [ ] 05-05-PLAN.md — BullMQ worker handlers (newsletter-blast/send-recipient/test/unsub-retry) + recipient query + Brevo blocklist sync (NOTIF-02, NOTIF-06, NOTIF-09)
-- [ ] 05-06-PLAN.md — /api/unsubscribe Node-runtime route + /unsubscribed page (NOTIF-02, NOTIF-03)
+- [x] 05-06-PLAN.md — /api/unsubscribe Node-runtime route + /unsubscribed page (NOTIF-02, NOTIF-03)
 - [ ] 05-07-PLAN.md — Newsletter composer custom Payload component + 4 admin Server Actions + live preview (NOTIF-09)
 - [ ] 05-08-PLAN.md — /member/preferences page + register D-09 extension + member dashboard cards (NOTIF-01, NOTIF-03)
 - [ ] 05-09-PLAN.md — /community page (preview-vs-redeem) + Footer Column 4 conditional links (NOTIF-04, NOTIF-05)
