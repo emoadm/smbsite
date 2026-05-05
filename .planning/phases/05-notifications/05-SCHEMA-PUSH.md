@@ -1,7 +1,7 @@
 ---
 phase: 05-notifications
 gate: schema-push
-status: pending-admin-ui-smoke
+status: applied
 applied_at: 2026-05-05T12:14:35Z (Fly.io deploy 27 — image deployment-01KQW0K1PD95SBBK64S7TYCTZF)
 applied_by: emoadm (Drizzle migration via CI; Payload tables via manual DDL — see incident note below)
 ---
@@ -11,11 +11,9 @@ applied_by: emoadm (Drizzle migration via CI; Payload tables via manual DDL — 
 This document is the BLOCKING gate sign-off for Phase 5. Wave 4 (plan 05-11)
 verification cannot run until this gate is closed.
 
-**Status:** pending-admin-ui-smoke — schema is applied to live Neon and the
-public surface is back to 200 on `/`, `/register`, `/login`, `/community`.
-Final step before flipping to `applied` is operator confirmation that
-`/admin/collections/newsletters` and `/admin/globals/community-channels`
-load + persist edits (Step E below).
+**Status:** applied (2026-05-05) — schema is on live Neon, public surface is
+200 on all (frontend) routes, admin UI smoke passed (4/4). Wave 4 (plan 05-11)
+verification is now unblocked.
 
 ## Incident — initial deploy failed
 
@@ -113,10 +111,10 @@ The orchestrator's `<schema_push_requirement>` recommended `CI=true PAYLOAD_MIGR
 
 ## Admin UI smoke test (post-deploy)
 
-- **`/admin/collections/newsletters` loads:** TBD — operator
-- **"Create new" opens draft form:** TBD — operator
-- **`/admin/globals/community-channels` loads:** TBD — operator
-- **Edit `bgDescription` + Save persists after reload:** TBD — operator
+- **`/admin/collections/newsletters` loads:** ✓ (operator-verified 2026-05-05)
+- **"Create new" opens draft form:** ✓
+- **`/admin/globals/community-channels` loads:** ✓
+- **Edit `bgDescription` + Save persists after reload:** ✓
 
 ## Rollback plan
 
