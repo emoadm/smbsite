@@ -186,7 +186,7 @@ Plans:
 - [x] 05-07-PLAN.md — Newsletter composer custom Payload component + 4 admin Server Actions + live preview (NOTIF-09)
 - [x] 05-08-PLAN.md — /member/preferences page + register D-09 extension + member dashboard cards (NOTIF-01, NOTIF-03)
 - [x] 05-09-PLAN.md — /community page (preview-vs-redeem) + Footer Column 4 conditional links (NOTIF-04, NOTIF-05)
-- [ ] 05-10-PLAN.md — [BLOCKING] Schema push (Drizzle migration applied + Payload auto-DDL verified)
+- [x] 05-10-PLAN.md — [BLOCKING] Schema push — Drizzle migration applied via CI; Payload tables applied via manual DDL (Neon SQL console) after auto-DDL-on-boot assumption failed in prod; gate doc 05-SCHEMA-PUSH.md flipped to applied 2026-05-05
 - [ ] 05-11-PLAN.md — E2E activation + manual mailbox verification + coalition-placeholder grep gate + STATE sign-off (all NOTIF-*)
 
 **UI hint**: yes
