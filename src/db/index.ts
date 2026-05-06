@@ -5,7 +5,19 @@ import { drizzle as drizzleNodePg } from 'drizzle-orm/node-postgres';
 import ws from 'ws';
 import * as schema from './schema';
 
-const url = process.env.DATABASE_URL!;
+// Phase 5 G1 (UAT gap closure) — explicit guard replaces the bare non-null
+// assertion. When DATABASE_URL is unset (e.g. `pnpm worker` invoked without
+// .env.local loaded, or a Fly secret rotation that drops the variable),
+// surface an actionable error instead of a confusing TypeError from
+// `.includes(...)` against undefined.
+const url = process.env.DATABASE_URL;
+if (!url) {
+  throw new Error(
+    'DATABASE_URL is not set. For dev runs, ensure .env.local is loaded ' +
+      "(scripts using tsx must `import 'dotenv/config'` or equivalent before " +
+      'importing src/db/*). For Fly.io, run `fly secrets set DATABASE_URL=...`.',
+  );
+}
 
 // CI Postgres + local dev speak plain TCP. The Neon serverless driver is
 // WebSocket-only, so it can't talk to a vanilla postgres on localhost. Detect
