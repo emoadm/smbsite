@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 5 UI-SPEC approved
-last_updated: "2026-05-05T02:13:45.448Z"
-last_activity: 2026-05-05 -- Phase 05 execution started
+stopped_at: Phase 5 manual verification complete — ready for /gsd-verify-work 05
+last_updated: "2026-05-06T17:30:00.000Z"
+last_activity: 2026-05-06 -- Phase 5 manual verifications signed off; D-Phase5-prep DNS resolved; 6 hotfixes shipped (importMap, Lexical toolbar, useDocumentInfo, Toaster, loadEnv patch)
 progress:
   total_phases: 7
   completed_phases: 3
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: 05 (notifications) — EXECUTING
-Plan: 1 of 11
-Status: Executing Phase 05
-Last activity: 2026-05-05 -- Phase 05 execution started
+Phase: 05 (notifications) — VERIFIED end-to-end (manual verification §05-MANUAL-VERIFICATION.md). Ready for `/gsd-verify-work 05`.
+Plan: 11 of 11 (Task 05.11.3 doc + STATE update committed; Task 05.11.4 is the verify-work gate)
+Status: Phase 05 code-shipping complete; manual verifications passed (DKIM ✓, Global swap ✓, real test send ✓, Cyrillic in Gmail + Apple Mail ✓, raw-header inspect soft-passed pending first blast, abv.bg/mail.bg/Outlook deferred to first real users)
+Last activity: 2026-05-06 -- Phase 5 manual verifications signed off + 6 hotfixes shipped during the session (importMap RSC + client features, FixedToolbar/InlineToolbar, useDocumentInfo, Toaster, payload loadEnv patch)
 
 Progress: [██████████] 100% (30/30 plans complete across Phase 1 + Phase 2 + Phase 02.1; all three code-shipping complete; Phase 02.1 OPS-05 signed off, Phase 1 + Phase 2 still awaiting operator-side warmup/sign-off + coalition deliverables)
 
@@ -98,7 +98,7 @@ None yet.
 | ops | ~~Cloudflare WAF custom rule~~ — RESOLVED via Plan 02-07 strict-Edge `src/middleware.ts` (cf-ray casual-probe gate, S5 pattern). Hard auth boundary tracked separately as `D-CloudflareIPAllowlist` (post-warmup-hardening). | resolved: Plan 02-07 (cebd636) | Plan 01-13 |
 | ops | Payload `loadEnv.js` patch-package fix for `payload migrate` CLI (payload@3.84 + next@15.3 incompat) | resolves_phase: 2 | Plan 01-13 |
 | ops | Operator-side: Postmaster Tools enrollment, 4-week warmup ladder execution, restore dry-run, first nightly backup verification, final Phase 1 sign-off signature | tracked in 01-DELIVERABILITY-CHECKLIST.md | Plan 01-13 |
-| ops | `D-Phase5-prep` — `mail2._domainkey.news.chastnik.eu` CNAME not yet added in Cloudflare DNS (must add before Phase 5 first newsletter send; news.* is Phase 5 sender, Phase 1 transactional path uses auth.*) | resolves_phase: 5 | Quick 260502-lhc |
+| ops | ~~`D-Phase5-prep` — `mail2._domainkey.news.chastnik.eu` CNAME not yet added in Cloudflare DNS~~ — RESOLVED 2026-05-06 (Plan 05-11 manual verification §1). Operator added the CNAME → `brevo2._domainkey.news.chastnik.eu`; full `news.*` DKIM chain now at parity with `auth.*`. First Phase 5 send unblocked. | resolved: Plan 05-11 (2026-05-06) | Quick 260502-lhc |
 | coalition | `D-CoalitionLogoSVG` — official high-res Sinya SVG logo asset. **BLOCKING** Phase 2 final ship. Phase 2 build can proceed with sinyabulgaria.bg live-site asset as placeholder. | resolves_phase: 2 | Phase 2 discuss |
 | coalition | `D-CoalitionContent-Hero` — hero headline + sub-headline copy (Bulgarian, formal-respectful). Coalition writes; Phase 2 ships with `[ТЕКСТ ОТ КОАЛИЦИЯ]` placeholder until delivered. | resolves_phase: 2 | Phase 2 discuss |
 | coalition | `D-CoalitionContent-Agenda` — entire `/agenda` page text (political program, vision, ~800-2000 words). Coalition writes; placeholder mechanism until delivered. | resolves_phase: 2 | Phase 2 discuss |
@@ -117,7 +117,7 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-04T19:08:18.682Z
-Stopped at: Phase 5 UI-SPEC approved
+Stopped at: Phase 5 manual verification complete — ready for /gsd-verify-work 05
 Resume file: .planning/phases/05-notifications/05-UI-SPEC.md
 Next command: /gsd-verify-work 02.1
 
