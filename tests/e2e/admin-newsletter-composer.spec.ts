@@ -82,7 +82,7 @@ test.describe('Phase 5 — newsletter composer (NOTIF-09)', () => {
 
     // 7. Send Blast must be DISABLED (no test sent yet — gate state "never").
     const sendBlastBtn = page.getByRole('button', {
-      name: /Изпрати рекламата|Планирай изпращане/,
+      name: /Изпрати бюлетина|Планирай изпращане/,
     });
     await expect(sendBlastBtn).toBeDisabled();
 
@@ -101,13 +101,13 @@ test.describe('Phase 5 — newsletter composer (NOTIF-09)', () => {
     // 10. Send Blast must now be ENABLED.
     await expect(
       page.getByRole('button', {
-        name: /Изпрати рекламата|Планирай изпращане/,
+        name: /Изпрати бюлетина|Планирай изпращане/,
       }),
     ).toBeEnabled({ timeout: 10_000 });
 
     // 11. Click Send Blast → expect post-send Dialog
     //     (admin.newsletters.postSend.title === "Бюлетинът е поставен в опашката").
-    await page.getByRole('button', { name: /Изпрати рекламата|Планирай изпращане/ }).click();
+    await page.getByRole('button', { name: /Изпрати бюлетина|Планирай изпращане/ }).click();
     await expect(page.getByText(/Бюлетинът е поставен в опашката/)).toBeVisible({
       timeout: 10_000,
     });

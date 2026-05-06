@@ -16,6 +16,13 @@ export default defineConfig({
     },
     coverage: { reporter: ['text', 'lcov'], exclude: ['tests/**', '**/*.config.*'] },
   },
+  // Phase 5 Plan 05-13 — JSX automatic runtime so .tsx components compile
+  // without an explicit `import React from 'react'` (the project's tsconfig
+  // has `jsx: "preserve"` for Next.js's compiler; vitest needs its own
+  // esbuild setting). Required for the jsdom mount test added in 05-13.
+  esbuild: {
+    jsx: 'automatic',
+  },
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
   },
