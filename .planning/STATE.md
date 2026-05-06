@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 5 manual verification complete — ready for /gsd-verify-work 05
-last_updated: "2026-05-06T17:30:00.000Z"
-last_activity: 2026-05-06 -- Phase 5 manual verifications signed off; D-Phase5-prep DNS resolved; 6 hotfixes shipped (importMap, Lexical toolbar, useDocumentInfo, Toaster, loadEnv patch)
+stopped_at: Phase 5 gap closure complete (G1, G2, G3, G4) — re-run /gsd-verify-work 05
+last_updated: "2026-05-06T22:30:00.000Z"
+last_activity: 2026-05-06 -- Phase 5 gap closure complete (G1, G2, G3, G4) — admin newsletter blast send unblocked, Redis eviction policy verified across all environments under strict no-silent-degradation contract
 progress:
   total_phases: 7
   completed_phases: 3
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: 05 (notifications) — VERIFIED end-to-end (manual verification §05-MANUAL-VERIFICATION.md). Ready for `/gsd-verify-work 05`.
-Plan: 11 of 11 (Task 05.11.3 doc + STATE update committed; Task 05.11.4 is the verify-work gate)
-Status: Phase 05 code-shipping complete; manual verifications passed (DKIM ✓, Global swap ✓, real test send ✓, Cyrillic in Gmail + Apple Mail ✓, raw-header inspect soft-passed pending first blast, abv.bg/mail.bg/Outlook deferred to first real users)
-Last activity: 2026-05-06 -- Phase 5 manual verifications signed off + 6 hotfixes shipped during the session (importMap RSC + client features, FixedToolbar/InlineToolbar, useDocumentInfo, Toaster, payload loadEnv patch)
+Phase: 05 (notifications) — VERIFIED end-to-end (manual verification §05-MANUAL-VERIFICATION.md) + UAT gap closure complete (G1, G2, G3, G4 all closed via plans 05-12 / 05-13 / 05-14). Ready for `/gsd-verify-work 05` re-run.
+Plan: 14 of 14 (gap-closure plans 05-12/13/14 complete; original 11 verified; Task 05.11.4 is the verify-work gate)
+Status: Phase 05 code-shipping + gap-closure complete; manual verifications passed (DKIM ✓, Global swap ✓, real test send ✓, Cyrillic in Gmail + Apple Mail ✓); UAT gaps closed: G1 worker dotenv ✓, G2 SendBlastButton gate-field wiring ✓ (Phase 5 BLOCKER lifted), G3 Bulgarian register ✓, G4 Redis maxmemory-policy=noeviction across all 3 environments ✓ (closed 2026-05-06 — local dev Homebrew default, staging + production Upstash dashboard toggle); abv.bg/mail.bg/Outlook deferred to first real users
+Last activity: 2026-05-06 -- Phase 5 gap closure complete (G1, G2, G3, G4); G4 closed via plan 05-14: Redis eviction policy verified `noeviction` across local/staging/production under strict no-silent-degradation contract; ops sign-off committed (ee259f5); transitively resolves latent silent-job-loss risk in Phase 1 OTP queue (shared UPSTASH_REDIS_URL)
 
 Progress: [██████████] 100% (30/30 plans complete across Phase 1 + Phase 2 + Phase 02.1; all three code-shipping complete; Phase 02.1 OPS-05 signed off, Phase 1 + Phase 2 still awaiting operator-side warmup/sign-off + coalition deliverables)
 
@@ -70,6 +70,7 @@ Recent decisions affecting current work:
 - Plan 01-13: Apex DMARC `rua=mailto:emoadm@gmail.com` (coalition operator inbox); subdomain DMARCs use Brevo-managed `rua@dmarc.brevo.com` aggregator
 - Plan 01-13: Production Payload admin bootstrapped via `/api/admin-bootstrap` HTTP route (now disabled) — fly-ssh procedure in OPS-RUNBOOK §2 hits payload@3.84+next@15.3 loadEnv incompatibility; patch-package fix deferred to phase 2
 - 2026-05-02 (post-Phase-1): Phase 2 split into Phase 2 "Public Surface (Pre-Warmup)" and Phase 2.1 "Attribution + Source Dashboard" (INSERTED). Reason: warmup ladder needs a real branded landing page + welcoming /member page so friends/family registering during warmup see real explanatory content (degrades warmup signal otherwise). Phase 2 keeps PUB-01..04 + GDPR-01..03; ATTR-01..07 and OPS-05 moved to Phase 2.1. Phase 2.1 runs in parallel with warmup, finishes before QR mail drop. Phase directory created: `.planning/phases/02.1-attribution-source-dashboard/`.
+- 2026-05-06 (Phase 5 gap-closure, plans 05-12 / 05-13 / 05-14): UAT G1 (worker dotenv load) + G2 (SendBlastButton gate-field wiring — Phase 5 BLOCKER) + G3 (Bulgarian register slip) + G4 (Redis maxmemory-policy=noeviction across all 3 environments under strict no-silent-degradation contract) all closed. The G4 fix transitively closes a latent silent-job-loss risk in Phase 1's OTP queue (same UPSTASH_REDIS_URL — see `src/lib/email/queue.ts:36`); see `.planning/phases/05-notifications/05-OPS-REDIS-EVICTION.md` for per-environment sign-off + skip-flag audit trail. Production never uses the WORKER_SKIP_EVICTION_ASSERT escape hatch. Startup-time assertion in `scripts/start-worker.ts` provides ongoing regression guard — verified-wrong policy always exits, unverifiable case requires explicit env-flag opt-in with structured audit-greppable warn line.
 
 ### Pending Todos
 
