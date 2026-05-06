@@ -70,11 +70,20 @@ function renderComposer() {
 }
 
 function findSendBlastButton(): HTMLButtonElement | null {
-  // SendBlastButton renders a single <button> with the localized blast label
+  // SendBlastButton renders a <button> with the localized blast label
   // (`Изпрати бюлетина` after Plan 05-13's i18n fix, or `Планирай изпращане`
-  // when scheduledAt is set). Match by accessible name across both copies.
-  const byName = screen.queryByRole('button', { name: /Изпрати бюлетина|Планирай изпращане/ });
-  return (byName as HTMLButtonElement | null) ?? null;
+  // when scheduledAt is set). When the gate is non-recent, Radix Tooltip's
+  // `asChild` trigger wraps the button — under React 19 + jsdom this can
+  // surface as two `role=button` matches (one base, one tooltip-trigger
+  // forwarded clone). Both render the same accessible name and the same
+  // `disabled` state, so picking either is safe; we take the LAST match
+  // (the one actually attached to the rendered tree at the action-bar
+  // location, after the tooltip slot wrap).
+  const matches = screen.queryAllByRole('button', {
+    name: /Изпрати бюлетина|Планирай изпращане/,
+  });
+  if (matches.length === 0) return null;
+  return matches[matches.length - 1] as HTMLButtonElement;
 }
 
 describe('Phase 5 G2 — NewsletterComposer mounts SendBlastButton with correct gate state', () => {

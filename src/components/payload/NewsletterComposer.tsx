@@ -57,6 +57,33 @@ export function NewsletterComposer(props: NewsletterComposerProps) {
   const newsletterId =
     docId !== undefined && docId !== null ? String(docId) : props.newsletterId;
 
+  // Phase 5 G2 (UAT gap closure — Plan 05-13) — gate-field wiring fix.
+  // Payload's `admin.components.edit.beforeDocumentControls` slot passes NO
+  // document fields as plain props. The 6daaf8c hotfix fixed this for the
+  // doc ID via useDocumentInfo() but stopped at the ID. lastTestSentAt and
+  // lastEditedAfterTestAt are read from useDocumentInfo().savedDocumentData
+  // (the persisted DB row shape — matches what src/lib/email/worker.tsx:271
+  // writes after a successful test send). Fallback chain handles the upstream
+  // deprecation: savedDocumentData → data → initialData → props (last resort).
+  // Without this fix, computeGate() always returns 'never' and the blast
+  // button is permanently disabled — Phase 5 main shipping deliverable
+  // (newsletter blast send) is non-functional via the admin UI.
+  const persistedData =
+    (docInfo?.savedDocumentData as Record<string, unknown> | undefined) ??
+    (docInfo?.data as Record<string, unknown> | undefined) ??
+    (docInfo?.initialData as Record<string, unknown> | undefined);
+  const persistedLastTestSentAt = persistedData?.lastTestSentAt;
+  const persistedLastEditedAfterTestAt = persistedData?.lastEditedAfterTestAt;
+
+  const resolvedLastTestSentAt =
+    typeof persistedLastTestSentAt === 'string'
+      ? persistedLastTestSentAt
+      : props.lastTestSentAt ?? null;
+  const resolvedLastEditedAfterTestAt =
+    typeof persistedLastEditedAfterTestAt === 'boolean'
+      ? persistedLastEditedAfterTestAt
+      : props.lastEditedAfterTestAt;
+
   const previewArgs = {
     subject: props.subject ?? '',
     previewText: props.previewText ?? '',
@@ -150,8 +177,8 @@ export function NewsletterComposer(props: NewsletterComposerProps) {
           <SendBlastButton
             newsletterId={newsletterId}
             scheduledAt={props.scheduledAt}
-            lastTestSentAt={props.lastTestSentAt}
-            lastEditedAfterTestAt={props.lastEditedAfterTestAt}
+            lastTestSentAt={resolvedLastTestSentAt}
+            lastEditedAfterTestAt={resolvedLastEditedAfterTestAt}
           />
         )}
       </div>
