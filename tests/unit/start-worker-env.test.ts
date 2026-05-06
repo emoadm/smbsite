@@ -40,9 +40,15 @@ describe('Phase 5 G1 — scripts/start-worker.ts dotenv-first invariant', () => 
 
     // Find first dotenv-loader line (case-insensitive match on the dotenv module).
     const dotenvIdx = codeLines.findIndex(({ line }) => /dotenv/i.test(line));
-    // Find first project-relative import.
+    // Find first project-relative import. Accepts both static (`import ... from '../src/...'`)
+    // and dynamic (`await import('../src/...')` / `import('../src/...')`) forms — the
+    // contract is "dotenv loads before any src/ module is evaluated", not the syntax flavour.
+    // Plan 05-14 (Phase 5 G4) introduced an async `main()` that uses dynamic imports
+    // so the eviction-policy assertion can run between dotenv and src/* loads; both forms
+    // honour the underlying invariant.
     const projectImportIdx = codeLines.findIndex(({ line }) =>
-      /^\s*import\s.*from\s+['"]\.\.\/src\//.test(line),
+      /^\s*import\s.*from\s+['"]\.\.\/src\//.test(line) ||
+      /\bimport\s*\(\s*['"]\.\.\/src\//.test(line),
     );
 
     expect(
