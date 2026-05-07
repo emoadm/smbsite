@@ -18,9 +18,9 @@ export async function Header() {
       <div className="mx-auto flex h-14 max-w-[1140px] items-center justify-between px-4 md:h-16 md:px-6">
         <Link href="/" aria-label={brand} className="flex items-center">
           <Image
-            src="/logo-placeholder.svg"
+            src="/logo.svg"
             alt={brand}
-            width={120}
+            width={156}
             height={40}
             className="h-8 w-auto md:h-10"
             priority

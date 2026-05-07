@@ -73,9 +73,9 @@ export async function Footer() {
           <div>
             <Link href="/" aria-label={brand} className="inline-flex items-center">
               <Image
-                src="/logo-placeholder.svg"
+                src="/logo.svg"
                 alt={brand}
-                width={96}
+                width={125}
                 height={32}
                 className="h-8 w-auto"
               />

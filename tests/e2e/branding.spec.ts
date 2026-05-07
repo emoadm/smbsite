@@ -19,7 +19,7 @@ test.describe('Branding contract — BRAND-02, BRAND-03, BRAND-06', () => {
       await expect(logo).toBeVisible();
       const img = logo.locator('img');
       await expect(img).toHaveAttribute('alt', 'Синя България');
-      await expect(img).toHaveAttribute('src', /logo-placeholder\.svg/);
+      await expect(img).toHaveAttribute('src', /logo\.svg/);
     }
   });
 
