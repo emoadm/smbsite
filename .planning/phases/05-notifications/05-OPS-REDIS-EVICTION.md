@@ -1,13 +1,57 @@
 ---
 phase: 05-notifications
 gate: redis-eviction-policy
-status: passed
+status: passed-with-contradiction
 verified_at: 2026-05-06T22:00:00+03:00
 verified_by: emoadm
-skip_flag_in_use: false
+skip_flag_in_use: true
+skip_flag_set_at: 2026-05-07T21:32:53Z
+skip_flag_set_by: emoadm (via fly secrets set on smbsite-prod)
+policy_followup: open — production deploy contradicted the doc's CONFIG-GET-on-prod-Upstash assumption; see "Update — 2026-05-08" below.
 ---
 
 # Phase 5 G4 — Redis maxmemory-policy verification
+
+## Update — 2026-05-08 (post-first-prod-worker-deploy)
+
+The first production deploy carrying the runtime assertion (image v36, commit
+`e78109b`) crashlooped on machine `6e823240c12438` with:
+
+```
+[worker] FATAL eviction-assert: Cannot verify Redis maxmemory-policy=noeviction
+— CONFIG GET returned unexpected shape: [].
+```
+
+This **contradicts the doc's prior assumption** in §3 below (lines 99, 112, 118)
+that "Production Upstash exposes CONFIG GET via the connection string." It
+does not, on the pay-as-you-go plan we are using. CONFIG GET returns an empty
+array, indistinguishable from the staging-tier deny pattern the doc anticipates.
+
+**Mitigation applied:** `WORKER_SKIP_EVICTION_ASSERT=1` set on `smbsite-prod`
+via `fly secrets set` at 2026-05-07T21:32:53Z. Worker exited the crashloop;
+all four machines now on image v36. Web app (`/`, `/register`, `/login`)
+verified live via curl smoke at 21:33Z.
+
+**Defence-in-depth still holds:** the Upstash dashboard verification
+(`Eviction Policy: noeviction`) on 2026-05-06 by emoadm remains valid; the
+infra-level policy is correct. What's lost is the worker-boot regression
+guard against a future dashboard-side change.
+
+**Policy decision deferred:** the doc's §3 line 112 — "Production — NOT
+ACCEPTABLE" for the skip flag — is currently violated. Before next gate
+review, operator decides between:
+  (a) Accept skip flag in prod; rewrite §3 / "Skip-flag audit trail" to
+      reflect that Upstash on the current plan blocks CONFIG GET
+      regardless of tier, and document the alternate regression-detection
+      strategy (e.g. periodic dashboard scrape, Sentry alert on BullMQ
+      "Eviction policy" warn at boot).
+  (b) Migrate the production Redis to a backend that exposes CONFIG GET
+      (self-hosted on Hetzner, Redis Cloud, or Upstash dedicated cluster
+      tier), then unset the skip flag and re-verify.
+
+This file's `skip_flag_in_use` flips to `true` to reflect production
+reality. The audit-trail table below (line 116) is left intact pending the
+(a)/(b) decision so the contradiction is visible, not hidden.
 
 This doc records the manual operator step closing UAT Gap G4: every Redis
 instance backing BullMQ MUST have `maxmemory-policy=noeviction` so that
@@ -126,21 +170,35 @@ worker should print one of:
 - `eviction-assert-skipped reason=<...> at=<ISO>` → skip flag in use (only allowed outside production).
 - `[worker] FATAL eviction-assert: ...` → worker exits with code 1; Fly's restart loop becomes the alerting channel.
 
-- **Production worker boot log (post-deploy):**
+- **Production worker boot log (post-deploy 2026-05-07T21:30Z, image v35):**
   ```
-  [pending — first deploy carrying scripts/start-worker.ts assertion code (commits f9ba1e5 + 53b355a) has not yet shipped. Operator will paste the boot-log line after the next worker deploy on Fly.io. Expected: `[worker] eviction-assert: noeviction ✓`]
+  [worker] FATAL eviction-assert: Cannot verify Redis maxmemory-policy=noeviction
+  — CONFIG GET returned unexpected shape: [].
+  Set WORKER_SKIP_EVICTION_ASSERT=1 to bypass after recording sign-off in
+  .planning/phases/05-notifications/05-OPS-REDIS-EVICTION.md.
   ```
-- **Status:** assertion code merged to main; runtime verification deferred to next worker deploy. The infra-level policy fix (UAT 2026-05-06) is independently verified via Upstash dashboard above; the assertion is defence-in-depth that will catch any future regression at boot.
+  → worker crashlooped; max restart count reached at 21:30:48Z.
+
+- **Production worker boot log (post-skip-flag 2026-05-07T21:32:53Z, image v36):**
+  ```
+  [no FATAL line; main child remained running until Fly auto-stopped per autostop_machines]
+  ```
+  → worker startup succeeded with the skip flag set.
+
+- **Status:** runtime CONFIG GET assertion **failed** in production (contradicts §3 line 99). Skip flag now bearing the load; doc-level policy decision tracked in the "Update — 2026-05-08" section above. Infra-level eviction policy itself (`noeviction`) remains independently verified via Upstash dashboard on 2026-05-06.
 
 ## Sign-off
 
 - [x] Local dev Redis verified (`noeviction`) — Homebrew default, no skip flag
 - [x] Staging Upstash verified (`noeviction`) — dashboard toggle 2026-05-06
-- [x] Production Upstash verified (`noeviction`) — dashboard toggle 2026-05-06; skip flag NOT in use
-- [ ] Startup-time assertion confirmed in production worker boot log — **deferred to next worker deploy** (assertion code only just landed in main; first verification on next `fly deploy`)
+- [x] Production Upstash verified (`noeviction`) — dashboard toggle 2026-05-06
+- [~] Skip flag NOT in use in production — **NO LONGER TRUE** as of 2026-05-07T21:32:53Z (see "Update — 2026-05-08"). Policy decision (a)/(b) open.
+- [~] Startup-time assertion confirmed in production worker boot log — assertion **executed** and **failed** with CONFIG GET = `[]`; defence-in-depth not active until policy decision lands.
 - [x] STATE.md updated to note this resolves a latent risk in Phase 1 OTP queue too — Task 05.14.3
 
-**UAT Gap G4 closed at the infra layer.** The assertion is the regression guard; production-boot-log paste is a soft follow-up after the next worker deploy. Phase 5 ready for `/gsd-verify-work 05`.
+**UAT Gap G4 closed at the infra layer** (eviction policy is `noeviction`).
+The boot-time defence-in-depth guard is currently bypassed in production
+pending operator policy decision (see "Update — 2026-05-08").
 
 ## Operator notes
 
