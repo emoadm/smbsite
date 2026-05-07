@@ -133,17 +133,19 @@ Plans:
   4. An editor can log into the admin panel, create and publish ideas to the catalog, and view real-time vote anomaly alerts when velocity thresholds are exceeded
   5. A member can view their personal dashboard showing their votes and activity; they can update their notification channel preferences
 
-**Plans**: 8 plans
+**Plans**: 10 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Wave 0 test scaffolds (8 unit-test files) + bg.json keys (idea/vote/member/profile/admin namespaces) (IDEA-01..08, MEMB-01..03, EDIT-02, OPS-04)
+- [ ] 03-01-PLAN.md — Wave 0 test scaffolds (8 unit-test files) + bg.json keys (idea/vote/member/profile/admin + email.voteAnomaly namespaces) (IDEA-01..08, MEMB-01..03, EDIT-02, OPS-04)
 - [ ] 03-02-PLAN.md — Drizzle schema (votes, vote_events_log, moderation_log, vote_anomalies) + voting utility modules (hmac, cooling, rate-limit, cache, slug) + Drizzle CLI push to staging+prod Neon (IDEA-04..08, OPS-04)
 - [ ] 03-03-PLAN.md — Payload Ideas collection + manual Neon DDL [BLOCKING] + payload.config.ts registration (IDEA-01, EDIT-02)
 - [ ] 03-04-PLAN.md — castVote / retractVote / undoRetract Server Actions + concurrent-INSERT race + retract integration tests + rate-limit unit test (IDEA-03, IDEA-04, IDEA-05, IDEA-06, IDEA-07)
-- [ ] 03-05-PLAN.md — Public catalog /idei + idea detail /idei/[slug] + 9 idea/* components + 8 shadcn primitives + 5 e2e specs + 3 unit tests (IDEA-01, IDEA-02, IDEA-03, IDEA-05, IDEA-06, IDEA-08)
+- [ ] 03-05a-PLAN.md — Public catalog /idei + IdeaCard + TopicChips + SortDropdown + CatalogPagination + 8 shadcn primitives + 1 e2e + 2 unit tests (IDEA-01, IDEA-02)
+- [ ] 03-05b-PLAN.md — Idea detail /idei/[slug] + VoteButtons + VoteCountDisplay + RetractToast + TurnstileChallenge + IdeaDetail Lexical render + draft preview gate + 4 e2e + 1 unit test (IDEA-03, IDEA-05, IDEA-06, IDEA-08)
 - [ ] 03-06-PLAN.md — Member dashboard My Activity panel + /member/profile read-only page + cooling indicator (MEMB-01, MEMB-02, MEMB-03, IDEA-07)
-- [ ] 03-07-PLAN.md — Editor admin: /admin/views/vote-anomalies + Ideas sidebar + ViewOnSiteButton + AnomalyBadge + freeze/exclude Server Actions + manual editor walkthrough (EDIT-01, EDIT-02, OPS-04)
-- [ ] 03-08-PLAN.md — OPS-04 anomaly detector worker + Sentry + Brevo email pipeline + 3 trigger integration tests + Phase gate end-to-end + OPS-RUNBOOK HMAC rotation + threshold tuning (OPS-04)
+- [ ] 03-07a-PLAN.md — Editor admin read-only: /admin/views/vote-anomalies View + Dashboard + read-only Server Actions (fetchVoteAnomalies / fetchVoteEventForensic) + role-gate e2e (OPS-04)
+- [ ] 03-07b-PLAN.md — Editor admin write-side: IdeaSidebar + ViewOnSiteButton + AnomalyBadge + ExcludeVotesDialog + freezeIdea / excludeVotes / dismissAnomaly / actAnomaly Server Actions + cache.ts silent-freeze gate + manual editor walkthrough (EDIT-01, EDIT-02, OPS-04)
+- [ ] 03-08-PLAN.md — OPS-04 anomaly detector worker + Sentry + Brevo email pipeline (loadT pattern) + 3 trigger integration tests + Phase gate end-to-end + OPS-RUNBOOK HMAC rotation + threshold tuning (OPS-04)
 
 **UI hint**: yes
 
@@ -233,7 +235,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Foundation | 13/13 | Code-shipping complete; operator warmup + sign-off pending | - |
 | 2. Public Surface + Attribution | 0/TBD | Not started | - |
-| 3. Idea Catalog + Voting | 0/8 | Not started — planning complete; HARD-BLOCKED on GDPR Art.9 lawyer opinion before merge | - |
+| 3. Idea Catalog + Voting | 0/10 | Not started — planning complete (post-checker revision: 03-05 split into 03-05a/b, 03-07 split into 03-07a/b); HARD-BLOCKED on GDPR Art.9 lawyer opinion before merge | - |
 | 4. User Submissions + Editorial | 0/TBD | Not started | - |
 | 5. Notifications | 0/TBD | Not started | - |
 | 6. GDPR Self-Service + Hardening | 0/TBD | Not started | - |
@@ -271,3 +273,5 @@ Category cross-check (all ✓):
 - GDPR: 9 → Phase 2 (GDPR-01–03) + Phase 6 (GDPR-04–09)
 - BRAND: 6 → Phase 1 (BRAND-01–03, BRAND-06) + Phase 6 (BRAND-04, BRAND-05)
 - OPS: 7 → Phase 1 (OPS-01–03, OPS-06, OPS-07) + Phase 2 (OPS-05) + Phase 3 (OPS-04)
+</content>
+</invoke>
