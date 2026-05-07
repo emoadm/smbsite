@@ -15,6 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 1: Foundation** - Project scaffolding, authentication, branding baseline, email domain warm-up, core ops infrastructure
 - [~] **Phase 2: Public Surface (Pre-Warmup)** - Branded landing page, Sinya color tokens, real /member welcome page, cookie consent — must ship before warmup ladder begins · *code-shipping complete; awaiting operator (Cloudflare cache rules + CookieYes dashboard + Lighthouse PR review) + coalition deliverables (5 D-* items) per 02-SIGNOFF.md*
 - [ ] **Phase 2.1: Attribution + Source Dashboard** *(INSERTED)* - UTM/QR/oblast attribution capture + Payload admin dashboard — must complete before QR mail drop
+- [ ] **Phase 2.2: Coalition Agenda Content** *(INSERTED)* - Integrate the coalition's official political program (25-page PDF, ~12k words) into /agenda; SPIDR-split into vertical slices. Resolves D-CoalitionContent-Agenda (BLOCKING warmup launch).
 - [ ] **Phase 3: Idea Catalog + Voting** - Editor-published idea catalog, binary voting engine with full anti-abuse stack (requires GDPR Art.9 legal opinion)
 - [ ] **Phase 4: User Submissions + Editorial** - Member proposals, problem reports, full editorial moderation panel
 - [ ] **Phase 5: Notifications** - Async newsletter, WhatsApp/Telegram channel links, member notification preferences
@@ -117,6 +118,24 @@ Plans:
 - [ ] 02.1-08-PLAN.md — k6 load-test scenario + Hetzner runner runbook + LOAD-TEST.md sign-off (BLOCKING) + STATE.md deferred items update (OPS-05)
 
 **UI hint**: yes
+
+---
+
+### Phase 02.2: Coalition Agenda Content (INSERTED)
+
+**Goal:** As a visitor, I want to read the coalition's manifesto and first policy chapter via the /agenda page, so that I can decide whether to register and join the platform.
+**Mode:** mvp
+
+**SPIDR split** (Paths axis, accepted 2026-05-08): this phase delivers the walking-skeleton slice — intro/manifesto JSX + TOC scaffold + ONE policy chapter (Икономика) — proving the JSX-with-prose-and-anchors render approach works end-to-end on real coalition content. Phase 02.3 (new, INSERTED via `/gsd-phase --insert 02.2 ...`) will ship the remaining chapters; final slice removes the `draftAlert` banner and i18n key.
+
+Description: integrate the coalition's official political program (25-page PDF, ~12k words extracted to `.planning/coalition/agenda-raw.txt`) into `/agenda`. Replace the `[ТЕКСТ ОТ КОАЛИЦИЯ]` placeholder with structured JSX, populate `TOC_ITEMS` with anchored H2 sections.
+
+**Requirements**: TBD (resolves `D-CoalitionContent-Agenda`)
+**Depends on:** Phase 2
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 02.2 to break down the walking-skeleton slice)
 
 ### Phase 3: Idea Catalog + Voting
 

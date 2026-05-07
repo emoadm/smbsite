@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: verifying
 stopped_at: Phase 3 context gathered
-last_updated: "2026-05-07T07:32:17.866Z"
+last_updated: "2026-05-07T22:16:22.414Z"
 last_activity: "2026-05-06 -- Phase 5 gap closure complete (G1, G2, G3, G4); G4 closed via plan 05-14: Redis eviction policy verified `noeviction` across local/staging/production under strict no-silent-degradation contract; ops sign-off committed (ee259f5); transitively resolves latent silent-job-loss risk in Phase 1 OTP queue (shared UPSTASH_REDIS_URL)"
 progress:
-  total_phases: 7
+  total_phases: 8
   completed_phases: 4
-  total_plans: 44
+  total_plans: 54
   completed_plans: 44
-  percent: 100
+  percent: 81
 ---
 
 # Project State
@@ -54,6 +54,10 @@ Progress: [██████████] 100% (30/30 plans complete across Pha
 *Updated after each plan completion*
 
 ## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 02.2 inserted (URGENT) after Phase 02.1 on 2026-05-08 — Coalition Agenda Content (D-CoalitionContent-Agenda); resolves the BLOCKING warmup-launch deferred item. Source: 25-page PDF (`programa-nie-sme-sinq-balgariq-2.pdf`) extracted to `.planning/coalition/agenda-raw.txt` (~12k words). Run `/gsd-mvp-phase 02.2` for SPIDR splitting.
 
 ### Decisions
 
