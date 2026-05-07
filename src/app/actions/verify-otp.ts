@@ -2,6 +2,7 @@
 
 import crypto from 'node:crypto';
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 import { and, eq, gt } from 'drizzle-orm';
 import { z } from '@/lib/zod-i18n';
 import { db } from '@/db';
@@ -115,6 +116,13 @@ export async function verifyOtp(
     path: '/',
     expires: sessionExpires,
   });
+
+  // Invalidate the layout cache so Header (Server Component reading `auth()`)
+  // re-renders with the new session on the client's soft navigation. Without
+  // this, router.push('/member') from OtpForm.tsx serves the cached layout
+  // rendered when session was null — username doesn't appear and the logo
+  // links to the unauthenticated home until a hard refresh.
+  revalidatePath('/', 'layout');
 
   return { ok: true, nextHref: '/member' };
 }
