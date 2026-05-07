@@ -1,10 +1,11 @@
 ---
 phase: 3
 slug: idea-catalog-voting
-status: draft
+status: approved
 shadcn_initialized: true
 preset: existing-project (style=new-york, baseColor=slate, cssVariables=true, iconLibrary=lucide)
 created: 2026-05-07
+reviewed_at: 2026-05-07
 ---
 
 # Phase 3 — UI Design Contract: Idea Catalog + Voting
@@ -83,7 +84,7 @@ Declared roles (4 sizes, 2 weights). All sizes already exist in `globals.css` `@
 | Role | Size | Weight | Line Height | Used For |
 |------|------|--------|-------------|----------|
 | Body | 16px (`--text-base` = 1rem) | 400 (Roboto regular) | 1.5 (`--leading-normal`) | Idea card excerpt, idea-detail Lexical paragraph render, vote-count copy, member dashboard prose, profile field values |
-| Label | 14px (`--text-sm` = 0.875rem) | 500 (Roboto medium) | 1.5 (`--leading-normal`) | Topic chip text, vote-count secondary line ("за членове"), profile field labels, anomaly table column headers, "Отбор на редактора" badge |
+| Label | 14px (`--text-sm` = 0.875rem) | 600 (Roboto semibold) | 1.5 (`--leading-normal`) | Topic chip text, vote-count secondary line ("за членове"), profile field labels, anomaly table column headers, "Отбор на редактора" badge |
 | Heading | 24px (`--text-2xl` = 1.5rem) | 800 (Gilroy ExtraBold via `--font-display`) | 1.2 (`--leading-snug`) | Idea card title, `/admin/views/vote-anomalies` page title, IdeaSidebar section titles |
 | Display | 36px (`--text-4xl` = 2.25rem) | 800 (Gilroy ExtraBold via `--font-display`) | 1.15 (`--leading-tight`) | Idea-detail H1 (the idea title); `/member/profile` page H1; `/idei` page H1 ("Идеи на коалицията") |
 
@@ -160,7 +161,7 @@ Phase 3 uses the Sinya navy accent ONLY for these elements. Any other usage is a
 - Mobile (<768px): topic chips horizontally scroll inside `overflow-x-auto` with `gap-2`; SortDropdown is a full-width row above the chips. Sticky? **NO.** Filter row scrolls with the page (sticky filters at mobile widths cause keyboard-overlap issues in Bulgarian Cyrillic IME tests).
 
 **Topic chip (`<Badge variant="outline" asChild>` wrapping a `<button>`):**
-- Inactive: `bg-muted text-muted-foreground border-input` + 4px x 12px padding + `rounded-full` + `text-sm font-medium`.
+- Inactive: `bg-muted text-muted-foreground border-input` + 4px x 12px padding + `rounded-full` + `text-sm font-semibold`.
 - Active (selected by user click): `bg-primary text-primary-foreground border-primary`.
 - Hover (inactive): `hover:bg-secondary/20 hover:border-secondary`.
 - Focus-visible: `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`.
@@ -292,7 +293,7 @@ The component receives `revealed: boolean` from server (computed against `IDEA_R
   - Below, single line: `<p className="text-base">{n} одобряват  ·  {p}% одобрение</p>` — uses tabular figures, 16px Roboto regular.
   - **NO reject count.** D-02 + Pitfall 9.
 - `revealed=true & role="member"`:
-  - Same as public, plus a second line below: `<p className="text-sm text-muted-foreground">{rejectN} не одобряват <span className="ml-2 inline-flex rounded-full bg-warning/10 text-warning border border-warning/20 px-2 py-0.5 text-xs font-medium">за членове</span></p>`.
+  - Same as public, plus a second line below: `<p className="text-sm text-muted-foreground">{rejectN} не одобряват <span className="ml-2 inline-flex rounded-full bg-warning/10 text-warning border border-warning/20 px-2 py-0.5 text-xs font-semibold">за членове</span></p>`.
   - **The "за членове" pill is mandatory** (RESEARCH Pitfall 2 — self-attributing screenshot defense). Cannot be removed by planner.
 - `revealed=true & role="frozen"` (only inside Payload admin Ideas edit screen — D-23 silent freeze on public): same as member but with an additional "Замразено от %{name} на %{date}" Alert above. Public + member pages render `revealed=true & role="public" | "member"` ignoring the frozen flag (silent — D-23).
 
@@ -461,7 +462,7 @@ The `/member` page (Phase 2 D-09 welcome page) is extended, NOT replaced. Update
 
 ```tsx
 <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-  <dt className="text-sm font-medium text-muted-foreground">{label}</dt>
+  <dt className="text-sm font-semibold text-muted-foreground">{label}</dt>
   <dd className="text-base text-foreground sm:ml-4 sm:text-right">{value}{aside}</dd>
 </div>
 ```
@@ -529,7 +530,7 @@ This surface is INSIDE the Payload admin shell. We do NOT redesign Payload's chr
 - Sidebar width: `w-[320px]` desktop, full-width below editor on narrower (responsive collapse via Payload's edit-screen layout primitives — uses `@payloadcms/ui` `Gutter` with `space-y-6`).
 - Live stats are server-rendered via direct (uncached) Drizzle query — D-22 explicitly: editor view does NOT hit the 5-min `unstable_cache`. Refresh = page reload. No websocket.
 - "Замрази/Размрази" Toggle uses shadcn `<Toggle>`; `pressed=display_frozen`. Click triggers Server Action with role re-check; on success, page reloads (revalidatePath of the admin route).
-- Anomaly badge shows `⚠ {count} alert` in `bg-warning/15 text-warning border-warning/30 rounded-md px-2 py-0.5 text-xs font-medium`. Clicking it deep-links to `/admin/views/vote-anomalies?idea_id=...`.
+- Anomaly badge shows `⚠ {count} alert` in `bg-warning/15 text-warning border-warning/30 rounded-md px-2 py-0.5 text-xs font-semibold`. Clicking it deep-links to `/admin/views/vote-anomalies?idea_id=...`.
 - Pre-threshold idea: stats card replaces numeric values with "Скрито" muted-fg text (editor sees "Скрито" for the public-facing fields but **always sees raw counts** for moderation purposes — D-02). Specifically: stats card shows raw counts for the editor; "Скрито" appears as a parenthetical hint next to the public-facing rendering preview only.
 
 **`<ViewOnSiteButton>`** (D-19): top of edit screen, `<Button variant="outline"><ExternalLink className="size-4" /> Виж как изглежда на сайта</Button>`. On draft: opens `/idei/{slug}?preview=draft` in new tab. On published: opens `/idei/{slug}` in new tab. Tooltip on hover (shadcn `<Tooltip>`): "Отваря в нов прозорец."
