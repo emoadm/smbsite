@@ -132,10 +132,10 @@ Description: integrate the coalition's official political program (25-page PDF, 
 
 **Requirements**: TBD (resolves `D-CoalitionContent-Agenda`)
 **Depends on:** Phase 2
-**Plans:** 0 plans
+**Plans:** 1 plan
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 02.2 to break down the walking-skeleton slice)
+- [ ] 02.2-01-PLAN.md — Slice 1 walking skeleton: manifesto + Десен консенсус + Икономика JSX + TOC + linter exemption + anchor-drift test (D-CoalitionContent-Agenda)
 
 ### Phase 3: Idea Catalog + Voting
 
