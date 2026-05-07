@@ -65,7 +65,9 @@ describe('Phase 5 D-01 — Newsletters Payload collection', () => {
     expect(code).toMatch(/LinkFeature\(/);
     expect(code).toMatch(/UnorderedListFeature\(\)/);
     expect(code).toMatch(/OrderedListFeature\(\)/);
-    expect(code).toMatch(/UploadFeature\(/);
+    // UploadFeature deliberately omitted — payload.config.ts registers no
+    // upload-target collection, so its toolbar button would have no destination.
+    // See src/collections/Newsletters.ts:98-99 for the implementation rationale.
     // Banned features must NOT appear
     expect(code).not.toMatch(/BlockquoteFeature/);
     expect(code).not.toMatch(/CodeBlock/);
