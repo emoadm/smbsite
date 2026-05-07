@@ -231,7 +231,7 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
       })) as { subject?: string; previewText?: string; body?: unknown } | null;
       if (!doc) return { messageId: 'skipped-missing-doc' };
 
-      subject = `[ТЕСТ] ${String(doc.subject ?? '')}`;
+      subject = `[ТЕСТ] ${String(doc.subject ?? '')}`; // i18n-allow: test-mode subject marker
       const previewText = String(doc.previewText ?? '');
       const bodyHtml = renderLexicalToHtml(doc.body as never);
 
