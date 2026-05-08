@@ -30,11 +30,20 @@ async function handle(req: NextRequest): Promise<NextResponse> {
   const token = url.searchParams.get('token') ?? '';
   const isTestSend = url.searchParams.get('test') === '1';
 
+  // Use SITE_ORIGIN as the redirect base instead of `req.url`. Behind
+  // Cloudflare→Fly, `req.url` resolves to the internal `http://0.0.0.0:3000`
+  // hostname (Node sees the request as it arrived at the container, not
+  // the public host the client connected to), so `new URL(path, req.url)`
+  // would emit redirects to `http://0.0.0.0:3000/unsubscribed?...` and the
+  // recipient's browser would chase a dead address. Operator hit this on a
+  // live test (2026-05-08).
+  const PUBLIC_ORIGIN = process.env.SITE_ORIGIN ?? 'https://chastnik.eu';
+
   // HMAC token is the auth substitute (D-14 — no login required for unsubscribe).
   const v = verifyUnsubToken(token);
   if (!v.ok) {
     logger.info({ reason: v.reason }, 'unsubscribe.token_rejected');
-    return NextResponse.redirect(new URL(`/unsubscribed?reason=${v.reason}`, req.url), {
+    return NextResponse.redirect(new URL(`/unsubscribed?reason=${v.reason}`, PUBLIC_ORIGIN), {
       status: 303,
     });
   }
@@ -50,7 +59,7 @@ async function handle(req: NextRequest): Promise<NextResponse> {
   // not restore inbox delivery until manually de-blocklisted in Brevo).
   if (isTestSend) {
     logger.info({ user_id: userId }, 'unsubscribe.test_send_noop');
-    return NextResponse.redirect(new URL('/unsubscribed?test=1', req.url), {
+    return NextResponse.redirect(new URL('/unsubscribed?test=1', PUBLIC_ORIGIN), {
       status: 303,
     });
   }
@@ -66,7 +75,7 @@ async function handle(req: NextRequest): Promise<NextResponse> {
     // Token verifies but user was deleted (Phase 6 grace-period deletion?).
     // RFC 8058 perspective: treat as success — no further DB or ESP action needed.
     logger.info({ user_id: userId }, 'unsubscribe.user_not_found');
-    return NextResponse.redirect(new URL('/unsubscribed', req.url), { status: 303 });
+    return NextResponse.redirect(new URL('/unsubscribed', PUBLIC_ORIGIN), { status: 303 });
   }
   const userEmail = userRows[0]!.email;
 
@@ -100,7 +109,7 @@ async function handle(req: NextRequest): Promise<NextResponse> {
     });
   }
 
-  return NextResponse.redirect(new URL('/unsubscribed', req.url), { status: 303 });
+  return NextResponse.redirect(new URL('/unsubscribed', PUBLIC_ORIGIN), { status: 303 });
 }
 
 // RFC 8058: mailbox providers POST `List-Unsubscribe=One-Click` header;
