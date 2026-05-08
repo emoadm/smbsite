@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   /* ============ BRAND PALETTE — Sinya Bulgaria (UI-SPEC §4.3) ============ */
