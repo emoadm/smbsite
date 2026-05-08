@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useActionState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useActionState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { requestOtp, type RequestOtpState } from '@/app/actions/request-otp';
 import { verifyOtp, type VerifyOtpState } from '@/app/actions/verify-otp';
@@ -18,19 +18,9 @@ export function OtpForm() {
   const email = params.get('email') ?? '';
   const formRef = useRef<HTMLFormElement>(null);
   const [state, action, pending] = useActionState(verifyOtp, initial);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (state.ok && state.nextHref) {
-      // router.refresh() flushes the in-memory Router Cache for the current
-      // tree before the soft nav, so the new /member request re-fetches the
-      // root layout's RSC and the Header re-renders with the just-set session.
-      // revalidatePath() in verify-otp.ts busts the server-side Full Route
-      // Cache; refresh() is what makes the client honor it on this push.
-      router.refresh();
-      router.push(state.nextHref);
-    }
-  }, [state, router]);
+  // Success path: verifyOtp calls redirect('/member') server-side and never
+  // returns. The action only returns state on failure (rate limit / wrong
+  // code / expired) — error display below handles those.
 
   return (
     <div className="flex flex-col gap-6">

@@ -1,6 +1,7 @@
 ---
 slug: header-stale-after-login
-status: resolved
+status: resolved-attempt-2
+note: "ATTEMPT 1 (commit 3293146 / v42) — router.refresh() + router.push() — FAILED in production incognito. ATTEMPT 2 — server-side redirect() from verify-otp.ts. Browser-evidence diagnostic confirmed: cookie set correctly, browser jar holds the cookie, opening /member in a fresh tab shows the correct authenticated Header. Bug was purely the soft-nav-from-useEffect path. redirect() bypasses that path entirely."
 trigger: "Login bug persists in production after commit 0592610 (revalidatePath fix). Header (Server Component reading auth() in src/app/(frontend)/layout.tsx) still shows 'Login' instead of username after OTP verify on chastnik.eu; logo links to public home until hard refresh."
 created: 2026-05-08
 updated: 2026-05-08
@@ -156,3 +157,40 @@ Add `router.refresh()` immediately before `router.push(state.nextHref)` in `OtpF
 
 **logout path note:**
 The original commit message for 0592610 claimed logout had the same root cause, but the logout action ends in `signOut({ redirectTo: '/login' })` which Auth.js v5 implements via Next's `redirect()` from inside a Server Action — that path is documented to invalidate the Router Cache. If logout still shows stale Header after this fix lands, reopen and instrument that path separately.
+
+---
+
+## Attempt 2 (2026-05-08, commit 3293146 → REOPENED → new commit)
+
+**Why attempt 1 failed:**
+Verified in incognito on chastnik.eu after v42 deployed. Symptom unchanged: Header still anonymous after OTP soft-nav.
+
+**Browser-evidence diagnostic that pinned root cause:**
+1. Set-Cookie response header on the verify POST: correct (`__Secure-next-auth.session-token=…; Path=/; Secure; HttpOnly; SameSite=lax`).
+2. DevTools → Application → Cookies after OTP submit: cookie present in jar with all correct attributes (Domain=chastnik.eu, Path=/, HttpOnly, Secure, Lax).
+3. Critical test: open a NEW TAB in same incognito session and visit `/member` directly — Header rendered AUTHENTICATED.
+
+The new-tab test rules out every server-side hypothesis: cookie write OK, cookie storage OK, server reads cookie OK, `auth()` finds session OK, layout renders authenticated Header OK — when the browser does a fresh navigation. The only failing path is the soft-nav-from-useEffect after the action response. `router.refresh() + router.push()` does not actually re-fetch the layout segment; the client Router Cache reuses it.
+
+**Real fix (attempt 2):**
+Move navigation to the server side via `redirect('/member')` inside the `verifyOtp` Server Action. A redirect from a Server Action is treated by the Next.js client as a fresh full re-fetch — not a cache-reusing soft nav — so the layout is re-rendered with the just-set cookie.
+
+**Applied:**
+- `src/app/actions/verify-otp.ts`:
+  - Added `import { redirect } from 'next/navigation';`
+  - Removed `import { revalidatePath } from 'next/cache';`
+  - Removed `revalidatePath('/', 'layout')` (no longer needed).
+  - Replaced `return { ok: true, nextHref: '/member' };` with `redirect('/member');`
+  - `VerifyOtpState` type narrowed to the failure variant only (success path throws NEXT_REDIRECT).
+- `src/components/forms/OtpForm.tsx`:
+  - Removed `useRouter` import + `useEffect` navigation (no longer needed).
+- `tests/unit/attribution-linkage.test.ts`:
+  - Updated the "preserves post-success behavior" assertion to match the new `redirect('/member')` shape.
+
+**Verification:**
+- `pnpm tsc --noEmit` passes.
+- `pnpm test:unit` passes (346/346 tests, 41 files).
+- Behavioral verification still pending production deploy.
+
+**Lesson learned:**
+Don't ship a hypothesis-based fix without browser-evidence to back it up. The new-tab test (4-second diagnostic) eliminated the entire server-side branch and pointed straight at the soft-nav path — should have run that BEFORE attempt 1.

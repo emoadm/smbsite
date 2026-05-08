@@ -2,7 +2,7 @@
 
 import crypto from 'node:crypto';
 import { cookies } from 'next/headers';
-import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { and, eq, gt } from 'drizzle-orm';
 import { z } from '@/lib/zod-i18n';
 import { db } from '@/db';
@@ -15,8 +15,13 @@ const Schema = z.object({
   code: z.string().regex(/^\d{6}$/),
 });
 
+// Success now redirects server-side via next/navigation `redirect()`; the action
+// only returns state on failure. The previous shape (returning `nextHref` and
+// soft-navigating from a useEffect) left the client Router Cache holding the
+// pre-login layout segment, so the Header re-rendered as anonymous until a
+// hard refresh. `redirect()` from a Server Action triggers a fresh navigation
+// that re-fetches the layout with the just-set session cookie.
 export type VerifyOtpState =
-  | { ok: true; nextHref: string }
   | { ok: false; error?: 'auth.otp.invalid' | 'auth.otp.expired' | 'auth.otp.locked' };
 
 export async function verifyOtp(
@@ -117,12 +122,13 @@ export async function verifyOtp(
     expires: sessionExpires,
   });
 
-  // Invalidate the layout cache so Header (Server Component reading `auth()`)
-  // re-renders with the new session on the client's soft navigation. Without
-  // this, router.push('/member') from OtpForm.tsx serves the cached layout
-  // rendered when session was null — username doesn't appear and the logo
-  // links to the unauthenticated home until a hard refresh.
-  revalidatePath('/', 'layout');
-
-  return { ok: true, nextHref: '/member' };
+  // Server-side redirect: throws NEXT_REDIRECT, never returns. The Next.js
+  // client treats redirects from Server Actions as a full re-fetch (not a
+  // cache-reusing soft nav), so the root layout's Header re-renders with the
+  // just-set session cookie. revalidatePath('/', 'layout') was insufficient
+  // here because the client Router Cache reused the cached layout segment
+  // across the /auth/otp → /member transition (debug session
+  // header-stale-after-login, evidence: new tab to /member showed correct
+  // Header while the soft nav after OTP did not).
+  redirect('/member');
 }

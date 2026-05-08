@@ -30,8 +30,13 @@ describe('ATTR-05 / D-07 — verifyOtp attr_sid → user_id linkage', () => {
     expect(updateIdx).toBeLessThan(sessionCookieIdx);
   });
 
-  it('preserves existing post-success behavior (sessionToken mint, return nextHref)', () => {
+  it('preserves existing post-success behavior (sessionToken mint, navigate to /member)', () => {
+    // Success now redirects server-side via next/navigation `redirect()` instead
+    // of returning { ok: true, nextHref }. The previous shape left the client
+    // Router Cache holding the pre-login layout segment so the Header didn't
+    // re-render after OTP verify (debug session header-stale-after-login).
     expect(src).toContain('const sessionToken = crypto.randomUUID()');
-    expect(src).toContain("return { ok: true, nextHref: '/member' }");
+    expect(src).toMatch(/import\s*\{\s*redirect\s*\}\s*from\s*'next\/navigation'/);
+    expect(src).toContain("redirect('/member')");
   });
 });
