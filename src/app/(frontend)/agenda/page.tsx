@@ -53,7 +53,7 @@ export default async function AgendaPage() {
   const t = await getTranslations('agenda');
   const tA11y = await getTranslations('a11y');
   return (
-    <MainContainer width="prose">
+    <MainContainer width="page">
       <SectionEyebrow>{t('leadEyebrow')}</SectionEyebrow>
       <h1 className="mt-2 mb-6 font-display text-3xl">{t('title')}</h1>
 
@@ -64,10 +64,23 @@ export default async function AgendaPage() {
       </Alert>
 
       {TOC_ITEMS.length > 0 && (
-        <TableOfContents items={TOC_ITEMS} label={tA11y('primaryNavLabel')} />
+        <TableOfContents
+          items={TOC_ITEMS}
+          label={tA11y('primaryNavLabel')}
+          variant="mobile"
+        />
       )}
 
-      <article className="prose prose-slate prose-lg max-w-none">
+      <div className="md:grid md:grid-cols-[200px_minmax(0,768px)] md:gap-12 lg:grid-cols-[220px_minmax(0,768px)] lg:gap-16">
+        {TOC_ITEMS.length > 0 && (
+          <TableOfContents
+            items={TOC_ITEMS}
+            label={tA11y('primaryNavLabel')}
+            variant="desktop"
+          />
+        )}
+
+        <article className="prose prose-slate prose-lg max-w-none">
         <section>
           <h2 id="manifest">НИЕ СМЕ СИНЯ БЪЛГАРИЯ!</h2>
           <p>Синя България е консервативен десен политически съюз.</p>
@@ -607,7 +620,8 @@ export default async function AgendaPage() {
             </li>
           </ol>
         </section>
-      </article>
+        </article>
+      </div>
     </MainContainer>
   );
 }
