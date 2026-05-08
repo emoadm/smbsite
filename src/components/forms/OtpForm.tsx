@@ -21,7 +21,15 @@ export function OtpForm() {
   const router = useRouter();
 
   useEffect(() => {
-    if (state.ok && state.nextHref) router.push(state.nextHref);
+    if (state.ok && state.nextHref) {
+      // router.refresh() flushes the in-memory Router Cache for the current
+      // tree before the soft nav, so the new /member request re-fetches the
+      // root layout's RSC and the Header re-renders with the just-set session.
+      // revalidatePath() in verify-otp.ts busts the server-side Full Route
+      // Cache; refresh() is what makes the client honor it on this push.
+      router.refresh();
+      router.push(state.nextHref);
+    }
   }, [state, router]);
 
   return (
