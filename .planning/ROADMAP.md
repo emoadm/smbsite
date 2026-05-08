@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation** - Project scaffolding, authentication, branding baseline, email domain warm-up, core ops infrastructure
 - [~] **Phase 2: Public Surface (Pre-Warmup)** - Branded landing page, Sinya color tokens, real /member welcome page, cookie consent — must ship before warmup ladder begins · *code-shipping complete; awaiting operator (Cloudflare cache rules + CookieYes dashboard + Lighthouse PR review) + coalition deliverables (5 D-* items) per 02-SIGNOFF.md*
-- [ ] **Phase 2.1: Attribution + Source Dashboard** *(INSERTED)* - UTM/QR/oblast attribution capture + Payload admin dashboard — must complete before QR mail drop
+- [x] **Phase 2.1: Attribution + Source Dashboard** *(INSERTED)* - UTM/QR/oblast attribution capture + Payload admin dashboard — must complete before QR mail drop · *Completed: 2026-05-08*
 - [ ] **Phase 2.2: Coalition Agenda Content** *(INSERTED)* - Integrate the coalition's official political program (25-page PDF, ~12k words) into /agenda; SPIDR-split into vertical slices. Resolves D-CoalitionContent-Agenda (BLOCKING warmup launch).
 - [ ] **Phase 3: Idea Catalog + Voting** - Editor-published idea catalog, binary voting engine with full anti-abuse stack (requires GDPR Art.9 legal opinion)
 - [ ] **Phase 4: User Submissions + Editorial** - Member proposals, problem reports, full editorial moderation panel
@@ -108,14 +108,14 @@ Plans:
 **Plans**: 8 plans
 
 Plans:
-- [ ] 02.1-01-PLAN.md — Drizzle schema (attribution_events table + users.self_reported_* additions) + schema-invariant grep test + drizzle-kit push to Neon (ATTR-02, ATTR-03..06, GDPR-09)
-- [ ] 02.1-02-PLAN.md — MaxMind GeoLite2 wrapper (lookupIp + OBLAST_NAMES) + Dockerfile mmdb download via Fly build-secret + CLAUDE.md ipapi.co footnote (ATTR-02)
-- [ ] 02.1-03-PLAN.md — Bulgarian copy in messages/bg.json: auth.register.source (8 D-10 enum labels) + attribution.dashboard namespace + tone-check tests (ATTR-06, ATTR-07)
-- [ ] 02.1-04-PLAN.md — BullMQ attribution producer + worker (mirrors email queue pattern) + scripts/start-worker.ts dual-worker registration + Pino redact extension (ATTR-01..04)
-- [ ] 02.1-05-PLAN.md — /api/attr/init Node-runtime endpoint (cookie set + UTM extract + fire-and-forget enqueue) + <AttrInit/> client mount in frontend layout (ATTR-01, ATTR-03..05)
-- [ ] 02.1-06-PLAN.md — register Server Action Zod enum + INSERT extension; verify-otp attr_sid → user_id linkage; RegistrationForm dropdown + conditional Други input + e2e (ATTR-05, ATTR-06)
-- [ ] 02.1-07-PLAN.md — Payload custom view at /admin/views/attribution: RSC role gate + Server Action aggregates + client dashboard (filters + tables + bar list + CSV) + payload.config.ts registration (ATTR-07)
-- [ ] 02.1-08-PLAN.md — k6 load-test scenario + Hetzner runner runbook + LOAD-TEST.md sign-off (BLOCKING) + STATE.md deferred items update (OPS-05)
+- [x] 02.1-01-PLAN.md — Drizzle schema (attribution_events table + users.self_reported_* additions) + schema-invariant grep test + drizzle-kit push to Neon (ATTR-02, ATTR-03..06, GDPR-09)
+- [x] 02.1-02-PLAN.md — MaxMind GeoLite2 wrapper (lookupIp + OBLAST_NAMES) + Dockerfile mmdb download via Fly build-secret + CLAUDE.md ipapi.co footnote (ATTR-02)
+- [x] 02.1-03-PLAN.md — Bulgarian copy in messages/bg.json: auth.register.source (8 D-10 enum labels) + attribution.dashboard namespace + tone-check tests (ATTR-06, ATTR-07)
+- [x] 02.1-04-PLAN.md — BullMQ attribution producer + worker (mirrors email queue pattern) + scripts/start-worker.ts dual-worker registration + Pino redact extension (ATTR-01..04)
+- [x] 02.1-05-PLAN.md — /api/attr/init Node-runtime endpoint (cookie set + UTM extract + fire-and-forget enqueue) + <AttrInit/> client mount in frontend layout (ATTR-01, ATTR-03..05)
+- [x] 02.1-06-PLAN.md — register Server Action Zod enum + INSERT extension; verify-otp attr_sid → user_id linkage; RegistrationForm dropdown + conditional Други input + e2e (ATTR-05, ATTR-06)
+- [x] 02.1-07-PLAN.md — Payload custom view at /admin/views/attribution: RSC role gate + Server Action aggregates + client dashboard (filters + tables + bar list + CSV) + payload.config.ts registration (ATTR-07)
+- [x] 02.1-08-PLAN.md — k6 load-test scenario + Hetzner runner runbook + LOAD-TEST.md sign-off (BLOCKING) + STATE.md deferred items update (OPS-05)
 
 **UI hint**: yes
 
@@ -132,7 +132,7 @@ Description: integrate the coalition's official political program (25-page PDF, 
 
 **Requirements**: TBD (resolves `D-CoalitionContent-Agenda`)
 **Depends on:** Phase 2
-**Plans:** 1 plan
+**Plans:** 8/8 plans complete
 
 Plans:
 - [ ] 02.2-01-PLAN.md — Slice 1 walking skeleton: manifesto + Десен консенсус + Икономика JSX + TOC + linter exemption + anchor-drift test (D-CoalitionContent-Agenda)
@@ -253,7 +253,9 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 13/13 | Code-shipping complete; operator warmup + sign-off pending | - |
-| 2. Public Surface + Attribution | 0/TBD | Not started | - |
+| 2. Public Surface (Pre-Warmup) | 9/9 | Code-shipping complete; operator + 5 coalition deliverables pending per 02-SIGNOFF.md | - |
+| 2.1. Attribution + Source Dashboard | 8/8 | Complete — UAT 16/16 passed, VERIFICATION passed (13/13 must-haves), security threats=0 | 2026-05-08 |
+| 2.2. Coalition Agenda Content | 0/1 | Not started — walking-skeleton MVP slice planned (D-CoalitionContent-Agenda) | - |
 | 3. Idea Catalog + Voting | 0/10 | Not started — planning complete (post-checker revision: 03-05 split into 03-05a/b, 03-07 split into 03-07a/b); HARD-BLOCKED on GDPR Art.9 lawyer opinion before merge | - |
 | 4. User Submissions + Editorial | 0/TBD | Not started | - |
 | 5. Notifications | 0/TBD | Not started | - |

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 3 context gathered
-last_updated: "2026-05-07T22:16:22.414Z"
-last_activity: "2026-05-06 -- Phase 5 gap closure complete (G1, G2, G3, G4); G4 closed via plan 05-14: Redis eviction policy verified `noeviction` across local/staging/production under strict no-silent-degradation contract; ops sign-off committed (ee259f5); transitively resolves latent silent-job-loss risk in Phase 1 OTP queue (shared UPSTASH_REDIS_URL)"
+status: ready_to_plan
+stopped_at: Phase 02.1 verified and marked complete; ready to plan Phase 02.2
+last_updated: "2026-05-08T17:30:08.239Z"
+last_activity: "2026-05-08 -- Phase 02.1 verification finalized: UAT 16/16 passed, VERIFICATION passed (13/13 must-haves), security threats=0. ROADMAP + STATE advanced to Phase 02.2 (coalition-agenda-content)."
 progress:
   total_phases: 8
-  completed_phases: 4
-  total_plans: 54
-  completed_plans: 44
-  percent: 81
+  completed_phases: 5
+  total_plans: 55
+  completed_plans: 52
+  percent: 95
 ---
 
 # Project State
@@ -21,22 +21,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Когато един собственик на МСП види сайта, разбира идеята достатъчно, за да даде името и имейла си — и след това продължава да се връща, защото гласът му се вижда и брои.
-**Current focus:** Phase 05 — notifications
+**Current focus:** Phase 02.2 — Coalition Agenda Content (walking-skeleton MVP slice, resolves D-CoalitionContent-Agenda)
 
 ## Current Position
 
-Phase: 05 (notifications) — VERIFIED end-to-end (manual verification §05-MANUAL-VERIFICATION.md) + UAT gap closure complete (G1, G2, G3, G4 all closed via plans 05-12 / 05-13 / 05-14). Ready for `/gsd-verify-work 05` re-run.
-Plan: 14 of 14 (gap-closure plans 05-12/13/14 complete; original 11 verified; Task 05.11.4 is the verify-work gate)
-Status: Phase 05 code-shipping + gap-closure complete; manual verifications passed (DKIM ✓, Global swap ✓, real test send ✓, Cyrillic in Gmail + Apple Mail ✓); UAT gaps closed: G1 worker dotenv ✓, G2 SendBlastButton gate-field wiring ✓ (Phase 5 BLOCKER lifted), G3 Bulgarian register ✓, G4 Redis maxmemory-policy=noeviction across all 3 environments ✓ (closed 2026-05-06 — local dev Homebrew default, staging + production Upstash dashboard toggle); abv.bg/mail.bg/Outlook deferred to first real users
-Last activity: 2026-05-06 -- Phase 5 gap closure complete (G1, G2, G3, G4); G4 closed via plan 05-14: Redis eviction policy verified `noeviction` across local/staging/production under strict no-silent-degradation contract; ops sign-off committed (ee259f5); transitively resolves latent silent-job-loss risk in Phase 1 OTP queue (shared UPSTASH_REDIS_URL)
+Phase: 02.2
+Plan: Not started — 02.2-01-PLAN.md authored (1 plan, MVP walking-skeleton slice)
+Status: Phase 02.1 verification finalized 2026-05-08 — UAT 16/16 passed, VERIFICATION passed (13/13 must-haves verified), security threats=0/35 (35 closed + 14 accepted risks). Phase 02.2 ready for `/gsd-execute-phase 02.2`. Phase 1, Phase 2 still awaiting operator-side warmup/sign-off + coalition deliverables.
+Last activity: 2026-05-08 -- Phase 02.1 verified + ROADMAP/STATE advanced to Phase 02.2
 
-Progress: [██████████] 100% (30/30 plans complete across Phase 1 + Phase 2 + Phase 02.1; all three code-shipping complete; Phase 02.1 OPS-05 signed off, Phase 1 + Phase 2 still awaiting operator-side warmup/sign-off + coalition deliverables)
+Progress: [█████████░] 95% (4 of 8 phases formally complete: 02.1 + Phase 5 code-shipping; Phase 1 + Phase 2 code-shipping complete pending operator/coalition; Phase 02.2 + 03 + 04 + 06 ahead)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
+- Total plans completed: 8
 - Average duration: -
 - Total execution time: 0 hours
 
@@ -44,7 +44,7 @@ Progress: [██████████] 100% (30/30 plans complete across Pha
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 02.1 | 8 | - | - |
 
 **Recent Trend:**
 
@@ -126,10 +126,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T07:32:17.863Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-idea-catalog-voting/03-CONTEXT.md
-Next command: /gsd-verify-work 02.1
+Last session: 2026-05-08T17:30:00Z
+Stopped at: Phase 02.1 verification finalized; ROADMAP + STATE advanced to Phase 02.2. Phase 3 CONTEXT remains gathered (resume file preserved for when Phase 02.2 ships and Phase 3 is unblocked by GDPR Art.9 legal opinion).
+Resume file: .planning/phases/02.2-coalition-agenda-content/02.2-01-PLAN.md
+Next command: /gsd-execute-phase 02.2
 
 **Coalition external dependencies status (run in parallel during execution):**
 

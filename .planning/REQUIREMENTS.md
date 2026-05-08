@@ -29,13 +29,13 @@
 
 ### Attribution (ATTR) — Откъде идват потребителите
 
-- [ ] **ATTR-01**: Един общ QR код в писмата от кампанията води до сайта; сканиранията се логват
-- [ ] **ATTR-02**: При сканиране/посещение IP-то се конвертира в (област, държава) с MaxMind GeoLite2; raw IP не се пази
-- [ ] **ATTR-03**: UTM параметри (source, medium, campaign, term, content) се захващат и пазят
-- [ ] **ATTR-04**: HTTP Referer се захваща и пази (когато е наличен)
-- [ ] **ATTR-05**: Атрибуционните събития се пазят с anonymous session cookie преди регистрация; закачат се за user_id след потвърждение
-- [ ] **ATTR-06**: Регистрационната форма съдържа въпрос "откъде научихте за сайта" (избор от опции + свободен текст)
-- [ ] **ATTR-07**: Атрибуционните данни са четими в админ панел с филтри по област/държава/канал
+- [x] **ATTR-01**: Един общ QR код в писмата от кампанията води до сайта; сканиранията се логват
+- [x] **ATTR-02**: При сканиране/посещение IP-то се конвертира в (област, държава) с MaxMind GeoLite2; raw IP не се пази
+- [x] **ATTR-03**: UTM параметри (source, medium, campaign, term, content) се захващат и пазят
+- [x] **ATTR-04**: HTTP Referer се захваща и пази (когато е наличен)
+- [x] **ATTR-05**: Атрибуционните събития се пазят с anonymous session cookie преди регистрация; закачат се за user_id след потвърждение
+- [x] **ATTR-06**: Регистрационната форма съдържа въпрос "откъде научихте за сайта" (избор от опции + свободен текст)
+- [x] **ATTR-07**: Атрибуционните данни са четими в админ панел с филтри по област/държава/канал
 
 ### Member Area (MEMB) — Общностна зона
 
@@ -118,7 +118,7 @@
 - [ ] **OPS-02**: Sentry (EU region) за грешки
 - [ ] **OPS-03**: Структурирани JSON логове, EU-hosted aggregator
 - [ ] **OPS-04**: Vote velocity мониторинг и alert при аномалии (>X гласа от един /24 subnet)
-- [ ] **OPS-05**: Load test на 2x очаквания пик от QR кампанията преди старт
+- [x] **OPS-05**: Load test на 2x очаквания пик от QR кампанията преди старт
 - [ ] **OPS-06**: Database backup-и (PostgreSQL → Neon point-in-time + външен)
 - [ ] **OPS-07**: CI/CD pipeline с автоматични migrations и rollback опция
 
@@ -212,17 +212,17 @@
 | PUB-02 | Phase 2 | Pending |
 | PUB-03 | Phase 2 | Pending |
 | PUB-04 | Phase 2 | Pending |
-| ATTR-01 | Phase 2 | Pending |
-| ATTR-02 | Phase 2 | Pending |
-| ATTR-03 | Phase 2 | Pending |
-| ATTR-04 | Phase 2 | Pending |
-| ATTR-05 | Phase 2 | Pending |
-| ATTR-06 | Phase 2 | Pending |
-| ATTR-07 | Phase 2 | Pending |
+| ATTR-01 | Phase 2 | Complete |
+| ATTR-02 | Phase 2 | Complete |
+| ATTR-03 | Phase 2 | Complete |
+| ATTR-04 | Phase 2 | Complete |
+| ATTR-05 | Phase 2 | Complete |
+| ATTR-06 | Phase 2 | Complete |
+| ATTR-07 | Phase 2 | Complete |
 | GDPR-01 | Phase 2 | Pending |
 | GDPR-02 | Phase 2 | Pending |
 | GDPR-03 | Phase 2 | Pending |
-| OPS-05 | Phase 2 | Pending |
+| OPS-05 | Phase 2 | Complete |
 | IDEA-01 | Phase 3 | Pending |
 | IDEA-02 | Phase 3 | Pending |
 | IDEA-03 | Phase 3 | Pending |
