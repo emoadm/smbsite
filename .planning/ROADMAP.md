@@ -150,7 +150,12 @@ Plans:
 
 **Requirements**: TBD (resolves the remaining portion of `D-CoalitionContent-Agenda`)
 **Depends on:** Phase 02.2 (architectural contract + 3-entry TOC scaffold)
-**Plans:** TBD (run `/gsd-mvp-phase 02.3` for SPIDR splitting; expected ~3-5 plans depending on chapter grouping)
+**Plans:** 3 plans
+
+Plans:
+- [ ] 02.3-01-PLAN.md — Slice 2 simple-prose chapters: Енергетика + Земеделие + Здравеопазване + Външна сигурност и отбрана; TOC 3→7; anchor-drift test ≥7 (REQ-AGENDA-S2-01/02/04/05)
+- [ ] 02.3-02-PLAN.md — Slice 2 numbered-policy chapters: Образование + Социална политика + Култура inserted in source order; TOC 7→10; anchor-drift test ≥10 (REQ-AGENDA-S2-01/02/04/05)
+- [ ] 02.3-03-PLAN.md — Slice 2 final cleanup: Правосъдие + Защита на ценностите + drop draftAlert banner + drop agenda.body + add agenda.metadataDescription + new i18n-cleanup unit test + new /agenda Playwright spec; TOC 10→12 final; anchor-drift test ≥12 (REQ-AGENDA-S2-01..05; full D-CoalitionContent-Agenda resolution)
 
 Success Criteria (what must be TRUE):
   1. A visitor opening `/agenda` sees the full coalition program — every chapter from `agenda-raw.txt` rendered as structured Bulgarian JSX with proper headings, paragraphs, lists, and ordered policy items
@@ -282,7 +287,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Public Surface (Pre-Warmup) | 9/9 | Code-shipping complete; operator + 5 coalition deliverables pending per 02-SIGNOFF.md | - |
 | 2.1. Attribution + Source Dashboard | 8/8 | Complete — UAT 16/16 passed, VERIFICATION passed (13/13 must-haves), security threats=0 | 2026-05-08 |
 | 2.2. Coalition Agenda Content | 1/1 | Complete — walking-skeleton slice (manifesto + Десен консенсус + Икономика); operator visual verification approved | 2026-05-08 |
-| 2.3. Coalition Agenda Content — Slice 2 (final) | 0/TBD | Not started — final SPIDR slice (remaining ~10 chapters + draftAlert removal); run `/gsd-mvp-phase 02.3` for SPIDR splitting | - |
+| 2.3. Coalition Agenda Content — Slice 2 (final) | 0/3 | Not started — 3 plans (simple-prose / numbered-policy / h3-subsection+cleanup) | - |
 | 3. Idea Catalog + Voting | 0/10 | Not started — planning complete (post-checker revision: 03-05 split into 03-05a/b, 03-07 split into 03-07a/b); HARD-BLOCKED on GDPR Art.9 lawyer opinion before merge | - |
 | 4. User Submissions + Editorial | 0/TBD | Not started | - |
 | 5. Notifications | 0/TBD | Not started | - |
