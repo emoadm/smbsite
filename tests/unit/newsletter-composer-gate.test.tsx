@@ -20,6 +20,22 @@ const mockUseDocumentInfo = vi.fn();
 
 vi.mock('@payloadcms/ui', () => ({
   useDocumentInfo: () => mockUseDocumentInfo(),
+  // Passthrough button — composer + SendBlastButton both import Button from
+  // @payloadcms/ui after the admin-styling refactor. Render a native <button>
+  // so the existing role=button selectors keep working under jsdom (the real
+  // Payload Button pulls in admin SCSS we don't load in unit tests).
+  Button: ({ children, disabled, onClick, type, 'aria-label': ariaLabel }: {
+    children: React.ReactNode;
+    disabled?: boolean;
+    onClick?: (e: React.MouseEvent) => void;
+    type?: 'button' | 'submit';
+    'aria-label'?: string;
+  }) =>
+    React.createElement(
+      'button',
+      { type: type ?? 'button', disabled, onClick, 'aria-label': ariaLabel },
+      children,
+    ),
 }));
 
 // LivePreviewIframe transitively imports a 'use server' Server Action

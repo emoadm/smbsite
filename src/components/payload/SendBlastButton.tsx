@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button as PayloadButton } from '@payloadcms/ui';
 import {
   Tooltip,
   TooltipContent,
@@ -86,15 +86,16 @@ export function SendBlastButton({
   };
 
   const button = (
-    <Button
-      size="lg"
+    <PayloadButton
+      buttonStyle="primary"
+      size="large"
       disabled={!canSend}
       onClick={onSend}
-      aria-disabled={!canSend}
+      aria-label={ctaLabel}
       type="button"
     >
       {ctaLabel}
-    </Button>
+    </PayloadButton>
   );
 
   return (
@@ -119,7 +120,9 @@ export function SendBlastButton({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={() => setPostSendOpen(false)}>{t('postSend.confirm')}</Button>
+            <PayloadButton buttonStyle="primary" onClick={() => setPostSendOpen(false)}>
+              {t('postSend.confirm')}
+            </PayloadButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

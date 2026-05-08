@@ -46,7 +46,7 @@ export function LivePreviewIframe({ args, onError }: LivePreviewIframeProps) {
       title={t('preview.title')}
       sandbox="allow-same-origin"
       srcDoc={html}
-      className="w-full h-[600px] border border-border rounded-md bg-card"
+      className="w-full h-[820px] border border-border rounded-md bg-card"
     />
   );
 }

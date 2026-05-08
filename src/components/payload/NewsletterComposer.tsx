@@ -1,12 +1,10 @@
 'use client';
 
 import React from 'react';
-import { useDocumentInfo } from '@payloadcms/ui';
+import { Button as PayloadButton, useDocumentInfo } from '@payloadcms/ui';
 import { Toaster } from 'sonner';
 import { LivePreviewIframe } from './LivePreviewIframe';
 import { SendBlastButton } from './SendBlastButton';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { sendTest } from '@/app/actions/send-test';
 import { cancelScheduled } from '@/app/actions/cancel-scheduled';
 import { getAdminT } from '@/lib/email/i18n-direct';
@@ -43,8 +41,6 @@ export interface NewsletterComposerProps {
 }
 
 export function NewsletterComposer(props: NewsletterComposerProps) {
-  const [tab, setTab] = React.useState<'edit' | 'preview'>('edit');
-
   // Phase 5 hotfix — Plan 05-07 originally read newsletterId/subject/etc.
   // from `props`, but Payload's `admin.components.edit.beforeDocumentControls`
   // slot does NOT actually pass document data as plain props. The only
@@ -133,45 +129,32 @@ export function NewsletterComposer(props: NewsletterComposerProps) {
           bare `sonner` Toaster (not the project's themed wrapper) to avoid
           pulling in next-themes/ThemeProvider in the admin context. */}
       <Toaster richColors position="bottom-right" />
-      {/* ≥xl split-pane, <xl tab-toggle (UI-SPEC §5.4.1) */}
-      <Tabs
-        value={tab}
-        onValueChange={(v) => setTab(v as 'edit' | 'preview')}
-        className="lg:hidden"
-      >
-        <TabsList>
-          <TabsTrigger value="edit">{t('tabs.edit')}</TabsTrigger>
-          <TabsTrigger value="preview">{t('tabs.preview')}</TabsTrigger>
-        </TabsList>
-      </Tabs>
 
-      <div className="hidden lg:grid lg:grid-cols-2 gap-8">
-        {/* Left pane is already populated by Payload's default form rendering;
-            this composer renders the right pane (preview) and the bottom action bar. */}
-        <div />
-        <div>
-          <h3 className="font-display text-lg mb-2">{t('preview.title')}</h3>
-          <LivePreviewIframe args={previewArgs} />
-          <p className="mt-2 text-xs text-muted-foreground">{t('preview.helper')}</p>
-        </div>
+      {/* Live email preview — full-width below Payload's form fields.
+          Earlier layout used a 2-col grid with an empty left column on the
+          assumption that Payload's form fields would render inside it. They
+          don't — the form is rendered by Payload in its own slot, not nested
+          inside our composer. The grid left half of the viewport empty and
+          squeezed the preview to half width. The mobile Tabs UX appended a
+          second iframe below the form on click which read as "form
+          duplicated, action bar pushed off-screen". Both removed in favor of
+          a single full-width preview pane. */}
+      <div className="mt-6">
+        <h3 className="font-display text-lg mb-2">{t('preview.title')}</h3>
+        <LivePreviewIframe args={previewArgs} />
+        <p className="mt-2 text-xs text-muted-foreground">{t('preview.helper')}</p>
       </div>
 
-      {/* Mobile preview when 'preview' tab selected */}
-      {tab === 'preview' && (
-        <div className="lg:hidden mt-4">
-          <LivePreviewIframe args={previewArgs} />
-        </div>
-      )}
-
-      {/* Action bar */}
-      <div className="mt-8 flex items-center gap-3 justify-end">
-        <Button variant="outline" onClick={onSendTest} type="button">
+      {/* Action bar — uses Payload's native Button so it matches admin
+          chrome instead of the public-site shadcn buttons. */}
+      <div className="mt-6 flex items-center gap-3 justify-end">
+        <PayloadButton buttonStyle="secondary" onClick={onSendTest} type="button">
           {t('actions.sendTest')}
-        </Button>
+        </PayloadButton>
         {props.status === 'scheduled' && (
-          <Button variant="destructive" onClick={onCancelScheduled} type="button">
+          <PayloadButton buttonStyle="error" onClick={onCancelScheduled} type="button">
             {t('cancel.dialog.title')}
-          </Button>
+          </PayloadButton>
         )}
         {newsletterId && (
           <SendBlastButton
