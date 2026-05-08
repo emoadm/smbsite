@@ -228,7 +228,12 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
       // re-subscribed in-app. The `?test=1` flag is honored by
       // src/app/api/unsubscribe/route.ts as "show the redirect, don't
       // mutate state" so editors can verify the link end-to-end safely.
-      const editorUserId = job.data.userId;
+      // Defense-in-depth: coerce to string at the worker boundary too.
+      // sendTest already does this but the EmailJobPayload type is `string`
+      // and a future caller could pass a number through (Payload admin user
+      // IDs are numeric — caused first-click dead `?reason=malformed` page).
+      const editorUserId =
+        job.data.userId != null ? String(job.data.userId) : undefined;
       const origin = process.env.SITE_ORIGIN ?? 'https://chastnik.eu';
       const preferencesUrl = `${origin}/member/preferences`;
       const unsubUrl = editorUserId

@@ -34,10 +34,15 @@ export async function sendTest(input: { newsletterId: string }): Promise<SendTes
   if (!doc) return { ok: false, reason: 'missing' };
 
   // Pass editor userId so the worker can sign a real unsub token for the
-  // test email. The earlier `#preview` sentinel meant the unsub /
-  // preferences links rendered as dead anchors and the operator couldn't
-  // verify what recipients would see.
-  const editorUserId = (user as { id?: string } | null)?.id;
+  // test email. Payload admin user IDs are numbers at runtime, not strings
+  // — coerce explicitly here. signUnsubToken serializes the uid into the
+  // JWT body via JSON.stringify, but verifyUnsubToken rejects with
+  // `reason=malformed` when typeof payload.uid !== 'string', which
+  // produced the dead /unsubscribed?reason=malformed page on the first
+  // click-through attempt.
+  const editorUserIdRaw = (user as { id?: string | number } | null)?.id;
+  const editorUserId =
+    editorUserIdRaw != null ? String(editorUserIdRaw) : undefined;
   await addEmailJob({
     to: editorEmail,
     kind: 'newsletter-test',
