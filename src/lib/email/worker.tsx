@@ -16,7 +16,7 @@ import { signUnsubToken } from '../unsubscribe/hmac';
 import { getNewsletterRecipients } from '../newsletter/recipients';
 import { brevoBlocklist } from '../newsletter/brevo-sync';
 import { logger } from '../logger';
-import bg from '../../../messages/bg.json';
+import { loadT } from './i18n-direct';
 
 function workerConnection(): IORedis {
   const url = process.env.UPSTASH_REDIS_URL!;
@@ -27,29 +27,13 @@ function workerConnection(): IORedis {
   });
 }
 
-type EmailT = (key: string, vars?: Record<string, string | number>) => string;
-
-// Worker runs as a standalone Node process (tsx scripts/start-worker.ts), outside the
-// Next.js request scope, so next-intl's getTranslations() isn't reliable here. Load the
-// Bulgarian message catalog directly and interpolate ICU-style placeholders ourselves —
-// the templates only use {firstName}, {validityHours}, {validityMinutes}, {year}.
-function loadT(namespace: string): EmailT {
-  const dict = namespace
-    .split('.')
-    .reduce<Record<string, unknown>>(
-      (node, key) => (node?.[key] as Record<string, unknown>) ?? {},
-      bg as Record<string, unknown>,
-    );
-  return (key: string, vars?: Record<string, string | number>) => {
-    const raw = (dict as Record<string, string>)[key];
-    if (typeof raw !== 'string') return key;
-    if (!vars) return raw;
-    return Object.entries(vars).reduce(
-      (acc, [k, v]) => acc.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v)),
-      raw,
-    );
-  };
-}
+// Use the shared i18n-direct loadT — it supports dotted-key lookup
+// (e.g. `topicChip.newsletter_voting`, `footer.preferencesIntro`). The
+// previous local loadT only did flat dict[key] resolution, so nested
+// newsletter keys returned the literal key string and rendered raw in
+// production emails (operator report 2026-05-08: footer.* and the topic
+// chip showed as TOPICCHIP.NEWSLETTER_VOTING / footer.preferencesIntro
+// in the inbox while greetingNamed — a flat key — rendered fine).
 
 type ProcessorResult = { messageId: string } | { fannedOut: number };
 
