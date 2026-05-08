@@ -26,10 +26,15 @@ describe('Phase 5 D-09 — register.ts writes 4 topic rows (single-checkbox-mult
     expect(code).not.toMatch(/kind:\s*['"]newsletter['"]\s*,/);
   });
 
-  it('preserves Phase 1 privacy_terms, cookies, political_opinion rows', () => {
+  it('preserves Phase 1 privacy_terms and cookies rows', () => {
+    // political_opinion row was dropped during the no-voting ramp-up
+    // (quick task 260508-rx3) — Phase 3 still gated by Art. 9 legal opinion,
+    // so collecting that consent up-front would misrepresent the active
+    // feature surface. The 'political_opinion' kind remains in the consents
+    // enum so re-introduction is purely additive when Phase 3 ships.
     expect(SRC).toMatch(/kind:\s*['"]privacy_terms['"]/);
     expect(SRC).toMatch(/kind:\s*['"]cookies['"]/);
-    expect(SRC).toMatch(/kind:\s*['"]political_opinion['"]/);
+    expect(SRC).not.toMatch(/kind:\s*['"]political_opinion['"]/);
   });
 
   it('preserves the surrounding tx.insert(consents).values([...]) shape', () => {

@@ -98,6 +98,7 @@ None yet.
 | 260508-fast | i18n linter: add EXEMPT_DIRS (collections/globals) + EXEMPT_FILES (oblast-names) + `// i18n-allow:` per-line pragma — unblocks CI without losing PUB-05 enforcement | 2026-05-08 | 11a0264 | — (gsd-fast inline) |
 | 260508-fast-2 | auth hydration fix — revalidatePath('/', 'layout') in verify-otp + logout actions; Header (Server Component reading auth()) was serving cached null-session render after router.push, causing post-login username/logo bug | 2026-05-08 | 0592610 | — (gsd-fast inline) |
 | 260508-fast-3 | drop stale UploadFeature assertion from payload-newsletters.test.ts — implementation deliberately removed UploadFeature, test contract drifted | 2026-05-08 | f0dc87d | — (gsd-fast inline) |
+| 260508-rx3 | ramp-up без гласуване — hide voting copy from user-facing surface (RegistrationForm, landing cards, FAQ, welcome email) and drop Art. 9 political-opinion consent checkbox + INSERT; Phase 3 still gated by external legal opinion | 2026-05-08 | (pending) | [260508-rx3-ramp-up-voting-language-user-facing-copy](./quick/260508-rx3-ramp-up-voting-language-user-facing-copy/) |
 
 ## Deferred Items
 

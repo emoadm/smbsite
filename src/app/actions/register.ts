@@ -46,7 +46,8 @@ const RegistrationSchema = z.object({
   consent_privacy_terms: z.literal('on'),
   consent_cookies: z.literal('on'),
   consent_newsletter: z.union([z.literal('on'), z.literal('')]).optional(),
-  consent_political: z.union([z.literal('on'), z.literal('')]).optional(),
+  // consent_political: dropped during ramp-up without voting. Re-add when
+  // Phase 3 ships (Art. 9 legal opinion received). Quick task 260508-rx3.
   'cf-turnstile-response': z.string().min(1),
   formStamp: z.string().min(1),
 });
@@ -149,12 +150,10 @@ export async function register(
         granted: data.consent_newsletter === 'on',
         version: POLICY_VERSION,
       },
-      {
-        user_id: userId,
-        kind: 'political_opinion',
-        granted: data.consent_political === 'on',
-        version: POLICY_VERSION,
-      },
+      // political_opinion consent row dropped during ramp-up without voting.
+      // Re-introduce when Phase 3 ships (Art. 9 legal opinion received). The
+      // 'political_opinion' kind remains in src/db/schema/consents.ts enum so
+      // re-activation is purely additive. Quick task 260508-rx3.
     ]);
   });
 

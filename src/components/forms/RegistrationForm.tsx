@@ -182,9 +182,12 @@ export function RegistrationForm({ formStamp }: { formStamp: string }) {
           </span>
         </ConsentCheckbox>
         <ConsentCheckbox name="consent_newsletter">{t('consents.newsletter')}</ConsentCheckbox>
-        <ConsentCheckbox name="consent_political">
-          {t('consents.politicalOpinion')}
-        </ConsentCheckbox>
+        {/* The Art. 9 political-opinion consent checkbox is intentionally hidden
+            during the no-voting ramp-up (Phase 3 still gated by external legal
+            opinion). The consent_political form field is also dropped from
+            register.ts; the `political_opinion` kind remains in the consents
+            enum so the row can be re-introduced when Phase 3 ships. Quick task
+            260508-rx3 / .planning/legal/art9-brief-to-counsel.md. */}
       </fieldset>
 
       <TurnstileWidget onStatusChange={setTurnstileStatus} />
