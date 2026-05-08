@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 1: Foundation** - Project scaffolding, authentication, branding baseline, email domain warm-up, core ops infrastructure
 - [~] **Phase 2: Public Surface (Pre-Warmup)** - Branded landing page, Sinya color tokens, real /member welcome page, cookie consent — must ship before warmup ladder begins · *code-shipping complete; awaiting operator (Cloudflare cache rules + CookieYes dashboard + Lighthouse PR review) + coalition deliverables (5 D-* items) per 02-SIGNOFF.md*
 - [x] **Phase 2.1: Attribution + Source Dashboard** *(INSERTED)* - UTM/QR/oblast attribution capture + Payload admin dashboard — must complete before QR mail drop · *Completed: 2026-05-08*
-- [ ] **Phase 2.2: Coalition Agenda Content** *(INSERTED)* - Integrate the coalition's official political program (25-page PDF, ~12k words) into /agenda; SPIDR-split into vertical slices. Resolves D-CoalitionContent-Agenda (BLOCKING warmup launch).
+- [x] **Phase 2.2: Coalition Agenda Content** *(INSERTED)* - Walking-skeleton SPIDR slice 1: manifesto + 'Десен консенсус' + 'Икономика' chapters + 3-entry TOC into /agenda. Partially resolves D-CoalitionContent-Agenda. · *Completed: 2026-05-08; Phase 02.3 (TBD) ships remaining ~10 chapters + final draftAlert removal*
 - [ ] **Phase 3: Idea Catalog + Voting** - Editor-published idea catalog, binary voting engine with full anti-abuse stack (requires GDPR Art.9 legal opinion)
 - [ ] **Phase 4: User Submissions + Editorial** - Member proposals, problem reports, full editorial moderation panel
 - [ ] **Phase 5: Notifications** - Async newsletter, WhatsApp/Telegram channel links, member notification preferences
@@ -132,10 +132,10 @@ Description: integrate the coalition's official political program (25-page PDF, 
 
 **Requirements**: TBD (resolves `D-CoalitionContent-Agenda`)
 **Depends on:** Phase 2
-**Plans:** 8/8 plans complete
+**Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 02.2-01-PLAN.md — Slice 1 walking skeleton: manifesto + Десен консенсус + Икономика JSX + TOC + linter exemption + anchor-drift test (D-CoalitionContent-Agenda)
+- [x] 02.2-01-PLAN.md — Slice 1 walking skeleton: manifesto + Десен консенсус + Икономика JSX + TOC + linter exemption + anchor-drift test (D-CoalitionContent-Agenda)
 
 ### Phase 3: Idea Catalog + Voting
 
@@ -255,7 +255,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation | 13/13 | Code-shipping complete; operator warmup + sign-off pending | - |
 | 2. Public Surface (Pre-Warmup) | 9/9 | Code-shipping complete; operator + 5 coalition deliverables pending per 02-SIGNOFF.md | - |
 | 2.1. Attribution + Source Dashboard | 8/8 | Complete — UAT 16/16 passed, VERIFICATION passed (13/13 must-haves), security threats=0 | 2026-05-08 |
-| 2.2. Coalition Agenda Content | 0/1 | Not started — walking-skeleton MVP slice planned (D-CoalitionContent-Agenda) | - |
+| 2.2. Coalition Agenda Content | 1/1 | Complete — walking-skeleton slice (manifesto + Десен консенсус + Икономика); operator visual verification approved | 2026-05-08 |
 | 3. Idea Catalog + Voting | 0/10 | Not started — planning complete (post-checker revision: 03-05 split into 03-05a/b, 03-07 split into 03-07a/b); HARD-BLOCKED on GDPR Art.9 lawyer opinion before merge | - |
 | 4. User Submissions + Editorial | 0/TBD | Not started | - |
 | 5. Notifications | 0/TBD | Not started | - |

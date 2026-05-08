@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: ready_to_plan
-stopped_at: Phase 02.1 verified and marked complete; ready to plan Phase 02.2
-last_updated: "2026-05-08T17:30:08.239Z"
-last_activity: "2026-05-08 -- Phase 02.1 verification finalized: UAT 16/16 passed, VERIFICATION passed (13/13 must-haves), security threats=0. ROADMAP + STATE advanced to Phase 02.2 (coalition-agenda-content)."
+stopped_at: Phase 02.2 walking-skeleton slice shipped and operator-verified; ROADMAP + STATE advanced to Phase 03 (HARD-BLOCKED on external GDPR Art.9 legal opinion). Phase 02.3 (remaining agenda chapters) to be inserted when ready.
+last_updated: "2026-05-08T18:59:27.191Z"
+last_activity: "2026-05-08 -- Phase 02.2 Plan 01 shipped: /agenda renders manifesto + Десен консенсус + Икономика with 3-entry sidebar TOC; surfaced + fixed two Phase 02-04 latent bugs (missing @tailwindcss/typography plugin; TOC overlapping article in single-column layout)."
 progress:
   total_phases: 8
   completed_phases: 5
-  total_plans: 55
-  completed_plans: 52
+  total_plans: 56
+  completed_plans: 53
   percent: 95
 ---
 
@@ -21,22 +21,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Когато един собственик на МСП види сайта, разбира идеята достатъчно, за да даде името и имейла си — и след това продължава да се връща, защото гласът му се вижда и брои.
-**Current focus:** Phase 02.2 — Coalition Agenda Content (walking-skeleton MVP slice, resolves D-CoalitionContent-Agenda)
+**Current focus:** Phase 03 — Idea Catalog + Voting (HARD-BLOCKED on external GDPR Art.9 legal opinion before merge)
 
 ## Current Position
 
-Phase: 02.2
-Plan: Not started — 02.2-01-PLAN.md authored (1 plan, MVP walking-skeleton slice)
-Status: Phase 02.1 verification finalized 2026-05-08 — UAT 16/16 passed, VERIFICATION passed (13/13 must-haves verified), security threats=0/35 (35 closed + 14 accepted risks). Phase 02.2 ready for `/gsd-execute-phase 02.2`. Phase 1, Phase 2 still awaiting operator-side warmup/sign-off + coalition deliverables.
-Last activity: 2026-05-08 -- Phase 02.1 verified + ROADMAP/STATE advanced to Phase 02.2
+Phase: 03
+Plan: Not started — 10 plans pre-planned (post-checker revision: 03-05 split into 03-05a/b, 03-07 split into 03-07a/b)
+Status: Phase 02.2 walking-skeleton slice shipped + operator-verified 2026-05-08 (manifesto + Десен консенсус + Икономика chapters into /agenda with 3-entry sidebar TOC). Phase 03 HARD-BLOCKED on external GDPR Art.9 legal opinion before voting can begin. Phase 1, Phase 2 still awaiting operator warmup/sign-off + coalition deliverables. Phase 02.3 (remaining ~10 agenda chapters + final draftAlert removal) to be inserted when ready.
+Last activity: 2026-05-08 -- Phase 02.2 shipped; surfaced + fixed two Phase 02-04 latent bugs (missing @tailwindcss/typography plugin; TOC overlapping article in single-column layout)
 
-Progress: [█████████░] 95% (4 of 8 phases formally complete: 02.1 + Phase 5 code-shipping; Phase 1 + Phase 2 code-shipping complete pending operator/coalition; Phase 02.2 + 03 + 04 + 06 ahead)
+Progress: [█████████░] 95% (5 of 8 phases formally complete: 02.1 + 02.2 + Phase 5 code-shipping; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 03 + 04 + 06 ahead)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: -
 - Total execution time: 0 hours
 
@@ -45,6 +45,7 @@ Progress: [█████████░] 95% (4 of 8 phases formally complete:
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 02.1 | 8 | - | - |
+| 02.2 | 1 | - | - |
 
 **Recent Trend:**
 
@@ -57,7 +58,8 @@ Progress: [█████████░] 95% (4 of 8 phases formally complete:
 
 ### Roadmap Evolution
 
-- Phase 02.2 inserted (URGENT) after Phase 02.1 on 2026-05-08 — Coalition Agenda Content (D-CoalitionContent-Agenda); resolves the BLOCKING warmup-launch deferred item. Source: 25-page PDF (`programa-nie-sme-sinq-balgariq-2.pdf`) extracted to `.planning/coalition/agenda-raw.txt` (~12k words). Run `/gsd-mvp-phase 02.2` for SPIDR splitting.
+- Phase 02.2 inserted (URGENT) after Phase 02.1 on 2026-05-08 — Coalition Agenda Content (D-CoalitionContent-Agenda); resolves the BLOCKING warmup-launch deferred item. Source: 25-page PDF (`programa-nie-sme-sinq-balgariq-2.pdf`) extracted to `.planning/coalition/agenda-raw.txt` (~12k words). SPIDR-split: 02.2 = walking-skeleton (manifesto + Десен консенсус + Икономика, ~210 source lines), shipped 2026-05-08. Phase 02.3 (TBD insertion) ships remaining ~10 chapters + removes the draftAlert banner + drops the obsolete `agenda.body` i18n key.
+- 2026-05-08 (Phase 02.2 mid-checkpoint): Two Phase 02-04 latent bugs surfaced and fixed during operator visual verification — (a) `@tailwindcss/typography` plugin was never installed despite `prose prose-slate prose-lg` classes being on the agenda article since `1211bca`; harmless while body was a single placeholder `<p>`, broke list rendering once 02.2 added `<ul>`/`<ol>`/h2 content (commit `8e8d384`). (b) Desktop TOC's `position: sticky` overlapped article body because both lived in a single 768px MainContainer column with no sidebar grid (commit `ce857ee`). Both fixes carry forward to Phase 02.3 — the architectural contract is now: 2-column grid layout `[200px_minmax(0,768px)]` md / `[220px_minmax(0,768px)]` lg, with TableOfContents `variant: 'mobile' | 'desktop' | 'both'` prop.
 
 ### Decisions
 
@@ -111,7 +113,7 @@ None yet.
 | ops | ~~`D-Phase5-prep` — `mail2._domainkey.news.chastnik.eu` CNAME not yet added in Cloudflare DNS~~ — RESOLVED 2026-05-06 (Plan 05-11 manual verification §1). Operator added the CNAME → `brevo2._domainkey.news.chastnik.eu`; full `news.*` DKIM chain now at parity with `auth.*`. First Phase 5 send unblocked. | resolved: Plan 05-11 (2026-05-06) | Quick 260502-lhc |
 | coalition | `D-CoalitionLogoSVG` — official high-res Sinya SVG logo asset. **BLOCKING** Phase 2 final ship. Phase 2 build can proceed with sinyabulgaria.bg live-site asset as placeholder. | resolves_phase: 2 | Phase 2 discuss |
 | coalition | `D-CoalitionContent-Hero` — hero headline + sub-headline copy (Bulgarian, formal-respectful). Coalition writes; Phase 2 ships with `[ТЕКСТ ОТ КОАЛИЦИЯ]` placeholder until delivered. | resolves_phase: 2 | Phase 2 discuss |
-| coalition | `D-CoalitionContent-Agenda` — entire `/agenda` page text (political program, vision, ~800-2000 words). Coalition writes; placeholder mechanism until delivered. | resolves_phase: 2 | Phase 2 discuss |
+| coalition | `D-CoalitionContent-Agenda` — partially resolved 2026-05-08 via Phase 02.2 walking-skeleton slice (manifesto + Десен консенсус + Икономика chapters, ~210 source lines). Phase 02.3 ships remaining ~10 chapters from `agenda-raw.txt:319+` and removes the draft `<Alert>` banner. Coalition source PDF already extracted to `.planning/coalition/agenda-raw.txt` — no further coalition deliverable needed; the gating is now internal phase-execution capacity. | resolves_phase: 02.3 | Phase 2 discuss → partial Phase 02.2 |
 | coalition | `D-CoalitionChannels` — WhatsApp Channel + Telegram channel creation + URLs to swap into `/member`. **BLOCKING warmup launch.** Coalition creates; quick task swaps in URLs once available. | resolves_phase: 2 | Phase 2 discuss |
 | coalition | `D-LawyerReviewLegal` — final lawyer-reviewed Privacy Policy + Terms of Use text. Coalition has NOT started review. **BLOCKING warmup launch** (in addition to existing Phase 1 sign-off gates). | resolves_phase: 2 | Phase 2 discuss |
 | ops | `D-CloudflareIPAllowlist` — configure Fly.io `internal_port` allow-list to accept only Cloudflare IP ranges (true network-layer auth boundary). Phase 2 middleware checks `cf-ray` as a soft signal only — header is plain HTTP and trivially spoofable by an attacker who discovers the origin IP. | resolves_phase: post-warmup-hardening | Plan 02-07 |
@@ -126,10 +128,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-08T17:30:00Z
-Stopped at: Phase 02.1 verification finalized; ROADMAP + STATE advanced to Phase 02.2. Phase 3 CONTEXT remains gathered (resume file preserved for when Phase 02.2 ships and Phase 3 is unblocked by GDPR Art.9 legal opinion).
-Resume file: .planning/phases/02.2-coalition-agenda-content/02.2-01-PLAN.md
-Next command: /gsd-execute-phase 02.2
+Last session: 2026-05-08T19:00:00Z
+Stopped at: Phase 02.2 walking-skeleton slice shipped + operator-verified. Phase 03 ahead but HARD-BLOCKED on external GDPR Art.9 legal opinion. Phase 02.3 (remaining ~10 agenda chapters + final draftAlert removal) to be inserted when ready. Phase 3 CONTEXT.md remains gathered for when GDPR opinion lands.
+Resume file: .planning/phases/03-idea-catalog-voting/03-CONTEXT.md
+Next command: /gsd-plan-phase 03 (after GDPR Art.9 legal opinion lands) — or /gsd-phase --insert 02.3 to slice the remaining agenda chapters next
 
 **Coalition external dependencies status (run in parallel during execution):**
 
