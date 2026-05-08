@@ -7,7 +7,6 @@ import { SendBlastButton } from './SendBlastButton';
 import { sendTest } from '@/app/actions/send-test';
 import { cancelScheduled } from '@/app/actions/cancel-scheduled';
 import { getAdminT } from '@/lib/email/i18n-direct';
-import type { NewsletterTopic } from '@/lib/email/templates/NewsletterEmail';
 
 /**
  * Phase 5 NOTIF-09 / UI-SPEC §5.4 / D-22 — newsletter composer action bar.
