@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready_to_plan
-stopped_at: Phase 02.2 walking-skeleton slice shipped and operator-verified; ROADMAP + STATE advanced to Phase 03 (HARD-BLOCKED on external GDPR Art.9 legal opinion). Phase 02.3 (remaining agenda chapters) to be inserted when ready.
-last_updated: "2026-05-08T18:59:27.191Z"
-last_activity: "2026-05-08 -- Phase 02.2 Plan 01 shipped: /agenda renders manifesto + Десен консенсус + Икономика with 3-entry sidebar TOC; surfaced + fixed two Phase 02-04 latent bugs (missing @tailwindcss/typography plugin; TOC overlapping article in single-column layout)."
+status: verifying
+stopped_at: Phase 02.3 inserted (final SPIDR slice for coalition agenda content). Ready for `/gsd-mvp-phase 02.3` or `/gsd-plan-phase 02.3`. Phase 03 still HARD-BLOCKED on external GDPR Art.9 legal opinion behind 02.3.
+last_updated: "2026-05-08T19:15:00Z"
+last_activity: "2026-05-08 -- Phase 02.3 inserted after Phase 02.2 (final agenda slice — remaining ~10 chapters + draftAlert removal + agenda.body i18n cleanup)"
 progress:
-  total_phases: 8
+  total_phases: 9
   completed_phases: 5
   total_plans: 56
   completed_plans: 53
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Когато един собственик на МСП види сайта, разбира идеята достатъчно, за да даде името и имейла си — и след това продължава да се връща, защото гласът му се вижда и брои.
-**Current focus:** Phase 03 — Idea Catalog + Voting (HARD-BLOCKED on external GDPR Art.9 legal opinion before merge)
+**Current focus:** Phase 02.3 — Coalition Agenda Content Slice 2 (final SPIDR slice; remaining ~10 chapters + draftAlert removal)
 
 ## Current Position
 
-Phase: 03
-Plan: Not started — 10 plans pre-planned (post-checker revision: 03-05 split into 03-05a/b, 03-07 split into 03-07a/b)
-Status: Phase 02.2 walking-skeleton slice shipped + operator-verified 2026-05-08 (manifesto + Десен консенсус + Икономика chapters into /agenda with 3-entry sidebar TOC). Phase 03 HARD-BLOCKED on external GDPR Art.9 legal opinion before voting can begin. Phase 1, Phase 2 still awaiting operator warmup/sign-off + coalition deliverables. Phase 02.3 (remaining ~10 agenda chapters + final draftAlert removal) to be inserted when ready.
-Last activity: 2026-05-08 -- Phase 02.2 shipped; surfaced + fixed two Phase 02-04 latent bugs (missing @tailwindcss/typography plugin; TOC overlapping article in single-column layout)
+Phase: 02.3
+Plan: Not started — run `/gsd-mvp-phase 02.3` for SPIDR splitting (expected ~3-5 plans depending on chapter grouping)
+Status: Phase 02.3 inserted 2026-05-08 after Phase 02.2 walking-skeleton ship. Architectural contract from 02.2 is locked (hardcoded JSX, file-level lint-i18n exemption, anchor-drift unit test, 2-column grid, TableOfContents variant prop). Phase 03 (Idea Catalog + Voting) remains HARD-BLOCKED on external GDPR Art.9 legal opinion behind 02.3. Phase 1, Phase 2 still awaiting operator warmup/sign-off + coalition deliverables.
+Last activity: 2026-05-08 -- Phase 02.3 inserted after Phase 02.2 (final agenda slice — remaining ~10 chapters + draftAlert removal + agenda.body i18n cleanup)
 
-Progress: [█████████░] 95% (5 of 8 phases formally complete: 02.1 + 02.2 + Phase 5 code-shipping; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 03 + 04 + 06 ahead)
+Progress: [█████████░] 95% (5 of 9 phases formally complete: 02.1 + 02.2 + Phase 5 code-shipping; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 02.3 + 03 + 04 + 06 ahead)
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [█████████░] 95% (5 of 8 phases formally complete:
 
 - Phase 02.2 inserted (URGENT) after Phase 02.1 on 2026-05-08 — Coalition Agenda Content (D-CoalitionContent-Agenda); resolves the BLOCKING warmup-launch deferred item. Source: 25-page PDF (`programa-nie-sme-sinq-balgariq-2.pdf`) extracted to `.planning/coalition/agenda-raw.txt` (~12k words). SPIDR-split: 02.2 = walking-skeleton (manifesto + Десен консенсус + Икономика, ~210 source lines), shipped 2026-05-08. Phase 02.3 (TBD insertion) ships remaining ~10 chapters + removes the draftAlert banner + drops the obsolete `agenda.body` i18n key.
 - 2026-05-08 (Phase 02.2 mid-checkpoint): Two Phase 02-04 latent bugs surfaced and fixed during operator visual verification — (a) `@tailwindcss/typography` plugin was never installed despite `prose prose-slate prose-lg` classes being on the agenda article since `1211bca`; harmless while body was a single placeholder `<p>`, broke list rendering once 02.2 added `<ul>`/`<ol>`/h2 content (commit `8e8d384`). (b) Desktop TOC's `position: sticky` overlapped article body because both lived in a single 768px MainContainer column with no sidebar grid (commit `ce857ee`). Both fixes carry forward to Phase 02.3 — the architectural contract is now: 2-column grid layout `[200px_minmax(0,768px)]` md / `[220px_minmax(0,768px)]` lg, with TableOfContents `variant: 'mobile' | 'desktop' | 'both'` prop.
+- Phase 02.3 inserted (URGENT) after Phase 02.2 on 2026-05-08 — Coalition Agenda Content Slice 2 (final SPIDR slice). Ships remaining ~10 chapters from `agenda-raw.txt:319+` (Енергетика, ресурси и околна среда onward) into `/agenda`, removes the `<Alert>` draftAlert banner, and drops the obsolete `agenda.body` i18n key from `messages/bg.json`. Inherits architectural contract from Phase 02.2. Run `/gsd-mvp-phase 02.3` for SPIDR splitting.
 
 ### Decisions
 
@@ -128,10 +129,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-08T19:00:00Z
-Stopped at: Phase 02.2 walking-skeleton slice shipped + operator-verified. Phase 03 ahead but HARD-BLOCKED on external GDPR Art.9 legal opinion. Phase 02.3 (remaining ~10 agenda chapters + final draftAlert removal) to be inserted when ready. Phase 3 CONTEXT.md remains gathered for when GDPR opinion lands.
-Resume file: .planning/phases/03-idea-catalog-voting/03-CONTEXT.md
-Next command: /gsd-plan-phase 03 (after GDPR Art.9 legal opinion lands) — or /gsd-phase --insert 02.3 to slice the remaining agenda chapters next
+Last session: 2026-05-08T19:15:00Z
+Stopped at: Phase 02.3 inserted (final SPIDR slice for coalition agenda content). Empty phase directory ready at `.planning/phases/02.3-coalition-agenda-content-slice-2/`. Phase 03 CONTEXT.md preserved for when GDPR Art.9 legal opinion lands.
+Resume file: .planning/ROADMAP.md (Phase 02.3 entry)
+Next command: /gsd-mvp-phase 02.3 (SPIDR-split into vertical slices) — or /gsd-discuss-phase 02.3 to clarify scope first
 
 **Coalition external dependencies status (run in parallel during execution):**
 

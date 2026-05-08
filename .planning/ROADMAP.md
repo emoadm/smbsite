@@ -15,7 +15,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 1: Foundation** - Project scaffolding, authentication, branding baseline, email domain warm-up, core ops infrastructure
 - [~] **Phase 2: Public Surface (Pre-Warmup)** - Branded landing page, Sinya color tokens, real /member welcome page, cookie consent — must ship before warmup ladder begins · *code-shipping complete; awaiting operator (Cloudflare cache rules + CookieYes dashboard + Lighthouse PR review) + coalition deliverables (5 D-* items) per 02-SIGNOFF.md*
 - [x] **Phase 2.1: Attribution + Source Dashboard** *(INSERTED)* - UTM/QR/oblast attribution capture + Payload admin dashboard — must complete before QR mail drop · *Completed: 2026-05-08*
-- [x] **Phase 2.2: Coalition Agenda Content** *(INSERTED)* - Walking-skeleton SPIDR slice 1: manifesto + 'Десен консенсус' + 'Икономика' chapters + 3-entry TOC into /agenda. Partially resolves D-CoalitionContent-Agenda. · *Completed: 2026-05-08; Phase 02.3 (TBD) ships remaining ~10 chapters + final draftAlert removal*
+- [x] **Phase 2.2: Coalition Agenda Content** *(INSERTED)* - Walking-skeleton SPIDR slice 1: manifesto + 'Десен консенсус' + 'Икономика' chapters + 3-entry TOC into /agenda. Partially resolves D-CoalitionContent-Agenda. · *Completed: 2026-05-08*
+- [ ] **Phase 2.3: Coalition Agenda Content — Slice 2 (final)** *(INSERTED)* - Ship remaining ~10 chapters from agenda-raw.txt:319+ into /agenda; remove draft Alert banner; drop agenda.body i18n key. Final SPIDR slice; resolves remaining D-CoalitionContent-Agenda.
 - [ ] **Phase 3: Idea Catalog + Voting** - Editor-published idea catalog, binary voting engine with full anti-abuse stack (requires GDPR Art.9 legal opinion)
 - [ ] **Phase 4: User Submissions + Editorial** - Member proposals, problem reports, full editorial moderation panel
 - [ ] **Phase 5: Notifications** - Async newsletter, WhatsApp/Telegram channel links, member notification preferences
@@ -137,6 +138,31 @@ Description: integrate the coalition's official political program (25-page PDF, 
 Plans:
 - [x] 02.2-01-PLAN.md — Slice 1 walking skeleton: manifesto + Десен консенсус + Икономика JSX + TOC + linter exemption + anchor-drift test (D-CoalitionContent-Agenda)
 
+---
+
+### Phase 02.3: Coalition Agenda Content — Slice 2 (final) (INSERTED)
+
+**Goal:** As a visitor, I want to read the coalition's full political program — every chapter — on /agenda, so that I can evaluate the platform's positions before deciding whether to register.
+**Mode:** mvp
+**Slice:** final (Phase 02.2 walking-skeleton inheritor)
+
+**Description:** Ship the remaining ~10 chapters from `agenda-raw.txt:319+` (Енергетика, ресурси и околна среда onward) into `/agenda` using the architectural contract locked by Phase 02.2: hardcoded Bulgarian JSX in `src/app/(frontend)/agenda/page.tsx`, file-level `lint-i18n` exemption, anchor-drift unit test, 2-column grid layout (`[200px_minmax(0,768px)]` md / `[220px_minmax(0,768px)]` lg) with `TableOfContents` `variant` prop. Final-slice cleanup: remove the `<Alert>` draftAlert banner and drop the obsolete `agenda.body` i18n key from `messages/bg.json`.
+
+**Requirements**: TBD (resolves the remaining portion of `D-CoalitionContent-Agenda`)
+**Depends on:** Phase 02.2 (architectural contract + 3-entry TOC scaffold)
+**Plans:** TBD (run `/gsd-mvp-phase 02.3` for SPIDR splitting; expected ~3-5 plans depending on chapter grouping)
+
+Success Criteria (what must be TRUE):
+  1. A visitor opening `/agenda` sees the full coalition program — every chapter from `agenda-raw.txt` rendered as structured Bulgarian JSX with proper headings, paragraphs, lists, and ordered policy items
+  2. The Table of Contents lists all top-level chapters in source order; clicking any entry jumps to its section via in-page anchor; the anchor-drift unit test passes for the extended set
+  3. The `<Alert>` draftAlert banner is removed (this is the "final slice" condition); the `agenda.body` i18n key is dropped from `messages/bg.json`
+  4. `pnpm lint:i18n` continues to pass (file-level EXEMPT_FILES entry from Phase 02.2 already covers all new content)
+  5. Operator visual walkthrough confirms typography, list rendering, anchor jumps, and active-section highlighting work end-to-end on desktop AND mobile
+
+**UI hint**: yes
+
+---
+
 ### Phase 3: Idea Catalog + Voting
 
 **Goal**: Confirmed members can browse a catalog of editorial ideas and cast approve/reject votes with full integrity guarantees; the six-layer anti-abuse stack is operational. This phase MUST NOT start without the GDPR Article 9 legal opinion confirming the lawful basis for recording political-opinion votes.
@@ -256,6 +282,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Public Surface (Pre-Warmup) | 9/9 | Code-shipping complete; operator + 5 coalition deliverables pending per 02-SIGNOFF.md | - |
 | 2.1. Attribution + Source Dashboard | 8/8 | Complete — UAT 16/16 passed, VERIFICATION passed (13/13 must-haves), security threats=0 | 2026-05-08 |
 | 2.2. Coalition Agenda Content | 1/1 | Complete — walking-skeleton slice (manifesto + Десен консенсус + Икономика); operator visual verification approved | 2026-05-08 |
+| 2.3. Coalition Agenda Content — Slice 2 (final) | 0/TBD | Not started — final SPIDR slice (remaining ~10 chapters + draftAlert removal); run `/gsd-mvp-phase 02.3` for SPIDR splitting | - |
 | 3. Idea Catalog + Voting | 0/10 | Not started — planning complete (post-checker revision: 03-05 split into 03-05a/b, 03-07 split into 03-07a/b); HARD-BLOCKED on GDPR Art.9 lawyer opinion before merge | - |
 | 4. User Submissions + Editorial | 0/TBD | Not started | - |
 | 5. Notifications | 0/TBD | Not started | - |
