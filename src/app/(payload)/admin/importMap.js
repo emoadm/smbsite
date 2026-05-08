@@ -37,6 +37,7 @@ import {
 } from '@payloadcms/richtext-lexical/client'
 import { AttributionView as AttributionView_attribution_dashboard } from '@/app/(payload)/admin/views/attribution/AttributionView'
 import { NewsletterComposer as NewsletterComposer_newsletters_beforedoccontrols } from '@/components/payload/NewsletterComposer'
+import { NewsletterPreviewField as NewsletterPreviewField_newsletters_preview } from '@/components/payload/NewsletterPreviewField'
 
 export const importMap = {
   // RSC entries
@@ -56,4 +57,5 @@ export const importMap = {
   // Project-local custom components
   "/src/app/(payload)/admin/views/attribution/AttributionView#AttributionView": AttributionView_attribution_dashboard,
   "/src/components/payload/NewsletterComposer#NewsletterComposer": NewsletterComposer_newsletters_beforedoccontrols,
+  "/src/components/payload/NewsletterPreviewField#NewsletterPreviewField": NewsletterPreviewField_newsletters_preview,
 }

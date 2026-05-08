@@ -69,16 +69,13 @@ vi.mock('@/payload.config', () => ({
 import { NewsletterComposer } from '@/components/payload/NewsletterComposer';
 
 function renderComposer() {
+  // Composer no longer takes the preview-related props — those moved to
+  // NewsletterPreviewField (a separate `ui` field). Composer now only
+  // mounts the action bar (Send Test / Cancel / Send Blast) plus gate
+  // state via useDocumentInfo().
   return render(
     React.createElement(NewsletterComposer, {
       newsletterId: 'test-id',
-      subject: 'Test subject',
-      previewText: 'Preview',
-      topic: 'newsletter_general',
-      fullName: 'Test Name',
-      lexicalAst: {
-        root: { type: 'root', children: [], direction: null, format: '', indent: 0, version: 1 },
-      },
       scheduledAt: null,
       status: 'draft',
     }),

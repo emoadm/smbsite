@@ -3,7 +3,6 @@
 import React from 'react';
 import { Button as PayloadButton, useDocumentInfo } from '@payloadcms/ui';
 import { Toaster } from 'sonner';
-import { LivePreviewIframe } from './LivePreviewIframe';
 import { SendBlastButton } from './SendBlastButton';
 import { sendTest } from '@/app/actions/send-test';
 import { cancelScheduled } from '@/app/actions/cancel-scheduled';
@@ -11,11 +10,20 @@ import { getAdminT } from '@/lib/email/i18n-direct';
 import type { NewsletterTopic } from '@/lib/email/templates/NewsletterEmail';
 
 /**
- * Phase 5 NOTIF-09 / UI-SPEC §5.4 / D-22 — newsletter composer custom field component.
+ * Phase 5 NOTIF-09 / UI-SPEC §5.4 / D-22 — newsletter composer action bar.
  *
- * Wraps the Payload-default form fields with a sibling live-preview pane
- * (≥xl split, <xl tab-toggle) + Send Test + Send Blast + Cancel Scheduled
- * buttons.
+ * Mounted in `admin.components.edit.beforeDocumentControls` — Payload's
+ * compact inline slot next to the document title and Save button. ONLY the
+ * action bar (Send Test / Cancel / Send Blast) lives here. The live email
+ * preview is rendered by NewsletterPreviewField.tsx, registered as a `ui`
+ * field after `body` so it lays out within the form's natural full width.
+ *
+ * Earlier this component also rendered the preview iframe inline. The
+ * `beforeDocumentControls` slot is NOT a full-width region — it is the
+ * narrow inline area to the right of the document title, so the iframe
+ * was visually squeezed and overlapped the title bar (operator screenshot
+ * 2026-05-08). Splitting the preview into a `ui` field keeps each piece
+ * in a slot that suits its size.
  *
  * i18n: this is a Payload admin custom 'use client' component. The Payload
  * admin shell does NOT mount NextIntlClientProvider. Therefore:
@@ -29,11 +37,6 @@ const t = getAdminT('admin.newsletters');
 
 export interface NewsletterComposerProps {
   newsletterId?: string;
-  subject?: string;
-  previewText?: string;
-  topic?: NewsletterTopic;
-  fullName?: string;
-  lexicalAst?: unknown;
   scheduledAt?: string | null;
   status?: string;
   lastTestSentAt?: string | null;
@@ -80,17 +83,6 @@ export function NewsletterComposer(props: NewsletterComposerProps) {
       ? persistedLastEditedAfterTestAt
       : props.lastEditedAfterTestAt;
 
-  const previewArgs = {
-    subject: props.subject ?? '',
-    previewText: props.previewText ?? '',
-    topic: (props.topic ?? 'newsletter_general') as NewsletterTopic,
-    fullName: props.fullName,
-    lexicalAst:
-      props.lexicalAst ?? {
-        root: { type: 'root', children: [], direction: null, format: '', indent: 0, version: 1 },
-      },
-  };
-
   const onSendTest = async () => {
     const sonner = await import('sonner');
     if (!newsletterId) {
@@ -130,24 +122,10 @@ export function NewsletterComposer(props: NewsletterComposerProps) {
           pulling in next-themes/ThemeProvider in the admin context. */}
       <Toaster richColors position="bottom-right" />
 
-      {/* Live email preview — full-width below Payload's form fields.
-          Earlier layout used a 2-col grid with an empty left column on the
-          assumption that Payload's form fields would render inside it. They
-          don't — the form is rendered by Payload in its own slot, not nested
-          inside our composer. The grid left half of the viewport empty and
-          squeezed the preview to half width. The mobile Tabs UX appended a
-          second iframe below the form on click which read as "form
-          duplicated, action bar pushed off-screen". Both removed in favor of
-          a single full-width preview pane. */}
-      <div className="mt-6">
-        <h3 className="font-display text-lg mb-2">{t('preview.title')}</h3>
-        <LivePreviewIframe args={previewArgs} />
-        <p className="mt-2 text-xs text-muted-foreground">{t('preview.helper')}</p>
-      </div>
-
-      {/* Action bar — uses Payload's native Button so it matches admin
-          chrome instead of the public-site shadcn buttons. */}
-      <div className="mt-6 flex items-center gap-3 justify-end">
+      {/* Compact action bar — fits the inline `beforeDocumentControls`
+          slot. Preview iframe lives in NewsletterPreviewField (a `ui`
+          field after `body` in Newsletters collection). */}
+      <div className="flex items-center gap-2 flex-wrap justify-end">
         <PayloadButton buttonStyle="secondary" onClick={onSendTest} type="button">
           {t('actions.sendTest')}
         </PayloadButton>

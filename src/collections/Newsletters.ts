@@ -119,6 +119,20 @@ export const Newsletters: CollectionConfig = {
       }),
     },
     {
+      // Phase 5 NOTIF-09 — live email preview rendered as a `ui` field so it
+      // sits inside the form layout at full width, instead of inside the
+      // narrow `beforeDocumentControls` slot where it overlapped the title.
+      // Subscribes to subject/previewText/topic/body via useFormFields and
+      // updates on form change (debounced 500ms in LivePreviewIframe).
+      name: 'preview',
+      type: 'ui',
+      admin: {
+        components: {
+          Field: '/src/components/payload/NewsletterPreviewField#NewsletterPreviewField',
+        },
+      },
+    },
+    {
       name: 'scheduledAt',
       type: 'date',
       admin: {
