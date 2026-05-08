@@ -28,6 +28,7 @@ const TOPIC_KINDS = [
 async function handle(req: NextRequest): Promise<NextResponse> {
   const url = new URL(req.url);
   const token = url.searchParams.get('token') ?? '';
+  const isTestSend = url.searchParams.get('test') === '1';
 
   // HMAC token is the auth substitute (D-14 — no login required for unsubscribe).
   const v = verifyUnsubToken(token);
@@ -39,6 +40,20 @@ async function handle(req: NextRequest): Promise<NextResponse> {
   }
 
   const userId = v.uid;
+
+  // Test-send guard. The newsletter-test branch in worker.tsx appends
+  // `&test=1` so editors who click the unsub link in their own test email
+  // see the redirect flow without actually getting suppressed. Without
+  // this, an editor verifying the link would mark themselves
+  // newsletter-revoked in `consents` AND get added to Brevo's global
+  // blocklist (sticky at the ESP level — re-subscribing in-app would
+  // not restore inbox delivery until manually de-blocklisted in Brevo).
+  if (isTestSend) {
+    logger.info({ user_id: userId }, 'unsubscribe.test_send_noop');
+    return NextResponse.redirect(new URL('/unsubscribed?test=1', req.url), {
+      status: 303,
+    });
+  }
 
   // Look up email — needed for Brevo blocklist call (D-24: log only user_id, not email).
   const userRows = await db

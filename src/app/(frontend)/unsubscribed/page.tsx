@@ -19,7 +19,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 export const dynamic = 'force-dynamic';
 
 interface UnsubscribedPageProps {
-  searchParams: Promise<{ reason?: string }>;
+  searchParams: Promise<{ reason?: string; test?: string }>;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -43,6 +43,7 @@ export default async function UnsubscribedPage({ searchParams }: UnsubscribedPag
   const t = await getTranslations('unsubscribe');
   const sp = await searchParams;
   const variant = variantFor(sp.reason);
+  const isTest = sp.test === '1';
 
   if (variant === 'invalid') {
     return (
@@ -86,6 +87,12 @@ export default async function UnsubscribedPage({ searchParams }: UnsubscribedPag
           <Alert className="mt-12 text-left">
             <AlertTitle>{t('expired.alert.title')}</AlertTitle>
             <AlertDescription>{t('expired.alert.body')}</AlertDescription>
+          </Alert>
+        )}
+        {isTest && (
+          <Alert className="mt-12 text-left">
+            <AlertTitle>{t('test.alert.title')}</AlertTitle>
+            <AlertDescription>{t('test.alert.body')}</AlertDescription>
           </Alert>
         )}
       </div>

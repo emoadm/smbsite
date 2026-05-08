@@ -33,12 +33,18 @@ export async function sendTest(input: { newsletterId: string }): Promise<SendTes
     .catch(() => null)) as { topic?: string } | null;
   if (!doc) return { ok: false, reason: 'missing' };
 
+  // Pass editor userId so the worker can sign a real unsub token for the
+  // test email. The earlier `#preview` sentinel meant the unsub /
+  // preferences links rendered as dead anchors and the operator couldn't
+  // verify what recipients would see.
+  const editorUserId = (user as { id?: string } | null)?.id;
   await addEmailJob({
     to: editorEmail,
     kind: 'newsletter-test',
     newsletterId: input.newsletterId,
     topic: doc.topic,
     fullName: (user as { name?: string } | null)?.name ?? '',
+    userId: editorUserId,
   });
 
   logger.info({ newsletterId: input.newsletterId }, 'newsletter.send-test.enqueued');

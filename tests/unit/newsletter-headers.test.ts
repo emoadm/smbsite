@@ -37,11 +37,18 @@ describe('Phase 5 NOTIF-02 — RFC 8058 headers (Pattern 3, Pitfall 2)', () => {
     expect(code).toMatch(/addEmailJob\([^)]*kind:\s*['"]newsletter-send-recipient['"]/s);
   });
 
-  it('newsletter-test uses #preview sentinel for unsubUrl (no Brevo blocklist effect)', () => {
+  it('newsletter-test unsubUrl carries the test=1 guard (no Brevo blocklist effect)', () => {
+    // Test sends previously used `unsubUrl: '#preview'` so the link rendered
+    // dead in the inbox (operator couldn't verify what recipients see).
+    // The current shape is a real signed token URL with `&test=1` appended;
+    // src/app/api/unsubscribe/route.ts honors the flag by short-circuiting
+    // before the `consents` INSERT and the brevoBlocklist() call. The
+    // editor sees the redirect flow without getting suppressed at the ESP.
     const code = SRC.split('\n')
       .filter((l) => !l.trim().startsWith('//'))
       .join('\n');
-    expect(code).toMatch(/unsubUrl:\s*['"]#preview['"]/);
+    expect(code).toMatch(/signUnsubToken\(editorUserId\)/);
+    expect(code).toMatch(/&test=1/);
   });
 
   it('unsubscribe-brevo-retry calls brevoBlocklist (D-14 retry path)', () => {

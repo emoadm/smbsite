@@ -219,7 +219,22 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
       const previewText = String(doc.previewText ?? '');
       const bodyHtml = renderLexicalToHtml(doc.body as never);
 
-      // Sentinel unsub URL — test sends never modify suppression state.
+      // Real preferencesUrl + token-bearing unsubUrl with `?test=1` guard.
+      // Earlier this used `#preview` sentinels for both, which made the
+      // links dead in the inbox (operator report 2026-05-08). Production
+      // unsub clicks call brevoBlocklist() which is sticky at the ESP
+      // level — if the editor accidentally clicked unsub on their own
+      // test it would suppress them globally in Brevo even after they
+      // re-subscribed in-app. The `?test=1` flag is honored by
+      // src/app/api/unsubscribe/route.ts as "show the redirect, don't
+      // mutate state" so editors can verify the link end-to-end safely.
+      const editorUserId = job.data.userId;
+      const origin = process.env.SITE_ORIGIN ?? 'https://chastnik.eu';
+      const preferencesUrl = `${origin}/member/preferences`;
+      const unsubUrl = editorUserId
+        ? `${origin}/api/unsubscribe?token=${signUnsubToken(editorUserId)}&test=1`
+        : `${origin}/member/preferences`;
+
       const props = {
         t,
         fullName: fullName ?? '',
@@ -227,8 +242,8 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
         previewText,
         topic,
         bodyHtml,
-        unsubUrl: '#preview',
-        preferencesUrl: '#preview',
+        unsubUrl,
+        preferencesUrl,
         year: new Date().getFullYear(),
       };
       html = await render(<NewsletterEmail {...props} />);
