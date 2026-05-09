@@ -25,8 +25,8 @@ describe('/agenda TOC anchors', () => {
     (m) => m[1],
   );
 
-  it('has at least 7 TOC entries (slice 2 — plan 01 complete)', () => {
-    expect(tocIds.length).toBeGreaterThanOrEqual(7);
+  it('has at least 8 TOC entries (slice 2 — plan 02 partial)', () => {
+    expect(tocIds.length).toBeGreaterThanOrEqual(8);
   });
 
   it('every TOC id has a matching <h2 id="…">', () => {
@@ -50,5 +50,9 @@ describe('/agenda TOC anchors', () => {
         'vanshna-sigurnost',
       ]),
     );
+  });
+
+  it('contains the slice-2 plan-02 anchor for Образование', () => {
+    expect(tocIds).toContain('obrazovanie');
   });
 });
