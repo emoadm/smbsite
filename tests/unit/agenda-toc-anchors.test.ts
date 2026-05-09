@@ -25,8 +25,8 @@ describe('/agenda TOC anchors', () => {
     (m) => m[1],
   );
 
-  it('has at least 3 TOC entries (slice 1)', () => {
-    expect(tocIds.length).toBeGreaterThanOrEqual(3);
+  it('has at least 7 TOC entries (slice 2 — plan 01 complete)', () => {
+    expect(tocIds.length).toBeGreaterThanOrEqual(7);
   });
 
   it('every TOC id has a matching <h2 id="…">', () => {
@@ -38,6 +38,17 @@ describe('/agenda TOC anchors', () => {
   it('contains the locked slice-1 anchors', () => {
     expect(tocIds).toEqual(
       expect.arrayContaining(['manifest', 'desen-konsensus', 'ikonomika']),
+    );
+  });
+
+  it('contains the slice-2 plan-01 anchors (Енергетика, Земеделие, Здравеопазване, Външна сигурност)', () => {
+    expect(tocIds).toEqual(
+      expect.arrayContaining([
+        'energetika',
+        'zemedelie',
+        'zdraveopazvane',
+        'vanshna-sigurnost',
+      ]),
     );
   });
 });
