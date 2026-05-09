@@ -1,18 +1,15 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { MainContainer } from '@/components/layout/MainContainer';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SectionEyebrow } from '@/components/landing/SectionEyebrow';
 import { TableOfContents } from '@/components/landing/TableOfContents';
 
 /**
- * /agenda — coalition political program. Slice 1 of 2 (Phase 02.2): ships
- * the manifesto, the 'Десен консенсус' top chapter, and the 'Икономика'
- * detailed sub-chapter as hardcoded Bulgarian JSX (per D-S1.1 in
- * `.planning/phases/02.2-coalition-agenda-content/SKELETON.md`). The
- * <Alert> draft marker remains visible until Phase 02.3 ships the
- * remaining chapters and removes it. The PUB-05 i18n linter exempts this
- * file at the file level (see `scripts/lint-i18n.mjs` EXEMPT_FILES).
+ * /agenda — coalition political program. Phase 02.3 final: ships all 12
+ * chapters as hardcoded Bulgarian JSX. The draft banner (Alert) has been
+ * removed as part of Phase 02.3 final-slice cleanup (UI-SPEC §4.1).
+ * The PUB-05 i18n linter exempts this file at the file level
+ * (see `scripts/lint-i18n.mjs` EXEMPT_FILES).
  *
  * Container uses `prose` width (768px, UI-SPEC §5.3 lock). TOC is sticky
  * on md+, collapsible <details> on mobile. Anchor-drift is guarded by
@@ -25,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const tSite = await getTranslations('site');
   return {
     title: `${t('title')} — ${tSite('brandName')}`,
-    description: t('draftAlert'),
+    description: t('metadataDescription'),
     alternates: { canonical: '/agenda' },
     openGraph: {
       type: 'article',
@@ -65,12 +62,6 @@ export default async function AgendaPage() {
     <MainContainer width="page">
       <SectionEyebrow>{t('leadEyebrow')}</SectionEyebrow>
       <h1 className="mt-2 mb-6 font-display text-3xl">{t('title')}</h1>
-
-      <Alert className="mb-8">
-        <AlertDescription className="text-sm text-muted-foreground">
-          {t('draftAlert')}
-        </AlertDescription>
-      </Alert>
 
       {TOC_ITEMS.length > 0 && (
         <TableOfContents
