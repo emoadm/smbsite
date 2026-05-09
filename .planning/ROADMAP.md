@@ -150,10 +150,10 @@ Plans:
 
 **Requirements**: TBD (resolves the remaining portion of `D-CoalitionContent-Agenda`)
 **Depends on:** Phase 02.2 (architectural contract + 3-entry TOC scaffold)
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
-- [ ] 02.3-01-PLAN.md — Slice 2 simple-prose chapters: Енергетика + Земеделие + Здравеопазване + Външна сигурност и отбрана; TOC 3→7; anchor-drift test ≥7 (REQ-AGENDA-S2-01/02/04/05)
+- [x] 02.3-01-PLAN.md — Slice 2 simple-prose chapters: Енергетика + Земеделие + Здравеопазване + Външна сигурност и отбрана; TOC 3→7; anchor-drift test ≥7 (REQ-AGENDA-S2-01/02/04/05)
 - [ ] 02.3-02-PLAN.md — Slice 2 numbered-policy chapters: Образование + Социална политика + Култура inserted in source order; TOC 7→10; anchor-drift test ≥10 (REQ-AGENDA-S2-01/02/04/05)
 - [ ] 02.3-03-PLAN.md — Slice 2 final cleanup: Правосъдие + Защита на ценностите + drop draftAlert banner + drop agenda.body + add agenda.metadataDescription + new i18n-cleanup unit test + new /agenda Playwright spec; TOC 10→12 final; anchor-drift test ≥12 (REQ-AGENDA-S2-01..05; full D-CoalitionContent-Agenda resolution)
 
