@@ -25,8 +25,8 @@ describe('/agenda TOC anchors', () => {
     (m) => m[1],
   );
 
-  it('has at least 8 TOC entries (slice 2 — plan 02 partial)', () => {
-    expect(tocIds.length).toBeGreaterThanOrEqual(8);
+  it('has at least 9 TOC entries (slice 2 — plan 02 partial)', () => {
+    expect(tocIds.length).toBeGreaterThanOrEqual(9);
   });
 
   it('every TOC id has a matching <h2 id="…">', () => {
@@ -52,7 +52,9 @@ describe('/agenda TOC anchors', () => {
     );
   });
 
-  it('contains the slice-2 plan-02 anchor for Образование', () => {
-    expect(tocIds).toContain('obrazovanie');
+  it('contains the slice-2 plan-02 anchors for Образование and Социална политика', () => {
+    expect(tocIds).toEqual(
+      expect.arrayContaining(['obrazovanie', 'sotsialna-politika']),
+    );
   });
 });
