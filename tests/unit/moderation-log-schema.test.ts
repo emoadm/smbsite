@@ -26,6 +26,12 @@ describe('Phase 4 D-A1 — moderation_log append-only schema invariants', () => 
       return;
     }
     const src = readFileSync(adminActionsPath, 'utf8');
-    expect(src).not.toMatch(/db\.(update|delete)\(moderation_log\)/);
+    // Strip single-line comments before checking — the file documents the
+    // invariant in a `// db.update(moderation_log) ...` comment.
+    const codeOnly = src
+      .split('\n')
+      .filter((line) => !line.trim().startsWith('//'))
+      .join('\n');
+    expect(codeOnly).not.toMatch(/\b(?:tx|db)\.(?:update|delete)\(moderation_log\)/);
   });
 });

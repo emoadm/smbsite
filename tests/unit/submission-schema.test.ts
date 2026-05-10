@@ -4,12 +4,12 @@ import { readFileSync } from 'node:fs';
 describe('Phase 4 D-A1 — submissions + moderation_log schema invariants', () => {
   it('submissions.ts declares pgTable submissions', () => {
     const src = readFileSync('src/db/schema/submissions.ts', 'utf8');
-    expect(src).toMatch(/pgTable\('submissions',/);
+    expect(src).toMatch(/pgTable\(\s*['"]submissions['"],/);
   });
 
   it('submissions.ts declares pgTable moderation_log', () => {
     const src = readFileSync('src/db/schema/submissions.ts', 'utf8');
-    expect(src).toMatch(/pgTable\('moderation_log',/);
+    expect(src).toMatch(/pgTable\(\s*['"]moderation_log['"],/);
   });
 
   it('submissions.submitter_id references users.id with onDelete restrict', () => {
