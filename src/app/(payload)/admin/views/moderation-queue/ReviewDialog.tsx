@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ConfirmActionDialog } from './ConfirmActionDialog';
 import { SuspendDialog } from './SuspendDialog';
-import { approveSubmission, rejectSubmission } from './actions';
+import { approveSubmission, rejectSubmission } from '@/lib/submissions/admin-actions';
 import type { PendingRow } from '@/lib/submissions/admin-queries';
 
 // Direct bg.json import — Payload admin shell does NOT wrap in a next-intl Provider.

@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { ConfirmActionDialog } from './ConfirmActionDialog';
-import { suspendUser } from './actions';
+import { suspendUser } from '@/lib/submissions/admin-actions';
 
 const t = (bg as { admin: { moderation: Record<string, string> } }).admin.moderation as {
   suspendHeading: string;
