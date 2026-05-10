@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: completed
 stopped_at: Phase 4 UI-SPEC approved
-last_updated: "2026-05-10T18:12:19.158Z"
-last_activity: 2026-05-10 -- Phase 04 marked complete
+last_updated: "2026-05-10T20:07:50.206Z"
+last_activity: "2026-05-10 -- Phase 04 shipped as PR #2"
 progress:
   total_phases: 9
   completed_phases: 7
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 Phase: 04 — COMPLETE
 Plan: 1 of 8
 Status: Phase 04 complete
-Last activity: 2026-05-10 -- Phase 04 marked complete
+Last activity: 2026-05-10 -- Phase 04 shipped as PR #2
 
 Progress: [█████████░] 95% (5 of 9 phases formally complete: 02.1 + 02.2 + Phase 5 code-shipping; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 02.3 + 03 + 04 + 06 ahead)
 
