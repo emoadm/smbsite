@@ -9,7 +9,8 @@ describe('Phase 4 EDIT-03 — Pages collection invariants', () => {
 
   it('Pages.ts uses isEditorOrAdmin access guard', () => {
     const src = readFileSync('src/collections/Pages.ts', 'utf8');
-    expect(src).toMatch(/\['admin', 'editor'\]\.includes\(role\)/);
+    // EDIT-07 fix: role-gate accepts admin, editor, super_editor.
+    expect(src).toMatch(/\['admin', 'editor', 'super_editor'\]\.includes\(role\)/);
   });
 
   it("Pages.ts defines 'draft' and 'published' status option values", () => {

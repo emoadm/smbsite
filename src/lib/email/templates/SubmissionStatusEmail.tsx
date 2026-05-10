@@ -1,9 +1,19 @@
 // Phase 4 Plan 04-07 — React Email template for submission approval/rejection notifications.
-// Mirrors structure of WelcomeEmail.tsx (same React import for tsx/classic JSX transform).
+// Mirrors structure of WelcomeEmail.tsx (translator passed in by worker.tsx).
 import React from 'react';
 import { Html, Head, Body, Container, Heading, Text, Hr, Button } from '@react-email/components';
 
-interface Props {
+export type SubmissionStatusEmailT = (
+  key: string,
+  vars?: Record<string, string | number>,
+) => string;
+
+export interface SubmissionStatusEmailProps {
+  /** Translator scoped to email.submissionStatus.{approved|rejected} for body/cta;
+   *  the worker loads it via loadT('email.submissionStatus.<variant>'). */
+  t: SubmissionStatusEmailT;
+  /** Translator scoped to email.submissionStatus for shared keys (memberFooter). */
+  tShared: SubmissionStatusEmailT;
   variant: 'approved' | 'rejected';
   fullName: string;
   title: string;
@@ -11,16 +21,20 @@ interface Props {
   siteOrigin: string;
 }
 
-export function SubmissionStatusEmail({ variant, fullName, title, moderatorNote, siteOrigin }: Props) {
+export function SubmissionStatusEmail({
+  t,
+  tShared,
+  variant,
+  fullName,
+  title,
+  moderatorNote,
+  siteOrigin,
+}: SubmissionStatusEmailProps) {
   const isApproved = variant === 'approved';
   const ctaHref = isApproved ? `${siteOrigin}/predlozheniya` : `${siteOrigin}/member/predlozheniya`;
-  const ctaLabel = isApproved ? 'Виж публичния каталог' : 'Виж моите предложения';
-  const heading = isApproved
-    ? 'Вашето предложение беше одобрено'
-    : 'Вашето предложение не беше одобрено';
-  const body = isApproved
-    ? `Предложението ти „${title}" беше прегледано и одобрено от редакционния екип. Вече е видимо публично.`
-    : `Предложението ти „${title}" не беше одобрено.`;
+  const bodyVars: Record<string, string> = isApproved
+    ? { fullName, title }
+    : { fullName, title, note: moderatorNote ?? '' };
 
   return (
     <Html lang="bg">
@@ -41,19 +55,9 @@ export function SubmissionStatusEmail({ variant, fullName, title, moderatorNote,
               color: isApproved ? '#004A79' : '#DC2626',
             }}
           >
-            {heading}
+            {t('subject')}
           </Heading>
-          <Text style={{ fontSize: 16 }}>Здравей, {fullName}!</Text>
-          <Text style={{ fontSize: 16 }}>{body}</Text>
-          {!isApproved && moderatorNote && (
-            <>
-              <Hr />
-              <Text style={{ fontSize: 14, color: '#475569' }}>
-                <strong>Бележка от редактора:</strong> {moderatorNote}
-              </Text>
-              <Hr />
-            </>
-          )}
+          <Text style={{ fontSize: 16, whiteSpace: 'pre-line' }}>{t('body', bodyVars)}</Text>
           <Button
             href={ctaHref}
             style={{
@@ -65,12 +69,10 @@ export function SubmissionStatusEmail({ variant, fullName, title, moderatorNote,
               display: 'inline-block',
             }}
           >
-            {ctaLabel}
+            {t('cta')}
           </Button>
           <Hr />
-          <Text style={{ fontSize: 12, color: '#475569' }}>
-            Получаваш това писмо, защото си член на платформата на коалиция Синя България.
-          </Text>
+          <Text style={{ fontSize: 12, color: '#475569' }}>{tShared('memberFooter')}</Text>
         </Container>
       </Body>
     </Html>

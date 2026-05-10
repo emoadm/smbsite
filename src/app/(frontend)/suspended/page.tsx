@@ -28,7 +28,7 @@ export default async function SuspendedPage() {
         <CardContent className="space-y-4">
           <p className="text-base">{t('body')}</p>
           <form action={logoutAction}>
-            <Button type="submit" variant="outline" size="sm">Изход</Button>
+            <Button type="submit" variant="outline" size="sm">{t('logoutLabel')}</Button>
           </form>
         </CardContent>
       </Card>

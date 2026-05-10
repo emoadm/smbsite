@@ -9,7 +9,8 @@ describe('Phase 4 EDIT-02 — Ideas collection invariants', () => {
 
   it('Ideas.ts uses isEditorOrAdmin access guard', () => {
     const src = readFileSync('src/collections/Ideas.ts', 'utf8');
-    expect(src).toMatch(/\['admin', 'editor'\]\.includes\(role\)/);
+    // EDIT-07 fix: role-gate accepts admin, editor, super_editor.
+    expect(src).toMatch(/\['admin', 'editor', 'super_editor'\]\.includes\(role\)/);
   });
 
   it('Ideas.ts defines all five topic option values', () => {

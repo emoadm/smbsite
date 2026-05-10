@@ -26,12 +26,12 @@ import {
 
 const isEditorOrAdmin = ({ req }: { req: { user?: unknown } }): boolean => {
   const role = ((req.user as { role?: string } | null)?.role) ?? '';
-  return ['admin', 'editor'].includes(role);
+  return ['admin', 'editor', 'super_editor'].includes(role);
 };
 
 const isPublishedOrEditor = ({ req }: { req: { user?: unknown } }) => {
   const role = ((req.user as { role?: string } | null)?.role) ?? '';
-  if (['admin', 'editor'].includes(role)) return true;
+  if (['admin', 'editor', 'super_editor'].includes(role)) return true;
   // Public read of published pages (anonymous + members):
   return { status: { equals: 'published' } };
 };

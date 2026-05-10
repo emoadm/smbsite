@@ -318,9 +318,12 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
         return { messageId: 'skipped-missing-row' };
       }
       const tEmail = loadT('email.submissionStatus.approved');
+      const tShared = loadT('email.submissionStatus');
       const origin = process.env.SITE_ORIGIN ?? 'https://chastnik.eu';
       const emailHtml = await render(
         <SubmissionStatusEmail
+          t={tEmail}
+          tShared={tShared}
           variant="approved"
           fullName={row.submitter_full_name}
           title={row.title ?? ''}
@@ -358,9 +361,12 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
         return { messageId: 'skipped-missing-row' };
       }
       const tEmail = loadT('email.submissionStatus.rejected');
+      const tShared = loadT('email.submissionStatus');
       const origin = process.env.SITE_ORIGIN ?? 'https://chastnik.eu';
       const emailHtml = await render(
         <SubmissionStatusEmail
+          t={tEmail}
+          tShared={tShared}
           variant="rejected"
           fullName={row.submitter_full_name}
           title={row.title ?? ''}
@@ -384,6 +390,7 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
       const tEmail = loadT('email.suspended');
       const emailHtml = await render(
         <AccountSuspendedEmail
+          t={tEmail}
           fullName={job.data.fullName ?? ''}
           reason={job.data.suspensionReason ?? ''}
         />
