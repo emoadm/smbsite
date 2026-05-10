@@ -51,6 +51,11 @@ human_verification:
       - "@next/env@15.5.x ships a webpack-bundled CJS module whose loadEnvConfig export Node ESM's static named-export detection cannot see; the previous payload patch (named import) broke. Fixed in a045187 by switching to createRequire form."
     open_followups:
       - "T-04-06-05 (dual-identity, accepted): the operator's admin_users.email did not resolve to a matching users.id during the walkthrough — both reviewer_id and actor_user_id ended up NULL. The audit row still has the action and target, just without the FK. Worth a one-off investigation post-phase: is the operator's member-side users row missing, or is Payload's session not exposing email at the expected field?"
+    followup_resolution_2026-05-10:
+      - "Root cause: admin_users had email 'emoadm@gmail.com' but no matching users row existed under that email (operator's member identity was a separate 'emoadm+test1@gmail.com' alias). My email lookup in getActorUserId correctly returned NULL given the data."
+      - "Resolution: bootstrapped a users row for the operator via OPS-RUNBOOK option B — INSERT INTO users (email='emoadm@gmail.com', platform_role='super_editor', ...) ... ON CONFLICT DO UPDATE. The created users.id is 36788725-4627-4a36-811b-b1479c33569f."
+      - "Verification: a fresh approve action (submission 259b3e5b-...) wrote actor_user_id = '36788725-...' in moderation_log. Audit trail now fully populated."
+      - "Implication for new editors: every admin_users account that wants its actions audit-attributable MUST also have a users-table row with the SAME email and platform_role IN ('editor','super_editor'). The OPS-RUNBOOK §1 already documents the bootstrap procedure; consider adding a STATE Deferred Item if more editors join later."
 ---
 
 # Phase 4: User Submissions + Editorial Moderation — Verification Report
