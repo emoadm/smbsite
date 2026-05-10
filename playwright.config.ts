@@ -10,6 +10,12 @@ export default defineConfig({
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000',
+    // Bypass the cf-ray casual-probe gate in src/middleware.ts for CI traffic.
+    // The middleware does a presence check only (no format validation); a
+    // clearly synthetic value keeps log inspection obvious. See quick task
+    // 260511-0nx for rationale and D-CloudflareIPAllowlist for the real
+    // network-layer auth boundary tracked separately.
+    extraHTTPHeaders: { 'cf-ray': 'playwright-ci-bypass' },
     trace: 'on-first-retry',
     actionTimeout: 5_000,
   },
