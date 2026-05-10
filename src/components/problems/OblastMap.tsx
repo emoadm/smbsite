@@ -47,7 +47,7 @@ export async function OblastMap({ aggregates }: Props) {
         count !== undefined ? quartileTierClass(count, sortedCounts) : 'fill-muted';
       const ariaLabel =
         count !== undefined
-          ? `${displayName}: ${count} сигнала`
+          ? t('tooltipReports', { displayName, count })
           : `${displayName}: ${t('suppressed')}`;
       return `<path${before}id="${isoCode}" class="${cls} stroke-border stroke-1 transition-colors hover:opacity-80 focus:outline focus:outline-2 focus:outline-primary" tabindex="0" role="img" aria-label="${ariaLabel}"${after}/>`;
     },

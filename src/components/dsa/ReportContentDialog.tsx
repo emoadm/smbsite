@@ -61,7 +61,7 @@ export function ReportContentDialog({ submissionId, open, onOpenChange }: Props)
             <h3 className="font-display text-lg font-extrabold">{t('successHeading')}</h3>
             <p className="text-sm text-muted-foreground">{t('successBody')}</p>
             <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Затвори
+              {t('close')}
             </Button>
           </div>
         ) : (

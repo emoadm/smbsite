@@ -73,14 +73,14 @@ export async function SubmissionStatusCard(props: Props) {
 
       {/* Topic line */}
       <p className="text-sm text-muted-foreground">
-        <span className="font-semibold">Тема:</span>{' '}
+        <span className="font-semibold">{tStatus('topicLabel')}</span>{' '}
         {tTopic(props.row.topic as 'taxes')}
       </p>
 
       {/* Level + oblast (problems only) */}
       {props.kind === 'problem' && props.row.level && (
         <p className="text-sm text-muted-foreground">
-          <span className="font-semibold">Ниво:</span>{' '}
+          <span className="font-semibold">{tStatus('levelLabel')}</span>{' '}
           {props.row.level === 'local'
             ? `${tLevel('local')} — ${oblastDisplayName(props.row.oblast)}`
             : tLevel('national')}

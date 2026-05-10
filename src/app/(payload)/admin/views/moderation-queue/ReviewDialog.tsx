@@ -35,6 +35,17 @@ const t = (bg as { admin: { moderation: Record<string, string> } }).admin.modera
   rejectDismiss: string;
   rejectAction: string;
   suspendAction: string;
+  kindProposalLabel: string;
+  kindProblemLabel: string;
+  kindDsaLabel: string;
+  reviewProposalHeading: string;
+  reviewProblemHeading: string;
+  reviewDsaHeading: string;
+  fieldSubmitter: string;
+  fieldTitle: string;
+  fieldTopic: string;
+  fieldLevel: string;
+  fieldDescription: string;
 };
 
 // Role + sector dictionaries (D-10/D-09) — translate raw DB enum values to Bulgarian labels.
@@ -93,10 +104,10 @@ export function ReviewDialog({
 
   const kindLabel =
     row.kind === 'proposal'
-      ? 'Преглед на предложение'
+      ? t.reviewProposalHeading
       : row.kind === 'problem'
-        ? 'Преглед на сигнал'
-        : 'Преглед на DSA сигнал';
+        ? t.reviewProblemHeading
+        : t.reviewDsaHeading;
 
   return (
     <>
@@ -112,7 +123,7 @@ export function ReviewDialog({
               <AccordionTrigger>{t.submitterDetailsToggle}</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground space-y-1">
                 <p>
-                  <strong>Подател:</strong> {row.submitter.full_name} ({row.submitter.email})
+                  <strong>{t.fieldSubmitter}</strong> {row.submitter.full_name} ({row.submitter.email})
                 </p>
                 <p>
                   {t.submitterRoleSector} {labelRole(row.submitter.role)}, {labelSector(row.submitter.sector)}
@@ -142,19 +153,19 @@ export function ReviewDialog({
           <div className="space-y-2 text-foreground">
             {row.title && (
               <p>
-                <strong>Заглавие:</strong> {row.title}
+                <strong>{t.fieldTitle}</strong> {row.title}
               </p>
             )}
             <p>
-              <strong>Тема:</strong> {labelTopic(row.topic)}
+              <strong>{t.fieldTopic}</strong> {labelTopic(row.topic)}
             </p>
             {row.level && (
               <p>
-                <strong>Ниво:</strong> {row.level} {row.oblast && `— ${row.oblast}`}
+                <strong>{t.fieldLevel}</strong> {row.level} {row.oblast && `— ${row.oblast}`}
               </p>
             )}
             <p className="whitespace-pre-wrap">
-              <strong>Описание:</strong>
+              <strong>{t.fieldDescription}</strong>
               <br />
               {row.body}
             </p>
