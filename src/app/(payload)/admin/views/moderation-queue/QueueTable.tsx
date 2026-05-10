@@ -112,7 +112,7 @@ export function QueueTable({ initialData, currentUserRole }: Props) {
 
   return (
     <>
-      <Tabs defaultValue="proposals" className="text-foreground">
+      <Tabs defaultValue="proposals" className="text-foreground bg-background rounded-md p-4">
         <TabsList>
           <TabsTrigger value="proposals">
             {t.tabProposals} ({initialData.counts.proposals})
