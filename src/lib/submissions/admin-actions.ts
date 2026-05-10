@@ -6,8 +6,8 @@ import { headers } from 'next/headers';
 import { getPayload } from 'payload';
 import config from '@/payload.config';
 import { db } from '@/db';
-import { submissions, moderation_log } from '@/db/schema';
-import { assertEditorOrAdmin } from '@/lib/auth/role-gate';
+import { submissions, moderation_log, users } from '@/db/schema';
+import { assertEditorOrAdmin, assertSuperEditor, assertNotLastSuperEditor } from '@/lib/auth/role-gate';
 import { addEmailJob } from '@/lib/email/queue';
 
 // Phase 4 EDIT-04 / EDIT-05 — editorial moderation Server Actions.
@@ -161,4 +161,186 @@ export async function rejectSubmission(input: {
     }
     throw err;
   }
+}
+
+// --- Phase 4 Plan 04-07 — EDIT-06 member lifecycle actions ---
+
+const suspendSchema = z.object({
+  userId: z.string().uuid(),
+  reason: z.string().trim().min(10).max(2000),
+});
+
+const unsuspendSchema = z.object({
+  userId: z.string().uuid(),
+  note: z.string().trim().min(5).max(2000),
+});
+
+const userIdSchema = z.object({ userId: z.string().uuid() });
+
+/**
+ * Suspend a member account.
+ *
+ * Requires editor or admin role. Reason >= 10 chars.
+ * Atomic: UPDATE users SET status='suspended' (WHERE status='active') + INSERT moderation_log.
+ * Race safety: WHERE status='active' means only the first concurrent call succeeds;
+ * the second returns alreadyHandled (T-04-07-02 mitigation).
+ * Enqueues 'user-suspended' email job for BullMQ worker.
+ */
+export async function suspendUser(input: {
+  userId: string;
+  reason: string;
+}): Promise<AdminActionResult> {
+  await assertEditorOrAdmin();
+  const parsed = suspendSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: 'submission.error.validation' };
+  const actorId = await getActorUserId();
+
+  try {
+    let userEmail: string | null = null;
+    let userFullName: string | null = null;
+
+    await db.transaction(async (tx) => {
+      const updated = await tx
+        .update(users)
+        .set({ status: 'suspended' })
+        .where(and(eq(users.id, parsed.data.userId), eq(users.status, 'active')))
+        .returning({ id: users.id, email: users.email, full_name: users.full_name });
+
+      if (updated.length === 0) {
+        throw new Error('alreadyHandled');
+      }
+
+      userEmail = updated[0]!.email;
+      userFullName = updated[0]!.full_name;
+
+      await tx.insert(moderation_log).values({
+        action: 'user_suspend',
+        actor_user_id: actorId,
+        target_kind: 'user',
+        target_id: parsed.data.userId,
+        note: parsed.data.reason,
+      });
+    });
+
+    if (userEmail) {
+      await addEmailJob({
+        to: userEmail,
+        kind: 'user-suspended',
+        fullName: userFullName ?? '',
+        suspensionReason: parsed.data.reason,
+      });
+    }
+
+    return { ok: true };
+  } catch (err) {
+    if (err instanceof Error && err.message === 'alreadyHandled') {
+      return { ok: false, error: 'submission.error.alreadyHandled' };
+    }
+    throw err;
+  }
+}
+
+/**
+ * Unsuspend a member account.
+ *
+ * Requires super_editor or admin role (D-A2 — only super-editors can reverse suspensions).
+ * Reverses status: 'suspended' → 'active'. Appends unsuspend log row.
+ */
+export async function unsuspendUser(input: {
+  userId: string;
+  note: string;
+}): Promise<AdminActionResult> {
+  await assertSuperEditor();
+  const parsed = unsuspendSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: 'submission.error.validation' };
+  const actorId = await getActorUserId();
+
+  await db.transaction(async (tx) => {
+    const updated = await tx
+      .update(users)
+      .set({ status: 'active' })
+      .where(and(eq(users.id, parsed.data.userId), eq(users.status, 'suspended')))
+      .returning({ id: users.id });
+
+    if (updated.length === 0) return;
+
+    await tx.insert(moderation_log).values({
+      action: 'user_unsuspend',
+      actor_user_id: actorId,
+      target_kind: 'user',
+      target_id: updated[0]!.id,
+      note: parsed.data.note,
+    });
+  });
+
+  return { ok: true };
+}
+
+/**
+ * Grant editor role to a member.
+ *
+ * Requires super_editor or admin role. Sets users.platform_role='editor'.
+ */
+export async function grantEditor(input: { userId: string }): Promise<AdminActionResult> {
+  await assertSuperEditor();
+  const parsed = userIdSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: 'submission.error.validation' };
+  const actorId = await getActorUserId();
+
+  await db.transaction(async (tx) => {
+    await tx
+      .update(users)
+      .set({ platform_role: 'editor' })
+      .where(eq(users.id, parsed.data.userId));
+
+    await tx.insert(moderation_log).values({
+      action: 'editor_grant',
+      actor_user_id: actorId,
+      target_kind: 'user',
+      target_id: parsed.data.userId,
+    });
+  });
+
+  return { ok: true };
+}
+
+/**
+ * Revoke editor (or super_editor) role from a member.
+ *
+ * Requires super_editor or admin role.
+ * If the target is a super_editor, assertNotLastSuperEditor() guard runs BEFORE the UPDATE
+ * to prevent locking out all role management (T-04-07-05 mitigation).
+ */
+export async function revokeEditor(input: { userId: string }): Promise<AdminActionResult> {
+  await assertSuperEditor();
+  const parsed = userIdSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: 'submission.error.validation' };
+  const actorId = await getActorUserId();
+
+  // Read target's current platform_role to decide whether last-super-editor guard applies.
+  const [target] = await db
+    .select({ platform_role: users.platform_role })
+    .from(users)
+    .where(eq(users.id, parsed.data.userId))
+    .limit(1);
+
+  if (target?.platform_role === 'super_editor') {
+    await assertNotLastSuperEditor();
+  }
+
+  await db.transaction(async (tx) => {
+    await tx
+      .update(users)
+      .set({ platform_role: null })
+      .where(eq(users.id, parsed.data.userId));
+
+    await tx.insert(moderation_log).values({
+      action: 'editor_revoke',
+      actor_user_id: actorId,
+      target_kind: 'user',
+      target_id: parsed.data.userId,
+    });
+  });
+
+  return { ok: true };
 }
