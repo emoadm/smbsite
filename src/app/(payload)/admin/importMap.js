@@ -44,6 +44,8 @@ import { ModerationQueueView as ModerationQueueView_modqueue } from '@/app/(payl
 import { QueueTable as QueueTable_modqueue } from '@/app/(payload)/admin/views/moderation-queue/QueueTable'
 import { ReviewDialog as ReviewDialog_modqueue } from '@/app/(payload)/admin/views/moderation-queue/ReviewDialog'
 import { ConfirmActionDialog as ConfirmActionDialog_modqueue } from '@/app/(payload)/admin/views/moderation-queue/ConfirmActionDialog'
+// Phase 4 Plan 04-07 — SuspendDialog for editor-initiated member suspensions
+import { SuspendDialog as SuspendDialog_modqueue } from '@/app/(payload)/admin/views/moderation-queue/SuspendDialog'
 
 export const importMap = {
   // RSC entries
@@ -69,4 +71,6 @@ export const importMap = {
   "/src/app/(payload)/admin/views/moderation-queue/QueueTable#QueueTable": QueueTable_modqueue,
   "/src/app/(payload)/admin/views/moderation-queue/ReviewDialog#ReviewDialog": ReviewDialog_modqueue,
   "/src/app/(payload)/admin/views/moderation-queue/ConfirmActionDialog#ConfirmActionDialog": ConfirmActionDialog_modqueue,
+  // Phase 4 Plan 04-07 — SuspendDialog
+  "/src/app/(payload)/admin/views/moderation-queue/SuspendDialog#SuspendDialog": SuspendDialog_modqueue,
 }

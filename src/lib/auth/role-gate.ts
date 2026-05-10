@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import config from '@/payload.config';
 import { db } from '@/db';
 import { users } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 /**
  * Phase 5 D-25 / Phase 02.1 D-13 — shared editor/admin gate.
@@ -63,5 +63,21 @@ export async function assertNotSuspended(userId: string): Promise<void> {
     .limit(1);
   if (u?.status === 'suspended') {
     throw new Error('Account suspended');
+  }
+}
+
+/**
+ * Phase 4 D-A2 — refuses to demote/remove the last super_editor.
+ * Caller (revokeEditor when target was super_editor) wraps with this guard.
+ *
+ * Counts users WHERE platform_role='super_editor'; throws if count <= 1.
+ */
+export async function assertNotLastSuperEditor(): Promise<void> {
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(users)
+    .where(eq(users.platform_role, 'super_editor'));
+  if ((count ?? 0) <= 1) {
+    throw new Error('Cannot demote the last super_editor');
   }
 }
