@@ -16,7 +16,12 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     importMap: {
-      baseDir: path.resolve(dirname),
+      // Project root, NOT src/. Component paths in this config start with
+      // '/src/...', and Payload concatenates baseDir + path. If baseDir is
+      // <root>/src/, the result is <root>/src/src/... — which webpack can't
+      // resolve and the importMap regenerator emits '../../../src/...' that
+      // collapses to src/src/... from src/app/(payload)/admin/importMap.js.
+      baseDir: path.resolve(dirname, '..'),
     },
     // Phase 2.1 ATTR-07 / D-12 / D-13: custom attribution dashboard view.
     // Payload's importMap auto-resolves the Component path at admin shell init.

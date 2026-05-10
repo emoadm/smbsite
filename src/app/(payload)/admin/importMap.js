@@ -10,10 +10,10 @@ import { UnorderedListFeatureClient as UnorderedListFeatureClient_e70f5e05f09f93
 import { LinkFeatureClient as LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { HeadingFeatureClient as HeadingFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ParagraphFeatureClient as ParagraphFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
-import { NewsletterPreviewField as NewsletterPreviewField_999718f1050bebd7138ae4fb95136b43 } from '../../../src/components/payload/NewsletterPreviewField'
-import { NewsletterComposer as NewsletterComposer_9c912fdb9ba6713ecc64688d73569708 } from '../../../src/components/payload/NewsletterComposer'
-import { AttributionView as AttributionView_1c44797ef8d952f0f8b79f85d332d7cd } from '../../../src/app/(payload)/admin/views/attribution/AttributionView'
-import { ModerationQueueView as ModerationQueueView_9004e3f2fc8715b33e902a0ff683a067 } from '../../../src/app/(payload)/admin/views/moderation-queue/ModerationQueueView'
+import { NewsletterPreviewField as NewsletterPreviewField_999718f1050bebd7138ae4fb95136b43 } from '../../../../src/components/payload/NewsletterPreviewField'
+import { NewsletterComposer as NewsletterComposer_9c912fdb9ba6713ecc64688d73569708 } from '../../../../src/components/payload/NewsletterComposer'
+import { AttributionView as AttributionView_1c44797ef8d952f0f8b79f85d332d7cd } from '../../../../src/app/(payload)/admin/views/attribution/AttributionView'
+import { ModerationQueueView as ModerationQueueView_9004e3f2fc8715b33e902a0ff683a067 } from '../../../../src/app/(payload)/admin/views/moderation-queue/ModerationQueueView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */

@@ -37,6 +37,14 @@ const t = (bg as { admin: { moderation: Record<string, string> } }).admin.modera
   suspendAction: string;
 };
 
+// Role + sector dictionaries (D-10/D-09) — translate raw DB enum values to Bulgarian labels.
+const tRoles = (bg as { auth: { register: { roles: Record<string, string> } } }).auth.register
+  .roles;
+const tSectors = (bg as { auth: { register: { sectors: Record<string, string> } } }).auth.register
+  .sectors;
+const labelRole = (v: string | null | undefined) => (v && tRoles[v]) || v || '—';
+const labelSector = (v: string | null | undefined) => (v && tSectors[v]) || v || '—';
+
 export function ReviewDialog({
   row,
   currentUserRole,
@@ -105,7 +113,7 @@ export function ReviewDialog({
                   <strong>Подател:</strong> {row.submitter.full_name} ({row.submitter.email})
                 </p>
                 <p>
-                  {t.submitterRoleSector} {row.submitter.role}, {row.submitter.sector}
+                  {t.submitterRoleSector} {labelRole(row.submitter.role)}, {labelSector(row.submitter.sector)}
                 </p>
                 {row.submitter.self_reported_source && (
                   <p>
@@ -129,7 +137,7 @@ export function ReviewDialog({
           <Separator className="my-4" />
 
           {/* Submission content */}
-          <div className="space-y-2">
+          <div className="space-y-2 text-foreground">
             {row.title && (
               <p>
                 <strong>Заглавие:</strong> {row.title}
