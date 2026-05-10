@@ -19,7 +19,7 @@ export interface OblastAggRow {
 /**
  * PROP-04 — public catalog of approved proposals.
  * D-C1 — column whitelist EXCLUDES every submitter-PII column.
- * No submitter_id. No full_name. No email. No sector. No role.
+ * No submitter PII columns: submitter_id, name, email, sector, role are excluded.
  */
 export async function getApprovedProposals(
   opts: { limit?: number; offset?: number } = {},
