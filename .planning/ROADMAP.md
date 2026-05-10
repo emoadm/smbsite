@@ -209,6 +209,8 @@ Plans:
 
 **Requirements**: PROP-01, PROP-02, PROP-03, PROP-04, PROB-01, PROB-02, PROB-03, PROB-04, PROB-05, EDIT-03, EDIT-04, EDIT-05, EDIT-06, EDIT-07
 
+**Re-scope note (2026-05-10):** Phase 4 absorbs EDIT-01 (admin login + role gating), EDIT-02 (Payload Ideas collection CRUD without voting fields), and the moderation_log schema — originally Phase 3 work — under D-LawyerTrack deferral. PROP-04 becomes a read-only public catalog (D-B1) until Phase 3 voting reactivates. See 04-CONTEXT.md.
+
 **Success Criteria** (what must be TRUE):
   1. A member can submit a proposal (title, description, topic) or a problem report (with mandatory local/national level tag and municipality/region selector for local issues); the submission is immediately placed in the moderation queue and NOT published publicly
   2. A member can see the current status (awaiting review / approved / rejected + note) of each of their own submissions at any time
@@ -216,7 +218,17 @@ Plans:
   4. An editor can review the full moderation queue, approve or reject items with a note, suspend a member account with a documented reason in the moderation log, and send ad-hoc newsletters from the admin panel
   5. An editor can publish and edit agitation pages (PUB content) directly from the admin panel; all moderation actions are append-only in the moderation_log table
 
-**Plans**: TBD
+**Plans**: 8 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Schema + DDL: submissions + moderation_log Drizzle tables, users.status + users.platform_role columns, Pages Payload collection, Bulgaria oblast SVG asset; manual Neon SQL Editor migration (PROP-01..02, PROB-01..04, EDIT-03, EDIT-05, EDIT-06, EDIT-07)
+- [ ] 04-02-PLAN.md — i18n string lock: ~100 Bulgarian keys under submission/problem/dsa/admin/email namespaces; Wave 0 string-presence test enforcing D-C1 anonymity invariants (all 14 reqs)
+- [ ] 04-03-PLAN.md — Member submission flows: ProposalForm + ProblemReportForm + Server Actions with auth + Turnstile + Upstash rate-limit + Zod + GeoIP oblast suggestion (PROP-01..02, PROB-01..04)
+- [ ] 04-04-PLAN.md — Member status views: /member/predlozheniya + /member/signali — owner-isolated lists with status badges and rejection notes (PROP-03, PROB-05)
+- [ ] 04-05-PLAN.md — Public surfaces: /predlozheniya proposals catalog (D-C1 anonymous byline) + /problemi heat-map (D-D2 N≥5 suppression at SQL layer) (PROP-04, PROB-01..04)
+- [ ] 04-06-PLAN.md — Editorial moderation queue: Payload custom view at /admin/views/moderation-queue with Tabs + Table + ReviewDialog + ConfirmActionDialog; approveSubmission + rejectSubmission Server Actions with transactional double-write (EDIT-04, EDIT-05, EDIT-07 latent fix)
+- [ ] 04-07-PLAN.md — Editor lifecycle + suspended-account gate + status-change emails: suspendUser + grantEditor + revokeEditor + assertNotLastSuperEditor; member/layout suspended check; BullMQ worker handlers + React Email templates; 04-OPS-RUNBOOK.md (EDIT-06, EDIT-07)
+- [ ] 04-08-PLAN.md — DSA Article 16 minimum compliance: ReportContentDialog on ProposalCard for logged-in members; submitDsaReport feeds into moderation queue with kind='dsa_report' (no numbered REQ — Phase 4 goal-driven)
 
 **UI hint**: yes
 
@@ -289,7 +301,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2.2. Coalition Agenda Content | 1/1 | Complete — walking-skeleton slice (manifesto + Десен консенсус + Икономика); operator visual verification approved | 2026-05-08 |
 | 2.3. Coalition Agenda Content — Slice 2 (final) | 0/3 | Not started — 3 plans (simple-prose / numbered-policy / h3-subsection+cleanup) | - |
 | 3. Idea Catalog + Voting | 0/10 | Not started — planning complete (post-checker revision: 03-05 split into 03-05a/b, 03-07 split into 03-07a/b); HARD-BLOCKED on GDPR Art.9 lawyer opinion before merge | - |
-| 4. User Submissions + Editorial | 0/TBD | Not started | - |
+| 4. User Submissions + Editorial | 0/8 | Not started — 8 plans (schema/i18n/member-flow/status-views/public/queue/lifecycle/dsa) | - |
 | 5. Notifications | 0/TBD | Not started | - |
 | 6. GDPR Self-Service + Hardening | 0/TBD | Not started | - |
 
