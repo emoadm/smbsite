@@ -9,6 +9,8 @@ import { OtpEmail } from './templates/OtpEmail';
 import { LoginOtpEmail } from './templates/LoginOtpEmail';
 import { WelcomeEmail } from './templates/WelcomeEmail';
 import { NewsletterEmail, type NewsletterTopic } from './templates/NewsletterEmail';
+import { SubmissionStatusEmail } from './templates/SubmissionStatusEmail';
+import { AccountSuspendedEmail } from './templates/AccountSuspendedEmail';
 import { sendBrevoEmail } from './brevo';
 import { EMAIL_QUEUE_NAME, type EmailJobPayload, addEmailJob } from './queue';
 import { renderLexicalToHtml } from '../newsletter/lexical-to-html';
@@ -17,6 +19,9 @@ import { getNewsletterRecipients } from '../newsletter/recipients';
 import { brevoBlocklist } from '../newsletter/brevo-sync';
 import { logger } from '../logger';
 import { loadT } from './i18n-direct';
+import { db } from '@/db';
+import { submissions, users } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
 function workerConnection(): IORedis {
   const url = process.env.UPSTASH_REDIS_URL!;
@@ -290,6 +295,109 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
       await brevoBlocklist(unsubEmail);
       logger.info({}, 'unsubscribe-brevo-retry.success');
       return { messageId: 'brevo-blocklist-ok' };
+    }
+
+    // Phase 4 Plan 04-07 — submission status + suspension notification emails.
+
+    case 'submission-status-approved': {
+      // job.data.userId is overloaded to carry submissionId (Plan 04-06 convention)
+      const submissionId = job.data.userId;
+      if (!submissionId) throw new Error('submissionId missing in job payload (submission-status-approved)');
+      const [row] = await db
+        .select({
+          title: submissions.title,
+          submitter_email: users.email,
+          submitter_full_name: users.full_name,
+        })
+        .from(submissions)
+        .innerJoin(users, eq(submissions.submitter_id, users.id))
+        .where(eq(submissions.id, submissionId))
+        .limit(1);
+      if (!row) {
+        logger.warn({ submissionId }, 'submission-status-approved: submission row missing');
+        return { messageId: 'skipped-missing-row' };
+      }
+      const tEmail = loadT('email.submissionStatus.approved');
+      const origin = process.env.SITE_ORIGIN ?? 'https://chastnik.eu';
+      const emailHtml = await render(
+        <SubmissionStatusEmail
+          variant="approved"
+          fullName={row.submitter_full_name}
+          title={row.title ?? ''}
+          siteOrigin={origin}
+        />
+      );
+      return sendBrevoEmail({
+        to: { email: row.submitter_email, name: row.submitter_full_name },
+        subject: tEmail('subject'),
+        htmlContent: emailHtml,
+        textContent: '',
+        from: {
+          email: process.env.EMAIL_FROM_TRANSACTIONAL ?? 'no-reply@auth.chastnik.eu',
+          name: loadT('email.from')('name'),
+        },
+      });
+    }
+
+    case 'submission-status-rejected': {
+      const submissionId = job.data.userId;
+      if (!submissionId) throw new Error('submissionId missing in job payload (submission-status-rejected)');
+      const [row] = await db
+        .select({
+          title: submissions.title,
+          moderator_note: submissions.moderator_note,
+          submitter_email: users.email,
+          submitter_full_name: users.full_name,
+        })
+        .from(submissions)
+        .innerJoin(users, eq(submissions.submitter_id, users.id))
+        .where(eq(submissions.id, submissionId))
+        .limit(1);
+      if (!row) {
+        logger.warn({ submissionId }, 'submission-status-rejected: submission row missing');
+        return { messageId: 'skipped-missing-row' };
+      }
+      const tEmail = loadT('email.submissionStatus.rejected');
+      const origin = process.env.SITE_ORIGIN ?? 'https://chastnik.eu';
+      const emailHtml = await render(
+        <SubmissionStatusEmail
+          variant="rejected"
+          fullName={row.submitter_full_name}
+          title={row.title ?? ''}
+          moderatorNote={row.moderator_note ?? ''}
+          siteOrigin={origin}
+        />
+      );
+      return sendBrevoEmail({
+        to: { email: row.submitter_email, name: row.submitter_full_name },
+        subject: tEmail('subject'),
+        htmlContent: emailHtml,
+        textContent: '',
+        from: {
+          email: process.env.EMAIL_FROM_TRANSACTIONAL ?? 'no-reply@auth.chastnik.eu',
+          name: loadT('email.from')('name'),
+        },
+      });
+    }
+
+    case 'user-suspended': {
+      const tEmail = loadT('email.suspended');
+      const emailHtml = await render(
+        <AccountSuspendedEmail
+          fullName={job.data.fullName ?? ''}
+          reason={job.data.suspensionReason ?? ''}
+        />
+      );
+      return sendBrevoEmail({
+        to: { email: to, name: fullName },
+        subject: tEmail('subject'),
+        htmlContent: emailHtml,
+        textContent: '',
+        from: {
+          email: process.env.EMAIL_FROM_TRANSACTIONAL ?? 'no-reply@auth.chastnik.eu',
+          name: loadT('email.from')('name'),
+        },
+      });
     }
   }
 
