@@ -38,6 +38,12 @@ import {
 import { AttributionView as AttributionView_attribution_dashboard } from '@/app/(payload)/admin/views/attribution/AttributionView'
 import { NewsletterComposer as NewsletterComposer_newsletters_beforedoccontrols } from '@/components/payload/NewsletterComposer'
 import { NewsletterPreviewField as NewsletterPreviewField_newsletters_preview } from '@/components/payload/NewsletterPreviewField'
+// Phase 4 Plan 04-06 — moderation queue Client Components
+// (payload generate:importmap BLOCKED by tsx/Node 22 ESM incompat; registered manually)
+import { ModerationQueueView as ModerationQueueView_modqueue } from '@/app/(payload)/admin/views/moderation-queue/ModerationQueueView'
+import { QueueTable as QueueTable_modqueue } from '@/app/(payload)/admin/views/moderation-queue/QueueTable'
+import { ReviewDialog as ReviewDialog_modqueue } from '@/app/(payload)/admin/views/moderation-queue/ReviewDialog'
+import { ConfirmActionDialog as ConfirmActionDialog_modqueue } from '@/app/(payload)/admin/views/moderation-queue/ConfirmActionDialog'
 
 export const importMap = {
   // RSC entries
@@ -58,4 +64,9 @@ export const importMap = {
   "/src/app/(payload)/admin/views/attribution/AttributionView#AttributionView": AttributionView_attribution_dashboard,
   "/src/components/payload/NewsletterComposer#NewsletterComposer": NewsletterComposer_newsletters_beforedoccontrols,
   "/src/components/payload/NewsletterPreviewField#NewsletterPreviewField": NewsletterPreviewField_newsletters_preview,
+  // Phase 4 Plan 04-06 — moderation queue Client Components
+  "/src/app/(payload)/admin/views/moderation-queue/ModerationQueueView#ModerationQueueView": ModerationQueueView_modqueue,
+  "/src/app/(payload)/admin/views/moderation-queue/QueueTable#QueueTable": QueueTable_modqueue,
+  "/src/app/(payload)/admin/views/moderation-queue/ReviewDialog#ReviewDialog": ReviewDialog_modqueue,
+  "/src/app/(payload)/admin/views/moderation-queue/ConfirmActionDialog#ConfirmActionDialog": ConfirmActionDialog_modqueue,
 }

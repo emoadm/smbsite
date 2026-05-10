@@ -13,14 +13,32 @@ import { eq } from 'drizzle-orm';
  *
  * SINGULAR `role` (not `roles`) is locked in by tests/unit/role-gate.test.ts
  * and tests/unit/dashboard-role-gate.test.ts (Phase 02.1 lineage).
+ *
+ * Phase 4 — extend to recognize super_editor (D-A2). Closes pre-resolved Q1 latent gap.
  */
 export async function assertEditorOrAdmin(): Promise<void> {
   const payload = await getPayload({ config });
   const h = await headers();
   const { user } = await payload.auth({ headers: h });
   const role = (user as { role?: string } | null)?.role ?? '';
-  if (!['admin', 'editor'].includes(role)) {
+  // Phase 4 — extend to recognize super_editor (D-A2). Closes pre-resolved Q1 latent gap.
+  if (!['admin', 'editor', 'super_editor'].includes(role)) {
     throw new Error('Forbidden — editor or admin role required');
+  }
+}
+
+/**
+ * Phase 4 D-A2 — super_editor gate.
+ * Used by Plan 04-07 grant/revoke flows that require elevated editorial role.
+ * Accepts admin or super_editor only — NOT plain 'editor'.
+ */
+export async function assertSuperEditor(): Promise<void> {
+  const payload = await getPayload({ config });
+  const h = await headers();
+  const { user } = await payload.auth({ headers: h });
+  const role = (user as { role?: string } | null)?.role ?? '';
+  if (!['admin', 'super_editor'].includes(role)) {
+    throw new Error('Forbidden — super_editor role required');
   }
 }
 

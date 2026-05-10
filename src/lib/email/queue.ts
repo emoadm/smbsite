@@ -11,7 +11,11 @@ export type EmailJobKind =
   | 'newsletter-blast'              // fan-out trigger (one per Send blast click)
   | 'newsletter-send-recipient'     // per-recipient sub-job (the actual Brevo send)
   | 'newsletter-test'               // single-recipient test send (D-02 24h gate)
-  | 'unsubscribe-brevo-retry';      // retry path for /api/unsubscribe Brevo blocklist failure
+  | 'unsubscribe-brevo-retry'       // retry path for /api/unsubscribe Brevo blocklist failure
+  // Phase 4 Plan 04-06 — submission status change notifications (worker handlers ship in Plan 04-07)
+  | 'submission-status-approved'
+  | 'submission-status-rejected'
+  | 'user-suspended';
 
 export interface EmailJobPayload {
   to: string;
@@ -22,10 +26,14 @@ export interface EmailJobPayload {
   fullName?: string;
   // Phase 5 newsletter fields (forward-declared in Wave 1, consumed in Wave 2)
   newsletterId?: string;            // Payload doc id (newsletter-blast / newsletter-test)
-  userId?: string;                  // recipient user id (newsletter-send-recipient)
+  userId?: string;                  // recipient user id (newsletter-send-recipient); overloaded in Phase 4 to carry submissionId for submission-status-* kinds
   topic?: string;                   // 'newsletter_general' | 'newsletter_voting' | 'newsletter_reports' | 'newsletter_events'
   unsubEmail?: string;              // unsubscribe-brevo-retry payload
   delayMs?: number;                 // optional schedule offset for delayed sends (D-04)
+  // Phase 4 Plan 04-06 — submission status notification fields (Plan 04-07 worker resolves by querying DB via userId=submissionId)
+  submissionTitle?: string;         // populated by Plan 04-07 worker handler
+  moderatorNote?: string;           // populated by Plan 04-07 worker handler
+  suspensionReason?: string;        // populated by Plan 04-07 suspension handler
 }
 
 export const EMAIL_QUEUE_NAME = 'email-queue';
