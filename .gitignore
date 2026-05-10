@@ -39,3 +39,6 @@ uploads/
 # Editor
 .vscode/
 .idea/
+
+# Local fill templates for legal artifacts (contain operator + coalition PII)
+.planning/legal/.fill-*.md
