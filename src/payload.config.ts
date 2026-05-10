@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { Users } from './collections/Users';
 import { Newsletters } from './collections/Newsletters';      // Phase 5 D-01
 import { Pages } from './collections/Pages';                  // Phase 4 EDIT-03
+import { Ideas } from './collections/Ideas';                  // Phase 4 EDIT-02
 import { CommunityChannels } from './globals/CommunityChannels'; // Phase 5 D-12
 
 const filename = fileURLToPath(import.meta.url);
@@ -28,7 +29,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Users, Newsletters, Pages],     // Phase 5 D-01 adds Newsletters; Phase 4 EDIT-03 adds Pages
+  collections: [Users, Newsletters, Pages, Ideas], // Phase 5 D-01 adds Newsletters; Phase 4 EDIT-03 adds Pages; Phase 4 EDIT-02 adds Ideas
   globals: [CommunityChannels],                // Phase 5 D-12 adds CommunityChannels
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
