@@ -45,5 +45,10 @@ export default buildConfig({
     pool: {
       connectionString: process.env.PAYLOAD_DATABASE_URL || '',
     },
+    // Disable drizzle-kit push on dev start — schema is managed manually
+    // via Neon SQL Editor (project memory: project_payload_schema_constraint.md).
+    // The default `push: true` runs a "Pulling schema from database..." diff
+    // step that hangs / exits the dev server in this setup.
+    push: false,
   }),
 });
