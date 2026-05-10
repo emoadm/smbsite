@@ -34,7 +34,20 @@ async function getActorUserId(): Promise<string | null> {
   const payload = await getPayload({ config });
   const h = await headers();
   const { user } = await payload.auth({ headers: h });
-  return (user as { id?: string } | null)?.id ?? null;
+  const u = user as { id?: string | number; email?: string } | null;
+  if (!u) return null;
+  // admin_users.id is integer (Payload), users.id is UUID. If the session
+  // already carries a UUID-shaped id, use it. Otherwise resolve via
+  // shared email — the operator runbook treats admin_users.email and
+  // users.email as the same identity (T-04-06-05, dual-identity model).
+  if (typeof u.id === 'string' && /^[0-9a-f]{8}-/i.test(u.id)) return u.id;
+  if (!u.email) return null;
+  const [match] = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.email, u.email))
+    .limit(1);
+  return match?.id ?? null;
 }
 
 /**
