@@ -11,6 +11,7 @@
     "dev": "next dev",
     "build": "tsx scripts/check-env.ts && next build",
     "start": "next start",
+    "start:standalone": "cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public && node .next/standalone/server.js",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",

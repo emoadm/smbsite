@@ -31,12 +31,13 @@ export default defineConfig({
       use: { ...devices['Pixel 5'], viewport: { width: 360, height: 740 } },
     },
   ],
-  // Always boot a local server. In CI, `pnpm build` has already produced `.next/` so `pnpm start`
-  // is the production-equivalent boot; locally `pnpm dev` keeps HMR. All required env vars
-  // (`DATABASE_URL`, `AUTH_SECRET`, `OTP_HMAC_KEY`, Turnstile keys, etc.) are inherited from
-  // the GitHub Actions job-level `env:` block.
+  // Always boot a local server. In CI, `pnpm build` has already produced `.next/standalone/`
+  // so we boot the standalone server entry directly (Next.js refuses `next start` under
+  // `output: 'standalone'`); locally `pnpm dev` keeps HMR. All required env vars
+  // (`DATABASE_URL`, `AUTH_SECRET`, `OTP_HMAC_KEY`, Turnstile keys, etc.) are inherited
+  // from the GitHub Actions job-level `env:` block.
   webServer: {
-    command: process.env.CI ? 'pnpm start' : 'pnpm dev',
+    command: process.env.CI ? 'pnpm start:standalone' : 'pnpm dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
