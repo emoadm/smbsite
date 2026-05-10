@@ -29,6 +29,15 @@ export default async function PublicProposalsPage({
 
   return (
     <MainContainer width="page">
+      {/* Phase 4 Plan 04-08 — DSA Art.16 report dialog inside ProposalCard needs Turnstile.
+       *  Load api.js only for logged-in members (anonymous visitors see no report button). */}
+      {isLoggedIn && (
+        <script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+          async
+          defer
+        />
+      )}
       <div className="pt-12">
         <h1 className="font-display text-4xl font-extrabold text-primary">{t('pageTitle')}</h1>
         <p className="mt-2 text-muted-foreground">{t('pageDescription')}</p>
