@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 4 UI-SPEC approved
-last_updated: "2026-05-10T14:25:18.374Z"
-last_activity: 2026-05-10 -- Phase 04 planning complete
+last_updated: "2026-05-10T14:31:12.062Z"
+last_activity: 2026-05-10 -- Phase 04 execution started
 progress:
   total_phases: 9
   completed_phases: 6
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Когато един собственик на МСП види сайта, разбира идеята достатъчно, за да даде името и имейла си — и след това продължава да се връща, защото гласът му се вижда и брои.
-**Current focus:** Phase 02.3 — Coalition Agenda Content Slice 2 (final SPIDR slice; remaining ~10 chapters + draftAlert removal)
+**Current focus:** Phase 04 — user-submissions-editorial-moderation
 
 ## Current Position
 
-Phase: 03
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-05-10 -- Phase 04 planning complete
+Phase: 04 (user-submissions-editorial-moderation) — EXECUTING
+Plan: 1 of 8
+Status: Executing Phase 04
+Last activity: 2026-05-10 -- Phase 04 execution started
 
 Progress: [█████████░] 95% (5 of 9 phases formally complete: 02.1 + 02.2 + Phase 5 code-shipping; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 02.3 + 03 + 04 + 06 ahead)
 
@@ -128,6 +128,7 @@ None yet.
 | feature | `D-ConsentsRegionPopulation` — Phase 02.1 GeoIP-derived oblast does not populate `consents.region`; deferred to Phase 6 (GDPR-04 / GDPR-05) so consents-audit-table writes stay scoped to the GDPR phase. | resolves_phase: 6 | Plan 02.1-08 |
 | ops | `D-Phase21Plan01-LiveNeonPush` — Plan 02.1-01 swapped `db:push` for `db:generate` (DIRECT_URL unavailable in worktree); migration `0001_grey_umar.sql` is committed but operator must apply against live Neon production via `pnpm db:migrate` (or CI deploy.yml's migrate job already running on push to main). Verify migration ran successfully before next staging/production deploy. | resolves_phase: 02.1-followup-ops | Plan 02.1-01 |
 | legal | `D-LawyerTrack` — both lawyer-dependent items intentionally paused 2026-05-10: (a) Art.9 opinion (gating Phase 3 voting; brief at `.planning/legal/art9-brief-to-counsel.md` still draft, not sent), (b) `D-LawyerReviewLegal` (gating warmup launch; Privacy Policy + Terms review not started). Both resume when a phase about to ship genuinely requires them. Active redirects: Phase 4 to be re-scoped for voting-independent slices (`/gsd-discuss-phase 4`); Phase 6 (GDPR self-service) remains unblocked. Re-activation triggers: operator initiates engagement OR a shipping phase requires the opinion/signed legal text. | resolves_phase: future | Session 2026-05-10 |
+| ops | `D-Phase04Plan01-LiveNeonPush` — Plan 04-01 generated `src/db/migrations/0003_phase04_submissions.sql` and the operator applied it via Neon SQL Editor on 2026-05-10 (production). Migration creates `submissions`, `moderation_log`, `ideas` tables, adds `users.status` + `users.platform_role`, and applies REVOKE UPDATE,DELETE on `moderation_log` and REVOKE DELETE on `submissions`. Verify staging Neon branch parity before next staging deploy with `\d submissions; \d moderation_log; SELECT has_table_privilege(current_user, 'moderation_log', 'UPDATE'); SELECT has_table_privilege(current_user, 'moderation_log', 'DELETE');`. | resolves_phase: 04-followup-ops | Plan 04-01 |
 
 ## Session Continuity
 
