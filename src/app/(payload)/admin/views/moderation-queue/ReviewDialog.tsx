@@ -16,7 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { ConfirmActionDialog } from './ConfirmActionDialog';
 import { SuspendDialog } from './SuspendDialog';
 import { approveSubmission, rejectSubmission } from './actions';
-import type { PendingRow } from './actions';
+import type { PendingRow } from '@/lib/submissions/admin-queries';
 
 // Direct bg.json import — Payload admin shell does NOT wrap in a next-intl Provider.
 const t = (bg as { admin: { moderation: Record<string, string> } }).admin.moderation as {

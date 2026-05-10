@@ -14,7 +14,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ReviewDialog } from './ReviewDialog';
-import type { ModerationQueueData, PendingRow } from './actions';
+import type { ModerationQueueData, PendingRow } from '@/lib/submissions/admin-queries';
 
 // Direct bg.json import — Payload admin shell does NOT wrap in a next-intl Provider.
 const t = (

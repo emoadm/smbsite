@@ -2,7 +2,7 @@ import type { AdminViewServerProps } from 'payload';
 import { DefaultTemplate } from '@payloadcms/next/templates';
 import { Gutter } from '@payloadcms/ui';
 import bg from '../../../../../../messages/bg.json';
-import { fetchModerationQueue } from './actions';
+import { fetchModerationQueue } from '@/lib/submissions/admin-queries';
 import { QueueTable } from './QueueTable';
 
 // Phase 4 EDIT-04 / EDIT-05 — Moderation queue custom Payload admin view.
