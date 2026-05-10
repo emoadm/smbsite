@@ -103,6 +103,7 @@ None yet.
 | 260508-fast-2 | auth hydration fix — revalidatePath('/', 'layout') in verify-otp + logout actions; Header (Server Component reading auth()) was serving cached null-session render after router.push, causing post-login username/logo bug | 2026-05-08 | 0592610 | — (gsd-fast inline) |
 | 260508-fast-3 | drop stale UploadFeature assertion from payload-newsletters.test.ts — implementation deliberately removed UploadFeature, test contract drifted | 2026-05-08 | f0dc87d | — (gsd-fast inline) |
 | 260508-rx3 | ramp-up без гласуване — hide voting copy from user-facing surface (RegistrationForm, landing cards, FAQ, welcome email) and drop Art. 9 political-opinion consent checkbox + INSERT; Phase 3 still gated by external legal opinion | 2026-05-08 | 490a4c8 | [260508-rx3-ramp-up-voting-language-user-facing-copy](./quick/260508-rx3-ramp-up-voting-language-user-facing-copy/) |
+| 260511-04m | Playwright CI webServer fix — `pnpm start` is incompatible with `next.config.ts` `output: 'standalone'`, server never bound :3000, ~37 page-load specs timed out on PR #2; new `pnpm start:standalone` copies `.next/static` + `public` into `.next/standalone/` then runs `node .next/standalone/server.js`. CI human-verify pending. | 2026-05-10 | 3b484b8 | [260511-04m-fix-playwright-standalone-webserver](./quick/260511-04m-fix-playwright-standalone-webserver/) |
 
 ## Deferred Items
 
