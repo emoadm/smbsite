@@ -76,7 +76,17 @@ CREATE INDEX "ideas_status_idx" ON "ideas" ("status");
 -- Replace `app_db_user` with the actual Neon role used by the application
 -- (see Neon → Settings → Roles; production role is typically `neondb_owner`
 -- or the Drizzle-connection role from DATABASE_URL).
-REVOKE UPDATE, DELETE ON TABLE moderation_log FROM app_db_user;
---> statement-breakpoint
--- DELETE on submissions also revoked: editorial actions only mutate status/note/reviewed_at via UPDATE.
-REVOKE DELETE ON TABLE submissions FROM app_db_user;
+--
+-- The DO block guards the REVOKEs so CI and other environments where the
+-- role doesn't exist don't fail the migration. Production substituted the
+-- real role name in the Neon SQL Editor when applying manually on 2026-05-10
+-- — that one-off path is unaffected by this guard.
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_db_user') THEN
+    REVOKE UPDATE, DELETE ON TABLE moderation_log FROM app_db_user;
+    REVOKE DELETE ON TABLE submissions FROM app_db_user;
+  ELSE
+    RAISE NOTICE 'app_db_user role not present — REVOKEs skipped (expected in CI / dev containers)';
+  END IF;
+END $$;
