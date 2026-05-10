@@ -42,8 +42,10 @@ const tRoles = (bg as { auth: { register: { roles: Record<string, string> } } })
   .roles;
 const tSectors = (bg as { auth: { register: { sectors: Record<string, string> } } }).auth.register
   .sectors;
+const tTopics = (bg as { submission: { topics: Record<string, string> } }).submission.topics;
 const labelRole = (v: string | null | undefined) => (v && tRoles[v]) || v || '—';
 const labelSector = (v: string | null | undefined) => (v && tSectors[v]) || v || '—';
+const labelTopic = (v: string | null | undefined) => (v && tTopics[v]) || v || '—';
 
 export function ReviewDialog({
   row,
@@ -99,7 +101,7 @@ export function ReviewDialog({
   return (
     <>
       <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl text-foreground">
           <DialogHeader>
             <DialogTitle>{kindLabel}</DialogTitle>
           </DialogHeader>
@@ -144,7 +146,7 @@ export function ReviewDialog({
               </p>
             )}
             <p>
-              <strong>Тема:</strong> {row.topic}
+              <strong>Тема:</strong> {labelTopic(row.topic)}
             </p>
             {row.level && (
               <p>
