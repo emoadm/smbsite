@@ -58,3 +58,29 @@ export const problemReportSchema = z
 
 export type ProposalInput = z.infer<typeof proposalSchema>;
 export type ProblemReportInput = z.infer<typeof problemReportSchema>;
+
+// DSA Article 16 — notice-and-action reporting schema.
+// 5 violation categories matching dsa.report.categories.* in messages/bg.json.
+export const DsaCategoryEnum = z.enum([
+  'illegal',
+  'harassment',
+  'misinformation',
+  'spam',
+  'other',
+]);
+
+// DSA report submission schema.
+// targetSubmissionId: UUID of the reported submission.
+// category: violation category (from DsaCategoryEnum).
+// reason: reporter's explanation, min 20 / max 2000 chars.
+// goodFaith: literal 'on' (checkbox — DSA Art.16 good-faith requirement).
+// 'cf-turnstile-response': Cloudflare Turnstile token (same as PROP/PROB).
+export const dsaReportSchema = z.object({
+  targetSubmissionId: z.string().uuid(),
+  category: DsaCategoryEnum,
+  reason: z.string().trim().min(20).max(2000),
+  goodFaith: z.literal('on'),
+  'cf-turnstile-response': z.string().min(1),
+});
+
+export type DsaReportInput = z.infer<typeof dsaReportSchema>;
