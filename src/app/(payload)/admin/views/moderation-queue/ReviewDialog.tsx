@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ConfirmActionDialog } from './ConfirmActionDialog';
+import { SuspendDialog } from './SuspendDialog';
 import { approveSubmission, rejectSubmission } from './actions';
 import type { PendingRow } from './actions';
 
@@ -33,6 +34,7 @@ const t = (bg as { admin: { moderation: Record<string, string> } }).admin.modera
   rejectBody: string;
   rejectDismiss: string;
   rejectAction: string;
+  suspendAction: string;
 };
 
 export function ReviewDialog({
@@ -47,6 +49,7 @@ export function ReviewDialog({
   const router = useRouter();
   const [note, setNote] = useState('');
   const [confirming, setConfirming] = useState<'approve' | 'reject' | null>(null);
+  const [suspending, setSuspending] = useState(false);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -109,6 +112,16 @@ export function ReviewDialog({
                     {t.submitterSource} {row.submitter.self_reported_source}
                   </p>
                 )}
+                {/* Phase 4 Plan 04-07 — suspend button inside submitter accordion (EDIT-06 UI) */}
+                <div className="mt-3 flex justify-end">
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => setSuspending(true)}
+                  >
+                    {t.suspendAction}
+                  </Button>
+                </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -200,6 +213,14 @@ export function ReviewDialog({
           disabled={pending || note.trim().length < 5}
           onConfirm={onConfirmReject}
           onDismiss={() => setConfirming(null)}
+        />
+      )}
+      {/* Phase 4 Plan 04-07 — SuspendDialog opens from submitter accordion "Спри акаунта" button */}
+      {suspending && (
+        <SuspendDialog
+          userId={row.submitter.id}
+          fullName={row.submitter.full_name}
+          onClose={() => setSuspending(false)}
         />
       )}
     </>
