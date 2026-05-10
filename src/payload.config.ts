@@ -24,6 +24,11 @@ export default buildConfig({
           Component: '/src/app/(payload)/admin/views/attribution/AttributionView#AttributionView',
           path: '/views/attribution',
         },
+        // Phase 4 EDIT-04 / EDIT-05 — editorial moderation queue view.
+        moderationQueue: {
+          Component: '/src/app/(payload)/admin/views/moderation-queue/ModerationQueueView#ModerationQueueView',
+          path: '/views/moderation-queue',
+        },
       },
     },
   },
