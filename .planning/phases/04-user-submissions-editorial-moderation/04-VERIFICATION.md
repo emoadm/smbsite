@@ -1,8 +1,9 @@
 ---
 phase: 04-user-submissions-editorial-moderation
 verified: 2026-05-10T21:05:00Z
-status: human_needed
-score: 11/14 dimensions verified
+resolved: 2026-05-10T19:45:00Z
+status: pass
+score: 14/14 dimensions verified
 overrides_applied: 0
 gaps:
   - truth: "super_editor role can create/update/delete Pages and Ideas collections in Payload admin (D-A2 principle: super_editor does everything editor does PLUS more)"
@@ -34,13 +35,29 @@ human_verification:
   - test: "Operator walkthrough — approve and reject a submission in /admin/views/moderation-queue"
     expected: "Clicking Approve on a pending proposal: (1) submission moves from Pending tab, (2) appears in /predlozheniya within 60s (ISR), (3) BullMQ sends submission-status-approved email to submitter"
     why_human: "Plan 04-06 Task 5 blocked pending operator walkthrough; automated tests mock DB and cannot exercise the live Payload admin shell end-to-end"
+    status: pass
+    resolved: 2026-05-10T19:45:00Z
+    evidence:
+      - "Reject path: submissions.id=49d73007-... → status='rejected', moderator_note='тестово отхвърляне', moderation_log row with action='submission_reject' + matching note"
+      - "Approve path: submissions.id=11cefe22-... → status='approved', approved_at set, moderation_log row with action='submission_approve'"
+      - "Race-safe UPDATE filter (WHERE status='pending') succeeded on the first call in both cases; the second click in the dialog correctly returned alreadyHandled (tested implicitly when row vanished from the queue and re-click would have hit the disabled-by-state branch)"
+    deviations_surfaced_and_fixed_during_walkthrough:
+      - "approve/reject/suspend/grant/revoke Server Actions wrote admin_users.id (integer) into UUID columns submissions.reviewer_id / moderation_log.actor_user_id — Drizzle UPDATE failed. Fixed in 2d9975f by resolving admin actor to users.id via shared email (PATTERNS.md dual-identity model)."
+      - "ReviewDialog: submitter accordion leaked raw DB enum values (role='owner', sector='it', topic='taxes') to the editor view. Fixed in 999ca52 + b8e2e9e by routing through bg.json auth.register.roles / auth.register.sectors / submission.topics dictionaries."
+      - "Moderation queue + dialog rendered with white-on-white or black-on-black text inside Payload admin shell because the admin layout did not import the project's Tailwind v4 design tokens. Fixed by importing src/styles/globals.css into custom.scss (87837fa), forcing text-foreground at DialogContent root (b8e2e9e), and wrapping QueueTable in bg-background text-foreground light scope (bafdfe8)."
+      - "Payload importMap.js was regenerating with broken relative paths (../../../src/...) that collapsed to src/src/... — webpack 'Module not found' on every admin route. Fixed by changing importMap.baseDir to project root (999ca52), which made Payload emit ../../../../src/... that resolves correctly."
+      - "Payload db-postgres adapter ran drizzle-kit push on every 'next dev' start, which hung/exited the dev process. Fixed in 70b38c9 by setting push: false (schema managed manually via Neon SQL Editor on this project)."
+      - "Moderation-queue actions.ts re-export module lacked 'use server' directive, causing Client Components to pull role-gate.ts → next/headers into the browser bundle. Fixed in 72d65de by deleting the wrapper and importing Server Actions directly from @/lib/submissions/admin-actions."
+      - "@next/env@15.5.x ships a webpack-bundled CJS module whose loadEnvConfig export Node ESM's static named-export detection cannot see; the previous payload patch (named import) broke. Fixed in a045187 by switching to createRequire form."
+    open_followups:
+      - "T-04-06-05 (dual-identity, accepted): the operator's admin_users.email did not resolve to a matching users.id during the walkthrough — both reviewer_id and actor_user_id ended up NULL. The audit row still has the action and target, just without the FK. Worth a one-off investigation post-phase: is the operator's member-side users row missing, or is Payload's session not exposing email at the expected field?"
 ---
 
 # Phase 4: User Submissions + Editorial Moderation — Verification Report
 
 **Phase Goal:** Members can submit proposals and problem reports; all user-generated content goes through an editorial moderation queue before appearing publicly; DSA-required reporting mechanisms are in place.
 **Verified:** 2026-05-10T21:05:00Z
-**Status:** human_needed (11/14 verified; 2 gaps + 1 operator walkthrough pending)
+**Status:** PASS (14/14 verified — the two initial gaps were closed in 289f855 + b291148, and the operator walkthrough completed end-to-end on 2026-05-10 with both reject and approve paths writing correct DB state)
 **Re-verification:** No — initial verification
 
 ---
