@@ -1,3 +1,11 @@
+/* eslint-disable react/no-unescaped-entities --
+ * Agenda content is curated long-form Bulgarian prose with many literal
+ * closing quotation marks inside JSX text. The rule's suggested escapes
+ * (`&quot;`) would make the source unreadable for editorial work; the
+ * Bulgarian closing-quote glyph already appears verbatim in source via
+ * copy-paste. Disable the rule for this file only — no runtime impact
+ * (React escapes JSX text either way).
+ */
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { MainContainer } from '@/components/layout/MainContainer';

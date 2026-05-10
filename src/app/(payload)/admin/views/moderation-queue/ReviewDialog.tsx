@@ -49,7 +49,7 @@ const labelTopic = (v: string | null | undefined) => (v && tTopics[v]) || v || '
 
 export function ReviewDialog({
   row,
-  currentUserRole,
+  currentUserRole: _currentUserRole,
   onClose,
 }: {
   row: PendingRow;

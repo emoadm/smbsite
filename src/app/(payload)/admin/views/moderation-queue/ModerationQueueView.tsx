@@ -27,7 +27,7 @@ const t = (bg as { admin: { queue: Record<string, unknown> } }).admin.queue as {
 export async function ModerationQueueView({
   initPageResult,
   params,
-  searchParams,
+  searchParams: _searchParams,
 }: AdminViewServerProps) {
   const {
     req: { user, i18n, payload },
