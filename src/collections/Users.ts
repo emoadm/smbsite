@@ -26,6 +26,7 @@ export const Users: CollectionConfig = {
       options: [
         { label: 'Admin', value: 'admin' },
         { label: 'Editor', value: 'editor' },
+        { label: 'Super Editor', value: 'super_editor' },
       ],
     },
   ],

@@ -15,8 +15,10 @@ describe('ATTR-07 / D-13 — attribution dashboard role gate (AttributionView.ts
     expect(src).not.toMatch(/\(user as any\)\.roles/);
   });
 
-  it('role gate restricts to admin or editor', () => {
-    expect(src).toMatch(/\['admin',\s*'editor'\]\.includes\(role\)/);
+  it('role gate restricts to admin, editor, or super_editor (Phase 4 EDIT-07 extension)', () => {
+    // Phase 4 EDIT-07 extended the gate to include super_editor.
+    // The old assertion ['admin','editor'] is superseded by the new 3-element check.
+    expect(src).toMatch(/\['admin', 'editor', 'super_editor'\]\.includes\(role\)/);
   });
 
   it('renders denial element BEFORE calling fetchAttributionAggregates (no data leak on bad role)', () => {
