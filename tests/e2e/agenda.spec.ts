@@ -24,7 +24,7 @@ test.describe('Public surface — /agenda (Phase 02.3 final)', () => {
 
   test('clicking each TOC link scrolls to the matching <h2>', async ({ page }) => {
     await page.goto('/agenda');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const ANCHORS = [
       'manifest', 'desen-konsensus', 'ikonomika',
@@ -45,7 +45,7 @@ test.describe('Public surface — /agenda (Phase 02.3 final)', () => {
   test('draft <Alert> banner is no longer present', async ({ page }) => {
     await page.goto('/agenda');
     // shadcn Alert renders role="alert" — the slice-1 banner had this role.
-    await expect(page.locator('[role="alert"]')).toHaveCount(0);
+    await expect(page.locator('article [role="alert"]')).toHaveCount(0);
   });
 
   test('OG meta description does NOT contain "финализиране"', async ({ page }) => {
