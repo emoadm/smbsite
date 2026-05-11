@@ -45,6 +45,12 @@ const isApprovedOrEditor = ({ req }: { req: { user?: unknown } }) => {
 
 export const Ideas: CollectionConfig = {
   slug: 'ideas',
+  // Phase 04.1 CONTEXT §3 (LOCKED option-a) — Payload owns a 'payload_ideas' table.
+  // Drizzle's 'ideas' table (created by 0003_phase04_submissions.sql) is reserved
+  // for Phase 3 voting-catalog work (paused under D-LawyerTrack). Without this
+  // override the two systems would race over the same table name. The admin URL
+  // path /admin/collections/ideas is unaffected — only the Postgres table name flips.
+  dbName: 'payload_ideas',
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'topic', 'status'],

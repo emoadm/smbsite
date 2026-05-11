@@ -57,6 +57,19 @@ describe('Phase 4 EDIT-02 — Ideas collection invariants', () => {
     expect(src).toMatch(/collections:\s*\[Users,\s*Newsletters,\s*Pages,\s*Ideas\]/);
   });
 
+  it("Ideas.ts declares dbName: 'payload_ideas' (Phase 04.1 CONTEXT §3 LOCKED option-a)", () => {
+    const src = readFileSync('src/collections/Ideas.ts', 'utf8');
+    // Strip line-comments to avoid matching the rationale comment above the field
+    const codeOnly = src
+      .split('\n')
+      .filter((line) => !line.trim().startsWith('//') && !line.trim().startsWith('*'))
+      .join('\n');
+    expect(codeOnly).toMatch(/dbName:\s*'payload_ideas'/);
+    // Exactly one dbName declaration in the collection config (no second override slipping in)
+    const matches = codeOnly.match(/dbName:/g) ?? [];
+    expect(matches.length).toBe(1);
+  });
+
   it('0003_phase04_submissions.sql contains CREATE TABLE "ideas"', () => {
     const src = readFileSync('src/db/migrations/0003_phase04_submissions.sql', 'utf8');
     expect(src).toMatch(/CREATE TABLE "ideas"/);
