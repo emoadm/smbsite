@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 4 UI-SPEC approved
-last_updated: "2026-05-10T20:07:50.206Z"
-last_activity: "2026-05-10 -- Phase 04 shipped as PR #2"
+stopped_at: Phase 02.3 closed out — shipped 2026-05-09, human UAT 2026-05-10
+last_updated: "2026-05-11T22:55:00.000Z"
+last_activity: "2026-05-11 -- Phase 02.3 close-out (shipped 2026-05-09, UAT 2026-05-10); PR #2 CI-fix chain complete (Batches A+B)"
 progress:
   total_phases: 9
   completed_phases: 7
@@ -21,16 +21,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Когато един собственик на МСП види сайта, разбира идеята достатъчно, за да даде името и имейла си — и след това продължава да се връща, защото гласът му се вижда и брои.
-**Current focus:** Phase 04 — user-submissions-editorial-moderation
+**Current focus:** Phase 02.3 closed out → next active phase = Phase 6 (GDPR self-service + hardening), the only fully-unblocked remaining phase (Phase 3 still paused under D-LawyerTrack pending Art.9 opinion)
 
 ## Current Position
 
-Phase: 04 — COMPLETE
-Plan: 1 of 8
-Status: Phase 04 complete
-Last activity: 2026-05-10 -- Phase 04 shipped as PR #2
+Phase: 02.3 — COMPLETE (close-out 2026-05-11)
+Status: Phase 02.3 shipped 2026-05-09 (12/12 agenda chapters live, Alert removed, bg.json cleaned); human UAT 2026-05-10 (2 pass / 1 issue → polish todo, non-blocking)
+Last activity: 2026-05-11 -- Phase 02.3 close-out commit; PR #2 CI-fix chain complete
 
-Progress: [█████████░] 95% (5 of 9 phases formally complete: 02.1 + 02.2 + Phase 5 code-shipping; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 02.3 + 03 + 04 + 06 ahead)
+Progress: [█████████░] 95% (Phase 02.1 + 02.2 + 02.3 + 04 + 05 code-shipping done; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 3 paused on D-LawyerTrack; Phase 6 unblocked and ahead)
 
 ## Performance Metrics
 
@@ -62,6 +61,7 @@ Progress: [█████████░] 95% (5 of 9 phases formally complete:
 - Phase 02.2 inserted (URGENT) after Phase 02.1 on 2026-05-08 — Coalition Agenda Content (D-CoalitionContent-Agenda); resolves the BLOCKING warmup-launch deferred item. Source: 25-page PDF (`programa-nie-sme-sinq-balgariq-2.pdf`) extracted to `.planning/coalition/agenda-raw.txt` (~12k words). SPIDR-split: 02.2 = walking-skeleton (manifesto + Десен консенсус + Икономика, ~210 source lines), shipped 2026-05-08. Phase 02.3 (TBD insertion) ships remaining ~10 chapters + removes the draftAlert banner + drops the obsolete `agenda.body` i18n key.
 - 2026-05-08 (Phase 02.2 mid-checkpoint): Two Phase 02-04 latent bugs surfaced and fixed during operator visual verification — (a) `@tailwindcss/typography` plugin was never installed despite `prose prose-slate prose-lg` classes being on the agenda article since `1211bca`; harmless while body was a single placeholder `<p>`, broke list rendering once 02.2 added `<ul>`/`<ol>`/h2 content (commit `8e8d384`). (b) Desktop TOC's `position: sticky` overlapped article body because both lived in a single 768px MainContainer column with no sidebar grid (commit `ce857ee`). Both fixes carry forward to Phase 02.3 — the architectural contract is now: 2-column grid layout `[200px_minmax(0,768px)]` md / `[220px_minmax(0,768px)]` lg, with TableOfContents `variant: 'mobile' | 'desktop' | 'both'` prop.
 - Phase 02.3 inserted (URGENT) after Phase 02.2 on 2026-05-08 — Coalition Agenda Content Slice 2 (final SPIDR slice). Ships remaining ~10 chapters from `agenda-raw.txt:319+` (Енергетика, ресурси и околна среда onward) into `/agenda`, removes the `<Alert>` draftAlert banner, and drops the obsolete `agenda.body` i18n key from `messages/bg.json`. Inherits architectural contract from Phase 02.2. Run `/gsd-mvp-phase 02.3` for SPIDR splitting.
+- 2026-05-11 close-out: Phase 02.3 SHIPPED 2026-05-09 (commits `12d50f8` UI-SPEC → `5e6d6fc` UAT) across 3 plans — plan-01 (4 simple-prose chapters), plan-02 (numbered-policy chapters + test infra), plan-03 (Правосъдие + Защита на ценностите + Alert removal + bg.json cleanup + Playwright spec). Human UAT 2026-05-10: 2 pass, 1 issue (mobile TOC return-nav friction → polish todo `.planning/todos/pending/2026-05-10-agenda-mobile-toc-sticky-fab.md`, non-blocking). Note: phase shipped without a CONTEXT.md — `/gsd-mvp-phase` path bypassed discuss-phase; not retroactively backfilled per user choice 2026-05-11. Resolves D-CoalitionContent-Agenda. ROADMAP.md line 19 marked `[x]`.
 
 ### Decisions
 
@@ -142,16 +142,16 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-10T13:12:52.385Z
-Stopped at: Phase 4 UI-SPEC approved
-Resume file: .planning/phases/04-user-submissions-editorial-moderation/04-UI-SPEC.md
-Next command: /gsd-mvp-phase 02.3 (SPIDR-split into vertical slices) — or /gsd-discuss-phase 02.3 to clarify scope first
+Last session: 2026-05-11T22:55:00Z
+Stopped at: Phase 02.3 closed out — shipped 2026-05-09, human UAT 2026-05-10
+Resume file: .planning/phases/02.3-coalition-agenda-content-slice-2/02.3-HUMAN-UAT.md (audit reference)
+Next command: `/gsd-discuss-phase 6` — Phase 6 (GDPR Self-Service + Hardening) is the only fully-unblocked remaining phase. Phase 3 stays paused on D-LawyerTrack (Art.9 opinion); Phase 4 shipped as PR #2; Phase 5 code-shipping done; Phase 1+2 awaiting operator/coalition deliverables.
 
-**Coalition external dependencies status (run in parallel during execution):**
+**Coalition external dependencies status (carry-forward):**
 
 - D-CoalitionLogoSVG (BLOCKING phase ship)
 - D-CoalitionContent-Hero (placeholder ships, content swaps in)
-- D-CoalitionContent-Agenda (placeholder ships, content swaps in)
+- ~~D-CoalitionContent-Agenda~~ — RESOLVED 2026-05-09 (Phase 02.3 ship: 12/12 chapters live)
 - D-CoalitionChannels (BLOCKING warmup)
-- D-LawyerReviewLegal (BLOCKING warmup)
+- D-LawyerReviewLegal (BLOCKING warmup) — part of D-LawyerTrack pause
 - D-CloudflareIPAllowlist (post-warmup hardening, NEW from plan 02-07 revision)
