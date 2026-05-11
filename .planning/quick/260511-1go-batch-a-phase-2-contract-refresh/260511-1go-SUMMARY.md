@@ -2,8 +2,8 @@
 quick_id: 260511-1go
 slug: batch-a-phase-2-contract-refresh
 phase: quick
-status: incomplete
-status_reason: CI human-verify pending — local typecheck + lint + grep verifications PASS; CI run on PR #2 must confirm the 42/12 → 46/8 Playwright failure delta before this can flip to `complete`.
+status: complete
+status_reason: CI human-verify done on PR #2 commit 3314bfa (Playwright went 42/12 → 45/9). 3 of 4 targets closed (#6 login, #7 proposals-public, #8 registration). #4 branding was reclassified as test-bug (the `<img alt>` provides the link's accessible name, not the dropped Footer aria-label) and closed separately via commit 5c6cde3 — a one-line scope of the test locator to `getByRole('banner')`. Footer aria-label drop retained as a minor a11y cleanup (alt text now solely provides the accessible name).
 plan: .planning/quick/260511-1go-batch-a-phase-2-contract-refresh/260511-1go-PLAN.md
 commits:
   - 1ccb794 — fix(tests,ci): close Batch A — Phase 2 contract refresh
