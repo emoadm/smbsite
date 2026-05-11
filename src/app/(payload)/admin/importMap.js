@@ -1,61 +1,38 @@
-// Phase 5 hotfix — Lexical RSC + client feature entries.
-//
-// Payload's `payload generate:importmap` would normally produce these
-// automatically, but that command uses tsx and is blocked by the
-// tsx@4.21 + Node 22 ESM incompat documented in
-// .planning/todos/pending/2026-05-04-payload-tsx-esm-incompat.md.
-//
-// Two categories of entries are required for any Lexical richText field:
-//   1. RSC entries (server-component render path): RscEntryLexicalField,
-//      RscEntryLexicalCell, LexicalDiffComponent. Without these the field
-//      doesn't render at all (Fly log: `getFromImportMap: PayloadComponent
-//      not found in importMap` for the RscEntryLexicalField path).
-//   2. Client feature entries: every Lexical *Feature() call registered in
-//      the lexicalEditor({ features }) config requires a matching client
-//      counterpart at the path `@payloadcms/richtext-lexical/client#<Name>Client`.
-//      Without these the editor mounts but the toolbar is empty (no Bold /
-//      Italic / Heading / Link buttons render).
-//
-// Newsletters.ts (Plan 05-04) uses 9 features: paragraph, heading, link,
-// list (ordered + unordered), bold, italic, fixed toolbar, inline toolbar.
-// All 9 client variants are registered here.
-import {
-  RscEntryLexicalField,
-  RscEntryLexicalCell,
-  LexicalDiffComponent,
-} from '@payloadcms/richtext-lexical/rsc'
-import {
-  ParagraphFeatureClient,
-  HeadingFeatureClient,
-  LinkFeatureClient,
-  UnorderedListFeatureClient,
-  OrderedListFeatureClient,
-  BoldFeatureClient,
-  ItalicFeatureClient,
-  FixedToolbarFeatureClient,
-  InlineToolbarFeatureClient,
-} from '@payloadcms/richtext-lexical/client'
-import { AttributionView as AttributionView_attribution_dashboard } from '@/app/(payload)/admin/views/attribution/AttributionView'
-import { NewsletterComposer as NewsletterComposer_newsletters_beforedoccontrols } from '@/components/payload/NewsletterComposer'
-import { NewsletterPreviewField as NewsletterPreviewField_newsletters_preview } from '@/components/payload/NewsletterPreviewField'
+import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
+import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
+import { LexicalDiffComponent as LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
+import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { OrderedListFeatureClient as OrderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { UnorderedListFeatureClient as UnorderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { LinkFeatureClient as LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { HeadingFeatureClient as HeadingFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { ParagraphFeatureClient as ParagraphFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { NewsletterPreviewField as NewsletterPreviewField_999718f1050bebd7138ae4fb95136b43 } from '../../../../src/components/payload/NewsletterPreviewField'
+import { NewsletterComposer as NewsletterComposer_9c912fdb9ba6713ecc64688d73569708 } from '../../../../src/components/payload/NewsletterComposer'
+import { AttributionView as AttributionView_1c44797ef8d952f0f8b79f85d332d7cd } from '../../../../src/app/(payload)/admin/views/attribution/AttributionView'
+import { ModerationQueueView as ModerationQueueView_9004e3f2fc8715b33e902a0ff683a067 } from '../../../../src/app/(payload)/admin/views/moderation-queue/ModerationQueueView'
+import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
+/** @type import('payload').ImportMap */
 export const importMap = {
-  // RSC entries
-  '@payloadcms/richtext-lexical/rsc#RscEntryLexicalField': RscEntryLexicalField,
-  '@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell': RscEntryLexicalCell,
-  '@payloadcms/richtext-lexical/rsc#LexicalDiffComponent': LexicalDiffComponent,
-  // Client feature entries (one per *Feature() in Newsletters.ts)
-  '@payloadcms/richtext-lexical/client#ParagraphFeatureClient': ParagraphFeatureClient,
-  '@payloadcms/richtext-lexical/client#HeadingFeatureClient': HeadingFeatureClient,
-  '@payloadcms/richtext-lexical/client#LinkFeatureClient': LinkFeatureClient,
-  '@payloadcms/richtext-lexical/client#UnorderedListFeatureClient': UnorderedListFeatureClient,
-  '@payloadcms/richtext-lexical/client#OrderedListFeatureClient': OrderedListFeatureClient,
-  '@payloadcms/richtext-lexical/client#BoldFeatureClient': BoldFeatureClient,
-  '@payloadcms/richtext-lexical/client#ItalicFeatureClient': ItalicFeatureClient,
-  '@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient': FixedToolbarFeatureClient,
-  '@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient': InlineToolbarFeatureClient,
-  // Project-local custom components
-  "/src/app/(payload)/admin/views/attribution/AttributionView#AttributionView": AttributionView_attribution_dashboard,
-  "/src/components/payload/NewsletterComposer#NewsletterComposer": NewsletterComposer_newsletters_beforedoccontrols,
-  "/src/components/payload/NewsletterPreviewField#NewsletterPreviewField": NewsletterPreviewField_newsletters_preview,
+  "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
+  "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
+  "@payloadcms/richtext-lexical/rsc#LexicalDiffComponent": LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e,
+  "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#OrderedListFeatureClient": OrderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#UnorderedListFeatureClient": UnorderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#LinkFeatureClient": LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#HeadingFeatureClient": HeadingFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#ParagraphFeatureClient": ParagraphFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "/src/components/payload/NewsletterPreviewField#NewsletterPreviewField": NewsletterPreviewField_999718f1050bebd7138ae4fb95136b43,
+  "/src/components/payload/NewsletterComposer#NewsletterComposer": NewsletterComposer_9c912fdb9ba6713ecc64688d73569708,
+  "/src/app/(payload)/admin/views/attribution/AttributionView#AttributionView": AttributionView_1c44797ef8d952f0f8b79f85d332d7cd,
+  "/src/app/(payload)/admin/views/moderation-queue/ModerationQueueView#ModerationQueueView": ModerationQueueView_9004e3f2fc8715b33e902a0ff683a067,
+  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

@@ -14,8 +14,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation** - Project scaffolding, authentication, branding baseline, email domain warm-up, core ops infrastructure
 - [~] **Phase 2: Public Surface (Pre-Warmup)** - Branded landing page, Sinya color tokens, real /member welcome page, cookie consent — must ship before warmup ladder begins · *code-shipping complete; awaiting operator (Cloudflare cache rules + CookieYes dashboard + Lighthouse PR review) + coalition deliverables (5 D-* items) per 02-SIGNOFF.md*
-- [ ] **Phase 2.1: Attribution + Source Dashboard** *(INSERTED)* - UTM/QR/oblast attribution capture + Payload admin dashboard — must complete before QR mail drop
-- [ ] **Phase 2.2: Coalition Agenda Content** *(INSERTED)* - Integrate the coalition's official political program (25-page PDF, ~12k words) into /agenda; SPIDR-split into vertical slices. Resolves D-CoalitionContent-Agenda (BLOCKING warmup launch).
+- [x] **Phase 2.1: Attribution + Source Dashboard** *(INSERTED)* - UTM/QR/oblast attribution capture + Payload admin dashboard — must complete before QR mail drop · *Completed: 2026-05-08*
+- [x] **Phase 2.2: Coalition Agenda Content** *(INSERTED)* - Walking-skeleton SPIDR slice 1: manifesto + 'Десен консенсус' + 'Икономика' chapters + 3-entry TOC into /agenda. Partially resolves D-CoalitionContent-Agenda. · *Completed: 2026-05-08*
+- [x] **Phase 2.3: Coalition Agenda Content — Slice 2 (final)** *(INSERTED)* - Ship remaining ~10 chapters from agenda-raw.txt:319+ into /agenda; remove draft Alert banner; drop agenda.body i18n key. Final SPIDR slice; resolves remaining D-CoalitionContent-Agenda. · *Completed: 2026-05-09 (human UAT 2026-05-10: 2 pass / 1 polish todo non-blocking)*
 - [ ] **Phase 3: Idea Catalog + Voting** - Editor-published idea catalog, binary voting engine with full anti-abuse stack (requires GDPR Art.9 legal opinion)
 - [ ] **Phase 4: User Submissions + Editorial** - Member proposals, problem reports, full editorial moderation panel
 - [ ] **Phase 5: Notifications** - Async newsletter, WhatsApp/Telegram channel links, member notification preferences
@@ -108,14 +109,14 @@ Plans:
 **Plans**: 8 plans
 
 Plans:
-- [ ] 02.1-01-PLAN.md — Drizzle schema (attribution_events table + users.self_reported_* additions) + schema-invariant grep test + drizzle-kit push to Neon (ATTR-02, ATTR-03..06, GDPR-09)
-- [ ] 02.1-02-PLAN.md — MaxMind GeoLite2 wrapper (lookupIp + OBLAST_NAMES) + Dockerfile mmdb download via Fly build-secret + CLAUDE.md ipapi.co footnote (ATTR-02)
-- [ ] 02.1-03-PLAN.md — Bulgarian copy in messages/bg.json: auth.register.source (8 D-10 enum labels) + attribution.dashboard namespace + tone-check tests (ATTR-06, ATTR-07)
-- [ ] 02.1-04-PLAN.md — BullMQ attribution producer + worker (mirrors email queue pattern) + scripts/start-worker.ts dual-worker registration + Pino redact extension (ATTR-01..04)
-- [ ] 02.1-05-PLAN.md — /api/attr/init Node-runtime endpoint (cookie set + UTM extract + fire-and-forget enqueue) + <AttrInit/> client mount in frontend layout (ATTR-01, ATTR-03..05)
-- [ ] 02.1-06-PLAN.md — register Server Action Zod enum + INSERT extension; verify-otp attr_sid → user_id linkage; RegistrationForm dropdown + conditional Други input + e2e (ATTR-05, ATTR-06)
-- [ ] 02.1-07-PLAN.md — Payload custom view at /admin/views/attribution: RSC role gate + Server Action aggregates + client dashboard (filters + tables + bar list + CSV) + payload.config.ts registration (ATTR-07)
-- [ ] 02.1-08-PLAN.md — k6 load-test scenario + Hetzner runner runbook + LOAD-TEST.md sign-off (BLOCKING) + STATE.md deferred items update (OPS-05)
+- [x] 02.1-01-PLAN.md — Drizzle schema (attribution_events table + users.self_reported_* additions) + schema-invariant grep test + drizzle-kit push to Neon (ATTR-02, ATTR-03..06, GDPR-09)
+- [x] 02.1-02-PLAN.md — MaxMind GeoLite2 wrapper (lookupIp + OBLAST_NAMES) + Dockerfile mmdb download via Fly build-secret + CLAUDE.md ipapi.co footnote (ATTR-02)
+- [x] 02.1-03-PLAN.md — Bulgarian copy in messages/bg.json: auth.register.source (8 D-10 enum labels) + attribution.dashboard namespace + tone-check tests (ATTR-06, ATTR-07)
+- [x] 02.1-04-PLAN.md — BullMQ attribution producer + worker (mirrors email queue pattern) + scripts/start-worker.ts dual-worker registration + Pino redact extension (ATTR-01..04)
+- [x] 02.1-05-PLAN.md — /api/attr/init Node-runtime endpoint (cookie set + UTM extract + fire-and-forget enqueue) + <AttrInit/> client mount in frontend layout (ATTR-01, ATTR-03..05)
+- [x] 02.1-06-PLAN.md — register Server Action Zod enum + INSERT extension; verify-otp attr_sid → user_id linkage; RegistrationForm dropdown + conditional Други input + e2e (ATTR-05, ATTR-06)
+- [x] 02.1-07-PLAN.md — Payload custom view at /admin/views/attribution: RSC role gate + Server Action aggregates + client dashboard (filters + tables + bar list + CSV) + payload.config.ts registration (ATTR-07)
+- [x] 02.1-08-PLAN.md — k6 load-test scenario + Hetzner runner runbook + LOAD-TEST.md sign-off (BLOCKING) + STATE.md deferred items update (OPS-05)
 
 **UI hint**: yes
 
@@ -132,10 +133,40 @@ Description: integrate the coalition's official political program (25-page PDF, 
 
 **Requirements**: TBD (resolves `D-CoalitionContent-Agenda`)
 **Depends on:** Phase 2
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 02.2-01-PLAN.md — Slice 1 walking skeleton: manifesto + Десен консенсус + Икономика JSX + TOC + linter exemption + anchor-drift test (D-CoalitionContent-Agenda)
+- [x] 02.2-01-PLAN.md — Slice 1 walking skeleton: manifesto + Десен консенсус + Икономика JSX + TOC + linter exemption + anchor-drift test (D-CoalitionContent-Agenda)
+
+---
+
+### Phase 02.3: Coalition Agenda Content — Slice 2 (final) (INSERTED)
+
+**Goal:** As a visitor, I want to read the coalition's full political program — every chapter — on /agenda, so that I can evaluate the platform's positions before deciding whether to register.
+**Mode:** mvp
+**Slice:** final (Phase 02.2 walking-skeleton inheritor)
+
+**Description:** Ship the remaining ~10 chapters from `agenda-raw.txt:319+` (Енергетика, ресурси и околна среда onward) into `/agenda` using the architectural contract locked by Phase 02.2: hardcoded Bulgarian JSX in `src/app/(frontend)/agenda/page.tsx`, file-level `lint-i18n` exemption, anchor-drift unit test, 2-column grid layout (`[200px_minmax(0,768px)]` md / `[220px_minmax(0,768px)]` lg) with `TableOfContents` `variant` prop. Final-slice cleanup: remove the `<Alert>` draftAlert banner and drop the obsolete `agenda.body` i18n key from `messages/bg.json`.
+
+**Requirements**: TBD (resolves the remaining portion of `D-CoalitionContent-Agenda`)
+**Depends on:** Phase 02.2 (architectural contract + 3-entry TOC scaffold)
+**Plans:** 3/3 plans complete
+
+Plans:
+- [x] 02.3-01-PLAN.md — Slice 2 simple-prose chapters: Енергетика + Земеделие + Здравеопазване + Външна сигурност и отбрана; TOC 3→7; anchor-drift test ≥7 (REQ-AGENDA-S2-01/02/04/05)
+- [x] 02.3-02-PLAN.md — Slice 2 numbered-policy chapters: Образование + Социална политика + Култура inserted in source order; TOC 7→10; anchor-drift test ≥10 (REQ-AGENDA-S2-01/02/04/05)
+- [x] 02.3-03-PLAN.md — Slice 2 final cleanup: Правосъдие + Защита на ценностите + drop draftAlert banner + drop agenda.body + add agenda.metadataDescription + new i18n-cleanup unit test + new /agenda Playwright spec; TOC 10→12 final; anchor-drift test ≥12 (REQ-AGENDA-S2-01..05; full D-CoalitionContent-Agenda resolution)
+
+Success Criteria (what must be TRUE):
+  1. A visitor opening `/agenda` sees the full coalition program — every chapter from `agenda-raw.txt` rendered as structured Bulgarian JSX with proper headings, paragraphs, lists, and ordered policy items
+  2. The Table of Contents lists all top-level chapters in source order; clicking any entry jumps to its section via in-page anchor; the anchor-drift unit test passes for the extended set
+  3. The `<Alert>` draftAlert banner is removed (this is the "final slice" condition); the `agenda.body` i18n key is dropped from `messages/bg.json`
+  4. `pnpm lint:i18n` continues to pass (file-level EXEMPT_FILES entry from Phase 02.2 already covers all new content)
+  5. Operator visual walkthrough confirms typography, list rendering, anchor jumps, and active-section highlighting work end-to-end on desktop AND mobile
+
+**UI hint**: yes
+
+---
 
 ### Phase 3: Idea Catalog + Voting
 
@@ -178,6 +209,8 @@ Plans:
 
 **Requirements**: PROP-01, PROP-02, PROP-03, PROP-04, PROB-01, PROB-02, PROB-03, PROB-04, PROB-05, EDIT-03, EDIT-04, EDIT-05, EDIT-06, EDIT-07
 
+**Re-scope note (2026-05-10):** Phase 4 absorbs EDIT-01 (admin login + role gating), EDIT-02 (Payload Ideas collection CRUD without voting fields), and the moderation_log schema — originally Phase 3 work — under D-LawyerTrack deferral. PROP-04 becomes a read-only public catalog (D-B1) until Phase 3 voting reactivates. See 04-CONTEXT.md.
+
 **Success Criteria** (what must be TRUE):
   1. A member can submit a proposal (title, description, topic) or a problem report (with mandatory local/national level tag and municipality/region selector for local issues); the submission is immediately placed in the moderation queue and NOT published publicly
   2. A member can see the current status (awaiting review / approved / rejected + note) of each of their own submissions at any time
@@ -185,7 +218,17 @@ Plans:
   4. An editor can review the full moderation queue, approve or reject items with a note, suspend a member account with a documented reason in the moderation log, and send ad-hoc newsletters from the admin panel
   5. An editor can publish and edit agitation pages (PUB content) directly from the admin panel; all moderation actions are append-only in the moderation_log table
 
-**Plans**: TBD
+**Plans**: 8 plans
+
+Plans:
+- [x] 04-01-PLAN.md — Schema + DDL: submissions + moderation_log Drizzle tables, users.status + users.platform_role columns, Pages Payload collection, Bulgaria oblast SVG asset; manual Neon SQL Editor migration (PROP-01..02, PROB-01..04, EDIT-03, EDIT-05, EDIT-06, EDIT-07)
+- [x] 04-02-PLAN.md — i18n string lock: ~100 Bulgarian keys under submission/problem/dsa/admin/email namespaces; Wave 0 string-presence test enforcing D-C1 anonymity invariants (all 14 reqs)
+- [x] 04-03-PLAN.md — Member submission flows: ProposalForm + ProblemReportForm + Server Actions with auth + Turnstile + Upstash rate-limit + Zod + GeoIP oblast suggestion (PROP-01..02, PROB-01..04)
+- [x] 04-04-PLAN.md — Member status views: /member/predlozheniya + /member/signali — owner-isolated lists with status badges and rejection notes (PROP-03, PROB-05)
+- [x] 04-05-PLAN.md — Public surfaces: /predlozheniya proposals catalog (D-C1 anonymous byline) + /problemi heat-map (D-D2 N≥5 suppression at SQL layer) (PROP-04, PROB-01..04)
+- [x] 04-06-PLAN.md — Editorial moderation queue: Payload custom view at /admin/views/moderation-queue with Tabs + Table + ReviewDialog + ConfirmActionDialog; approveSubmission + rejectSubmission Server Actions with transactional double-write (EDIT-04, EDIT-05, EDIT-07 latent fix)
+- [x] 04-07-PLAN.md — Editor lifecycle + suspended-account gate + status-change emails: suspendUser + grantEditor + revokeEditor + assertNotLastSuperEditor; member/layout suspended check; BullMQ worker handlers + React Email templates; 04-OPS-RUNBOOK.md (EDIT-06, EDIT-07)
+- [x] 04-08-PLAN.md — DSA Article 16 minimum compliance: ReportContentDialog on ProposalCard for logged-in members; submitDsaReport feeds into moderation queue with kind='dsa_report' (no numbered REQ — Phase 4 goal-driven)
 
 **UI hint**: yes
 
@@ -253,9 +296,12 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 13/13 | Code-shipping complete; operator warmup + sign-off pending | - |
-| 2. Public Surface + Attribution | 0/TBD | Not started | - |
+| 2. Public Surface (Pre-Warmup) | 9/9 | Code-shipping complete; operator + 5 coalition deliverables pending per 02-SIGNOFF.md | - |
+| 2.1. Attribution + Source Dashboard | 8/8 | Complete — UAT 16/16 passed, VERIFICATION passed (13/13 must-haves), security threats=0 | 2026-05-08 |
+| 2.2. Coalition Agenda Content | 1/1 | Complete — walking-skeleton slice (manifesto + Десен консенсус + Икономика); operator visual verification approved | 2026-05-08 |
+| 2.3. Coalition Agenda Content — Slice 2 (final) | 0/3 | Not started — 3 plans (simple-prose / numbered-policy / h3-subsection+cleanup) | - |
 | 3. Idea Catalog + Voting | 0/10 | Not started — planning complete (post-checker revision: 03-05 split into 03-05a/b, 03-07 split into 03-07a/b); HARD-BLOCKED on GDPR Art.9 lawyer opinion before merge | - |
-| 4. User Submissions + Editorial | 0/TBD | Not started | - |
+| 4. User Submissions + Editorial | 0/8 | Not started — 8 plans (schema/i18n/member-flow/status-views/public/queue/lifecycle/dsa) | - |
 | 5. Notifications | 0/TBD | Not started | - |
 | 6. GDPR Self-Service + Hardening | 0/TBD | Not started | - |
 

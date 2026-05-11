@@ -12,11 +12,11 @@
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Публични агитационни страници (текст, видео, изображения), достъпни без регистрация — `/agenda` ships full coalition political program (12 chapters, ~1900 lines of authored Bulgarian JSX) without auth gate. Validated in Phase 02.3.
 
 ### Active
 
-- [ ] Публични агитационни страници (текст, видео, изображения), достъпни без регистрация
+- [ ] Публични агитационни страници (текст, видео, изображения), достъпни без регистрация (extra surfaces beyond /agenda still open)
 - [ ] Регистрация с име и имейл; имейл потвърждение
 - [ ] Вход / изход / възстановяване на достъп
 - [ ] Каталог на политически идеи / решения (публикувани от редакторите и от потребителите)
@@ -96,4 +96,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-29 after initialization (incl. research findings: WhatsApp Channel + Telegram)*
+*Last updated: 2026-05-10 — Phase 02.3 complete: D-CoalitionContent-Agenda fully resolved; /agenda ships all 12 program chapters; draft Alert removed.*

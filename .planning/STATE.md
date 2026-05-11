@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 3 context gathered
-last_updated: "2026-05-07T22:16:22.414Z"
-last_activity: "2026-05-06 -- Phase 5 gap closure complete (G1, G2, G3, G4); G4 closed via plan 05-14: Redis eviction policy verified `noeviction` across local/staging/production under strict no-silent-degradation contract; ops sign-off committed (ee259f5); transitively resolves latent silent-job-loss risk in Phase 1 OTP queue (shared UPSTASH_REDIS_URL)"
+status: completed
+stopped_at: Phase 02.3 closed out — shipped 2026-05-09, human UAT 2026-05-10
+last_updated: "2026-05-11T22:55:00.000Z"
+last_activity: "2026-05-11 -- Phase 02.3 close-out (shipped 2026-05-09, UAT 2026-05-10); PR #2 CI-fix chain complete (Batches A+B)"
 progress:
-  total_phases: 8
-  completed_phases: 4
-  total_plans: 54
-  completed_plans: 44
-  percent: 81
+  total_phases: 9
+  completed_phases: 7
+  total_plans: 66
+  completed_plans: 56
+  percent: 78
 ---
 
 # Project State
@@ -21,22 +21,21 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Когато един собственик на МСП види сайта, разбира идеята достатъчно, за да даде името и имейла си — и след това продължава да се връща, защото гласът му се вижда и брои.
-**Current focus:** Phase 05 — notifications
+**Current focus:** Phase 02.3 closed out → next active phase = Phase 6 (GDPR self-service + hardening), the only fully-unblocked remaining phase (Phase 3 still paused under D-LawyerTrack pending Art.9 opinion)
 
 ## Current Position
 
-Phase: 05 (notifications) — VERIFIED end-to-end (manual verification §05-MANUAL-VERIFICATION.md) + UAT gap closure complete (G1, G2, G3, G4 all closed via plans 05-12 / 05-13 / 05-14). Ready for `/gsd-verify-work 05` re-run.
-Plan: 14 of 14 (gap-closure plans 05-12/13/14 complete; original 11 verified; Task 05.11.4 is the verify-work gate)
-Status: Phase 05 code-shipping + gap-closure complete; manual verifications passed (DKIM ✓, Global swap ✓, real test send ✓, Cyrillic in Gmail + Apple Mail ✓); UAT gaps closed: G1 worker dotenv ✓, G2 SendBlastButton gate-field wiring ✓ (Phase 5 BLOCKER lifted), G3 Bulgarian register ✓, G4 Redis maxmemory-policy=noeviction across all 3 environments ✓ (closed 2026-05-06 — local dev Homebrew default, staging + production Upstash dashboard toggle); abv.bg/mail.bg/Outlook deferred to first real users
-Last activity: 2026-05-06 -- Phase 5 gap closure complete (G1, G2, G3, G4); G4 closed via plan 05-14: Redis eviction policy verified `noeviction` across local/staging/production under strict no-silent-degradation contract; ops sign-off committed (ee259f5); transitively resolves latent silent-job-loss risk in Phase 1 OTP queue (shared UPSTASH_REDIS_URL)
+Phase: 02.3 — COMPLETE (close-out 2026-05-11)
+Status: Phase 02.3 shipped 2026-05-09 (12/12 agenda chapters live, Alert removed, bg.json cleaned); human UAT 2026-05-10 (2 pass / 1 issue → polish todo, non-blocking)
+Last activity: 2026-05-11 -- Phase 02.3 close-out commit; PR #2 CI-fix chain complete
 
-Progress: [██████████] 100% (30/30 plans complete across Phase 1 + Phase 2 + Phase 02.1; all three code-shipping complete; Phase 02.1 OPS-05 signed off, Phase 1 + Phase 2 still awaiting operator-side warmup/sign-off + coalition deliverables)
+Progress: [█████████░] 95% (Phase 02.1 + 02.2 + 02.3 + 04 + 05 code-shipping done; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 3 paused on D-LawyerTrack; Phase 6 unblocked and ahead)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
+- Total plans completed: 12
 - Average duration: -
 - Total execution time: 0 hours
 
@@ -44,7 +43,9 @@ Progress: [██████████] 100% (30/30 plans complete across Pha
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 02.1 | 8 | - | - |
+| 02.2 | 1 | - | - |
+| 02.3 | 3 | - | - |
 
 **Recent Trend:**
 
@@ -57,7 +58,10 @@ Progress: [██████████] 100% (30/30 plans complete across Pha
 
 ### Roadmap Evolution
 
-- Phase 02.2 inserted (URGENT) after Phase 02.1 on 2026-05-08 — Coalition Agenda Content (D-CoalitionContent-Agenda); resolves the BLOCKING warmup-launch deferred item. Source: 25-page PDF (`programa-nie-sme-sinq-balgariq-2.pdf`) extracted to `.planning/coalition/agenda-raw.txt` (~12k words). Run `/gsd-mvp-phase 02.2` for SPIDR splitting.
+- Phase 02.2 inserted (URGENT) after Phase 02.1 on 2026-05-08 — Coalition Agenda Content (D-CoalitionContent-Agenda); resolves the BLOCKING warmup-launch deferred item. Source: 25-page PDF (`programa-nie-sme-sinq-balgariq-2.pdf`) extracted to `.planning/coalition/agenda-raw.txt` (~12k words). SPIDR-split: 02.2 = walking-skeleton (manifesto + Десен консенсус + Икономика, ~210 source lines), shipped 2026-05-08. Phase 02.3 (TBD insertion) ships remaining ~10 chapters + removes the draftAlert banner + drops the obsolete `agenda.body` i18n key.
+- 2026-05-08 (Phase 02.2 mid-checkpoint): Two Phase 02-04 latent bugs surfaced and fixed during operator visual verification — (a) `@tailwindcss/typography` plugin was never installed despite `prose prose-slate prose-lg` classes being on the agenda article since `1211bca`; harmless while body was a single placeholder `<p>`, broke list rendering once 02.2 added `<ul>`/`<ol>`/h2 content (commit `8e8d384`). (b) Desktop TOC's `position: sticky` overlapped article body because both lived in a single 768px MainContainer column with no sidebar grid (commit `ce857ee`). Both fixes carry forward to Phase 02.3 — the architectural contract is now: 2-column grid layout `[200px_minmax(0,768px)]` md / `[220px_minmax(0,768px)]` lg, with TableOfContents `variant: 'mobile' | 'desktop' | 'both'` prop.
+- Phase 02.3 inserted (URGENT) after Phase 02.2 on 2026-05-08 — Coalition Agenda Content Slice 2 (final SPIDR slice). Ships remaining ~10 chapters from `agenda-raw.txt:319+` (Енергетика, ресурси и околна среда onward) into `/agenda`, removes the `<Alert>` draftAlert banner, and drops the obsolete `agenda.body` i18n key from `messages/bg.json`. Inherits architectural contract from Phase 02.2. Run `/gsd-mvp-phase 02.3` for SPIDR splitting.
+- 2026-05-11 close-out: Phase 02.3 SHIPPED 2026-05-09 (commits `12d50f8` UI-SPEC → `5e6d6fc` UAT) across 3 plans — plan-01 (4 simple-prose chapters), plan-02 (numbered-policy chapters + test infra), plan-03 (Правосъдие + Защита на ценностите + Alert removal + bg.json cleanup + Playwright spec). Human UAT 2026-05-10: 2 pass, 1 issue (mobile TOC return-nav friction → polish todo `.planning/todos/pending/2026-05-10-agenda-mobile-toc-sticky-fab.md`, non-blocking). Note: phase shipped without a CONTEXT.md — `/gsd-mvp-phase` path bypassed discuss-phase; not retroactively backfilled per user choice 2026-05-11. Resolves D-CoalitionContent-Agenda. ROADMAP.md line 19 marked `[x]`.
 
 ### Decisions
 
@@ -99,6 +103,12 @@ None yet.
 | 260508-fast-2 | auth hydration fix — revalidatePath('/', 'layout') in verify-otp + logout actions; Header (Server Component reading auth()) was serving cached null-session render after router.push, causing post-login username/logo bug | 2026-05-08 | 0592610 | — (gsd-fast inline) |
 | 260508-fast-3 | drop stale UploadFeature assertion from payload-newsletters.test.ts — implementation deliberately removed UploadFeature, test contract drifted | 2026-05-08 | f0dc87d | — (gsd-fast inline) |
 | 260508-rx3 | ramp-up без гласуване — hide voting copy from user-facing surface (RegistrationForm, landing cards, FAQ, welcome email) and drop Art. 9 political-opinion consent checkbox + INSERT; Phase 3 still gated by external legal opinion | 2026-05-08 | 490a4c8 | [260508-rx3-ramp-up-voting-language-user-facing-copy](./quick/260508-rx3-ramp-up-voting-language-user-facing-copy/) |
+| 260511-04m | Playwright CI webServer fix — `pnpm start` is incompatible with `next.config.ts` `output: 'standalone'`, server never bound :3000, ~37 page-load specs timed out on PR #2; new `pnpm start:standalone` copies `.next/static` + `public` into `.next/standalone/` then runs `node .next/standalone/server.js`. CI human-verify pending. | 2026-05-10 | 3b484b8 | [260511-04m-fix-playwright-standalone-webserver](./quick/260511-04m-fix-playwright-standalone-webserver/) |
+| 260511-0nx | Playwright cf-ray header bypass — second half of 260511-04m. After webServer started, all pages 403'd because `src/middleware.ts:48` requires cf-ray under NODE_ENV=production. Added `extraHTTPHeaders: { 'cf-ray': 'playwright-ci-bypass' }` to `playwright.config.ts` `use` block — mimics Cloudflare edge traffic, doesn't weaken the gate (presence-only check, real auth = D-CloudflareIPAllowlist). CI human-verify pending. | 2026-05-10 | 2620e84 | [260511-0nx-playwright-cf-ray-header-bypass](./quick/260511-0nx-playwright-cf-ray-header-bypass/) |
+| 260511-15o | Playwright failures triage (PR #2 / run 25640408203) — 8 newly-visible specs classified: 4 code-bugs (Footer dup logo aria-label, missing `<Label htmlFor>` on Други input, `s-maxage` not emitted at origin), 3 test-bugs (Phase 1 → Phase 2 contract drift in login/registration/proposals-public), 1 config-bug (CookieYes placeholder key blocks networkidle). 4 dispatch batches A-D in TRIAGE.md. No code changes — diagnostic only. | 2026-05-10 | (no code) | [260511-15o-triage-8-newly-visible-playwright-failur](./quick/260511-15o-triage-8-newly-visible-playwright-failur/) |
+| 260511-1go | TRIAGE Batch A — close 4 Phase 2 contract-refresh failures: drop dup `aria-label` from Footer brand link (#4), replace Phase 1 redirect assertion with Header "Вход" link visibility check in login.spec (#6), add source-dropdown picker (`qr_letter` / "QR код в писмо") to registration.spec before submit (#8), scope email-leak regex from `page.content()` to `<main>` in proposals-public.spec (#7). CI verified 42/12 → 45/9; #4 reclassified (img alt provides accessible name) and closed separately via 5c6cde3 — branding test scoped to `getByRole('banner')`. | 2026-05-10 | b4536b3 + 5c6cde3 | [260511-1go-batch-a-phase-2-contract-refresh](./quick/260511-1go-batch-a-phase-2-contract-refresh/) |
+| 260511-fast-1 | branding.spec.ts locator scope-to-header (`getByRole('banner')`) — follow-on to 260511-1go, closes TRIAGE #4 reclassified as test-bug. Footer aria-label drop in 260511-1go was not enough because `<img alt>` provides the link's accessible name; scoping the test is the structurally-correct fix. | 2026-05-10 | 5c6cde3 | — (gsd-fast inline) |
+| 260511-fast-2 | agenda.spec.ts TRIAGE Batch B — `waitForLoadState('networkidle')` → `'domcontentloaded'` (CookieYes Script never settles network with placeholder key) + scope `role="alert"` locator to `article [role="alert"]` (any out-of-scope alert role from Sentry/widget mounts now ignored). Deviated from TRIAGE's primary fix path (empty `NEXT_PUBLIC_COOKIEYES_SITE_KEY` in ci.yml) because `scripts/check-env.ts:109` requires non-empty values. Used TRIAGE's documented alternative. CI verified 46/8 → 48/6. | 2026-05-10 | a4da7da | — (gsd-fast inline) |
 
 ## Deferred Items
 
@@ -111,7 +121,7 @@ None yet.
 | ops | ~~`D-Phase5-prep` — `mail2._domainkey.news.chastnik.eu` CNAME not yet added in Cloudflare DNS~~ — RESOLVED 2026-05-06 (Plan 05-11 manual verification §1). Operator added the CNAME → `brevo2._domainkey.news.chastnik.eu`; full `news.*` DKIM chain now at parity with `auth.*`. First Phase 5 send unblocked. | resolved: Plan 05-11 (2026-05-06) | Quick 260502-lhc |
 | coalition | `D-CoalitionLogoSVG` — official high-res Sinya SVG logo asset. **BLOCKING** Phase 2 final ship. Phase 2 build can proceed with sinyabulgaria.bg live-site asset as placeholder. | resolves_phase: 2 | Phase 2 discuss |
 | coalition | `D-CoalitionContent-Hero` — hero headline + sub-headline copy (Bulgarian, formal-respectful). Coalition writes; Phase 2 ships with `[ТЕКСТ ОТ КОАЛИЦИЯ]` placeholder until delivered. | resolves_phase: 2 | Phase 2 discuss |
-| coalition | `D-CoalitionContent-Agenda` — entire `/agenda` page text (political program, vision, ~800-2000 words). Coalition writes; placeholder mechanism until delivered. | resolves_phase: 2 | Phase 2 discuss |
+| coalition | `D-CoalitionContent-Agenda` — partially resolved 2026-05-08 via Phase 02.2 walking-skeleton slice (manifesto + Десен консенсус + Икономика chapters, ~210 source lines). Phase 02.3 ships remaining ~10 chapters from `agenda-raw.txt:319+` and removes the draft `<Alert>` banner. Coalition source PDF already extracted to `.planning/coalition/agenda-raw.txt` — no further coalition deliverable needed; the gating is now internal phase-execution capacity. | resolves_phase: 02.3 | Phase 2 discuss → partial Phase 02.2 |
 | coalition | `D-CoalitionChannels` — WhatsApp Channel + Telegram channel creation + URLs to swap into `/member`. **BLOCKING warmup launch.** Coalition creates; quick task swaps in URLs once available. | resolves_phase: 2 | Phase 2 discuss |
 | coalition | `D-LawyerReviewLegal` — final lawyer-reviewed Privacy Policy + Terms of Use text. Coalition has NOT started review. **BLOCKING warmup launch** (in addition to existing Phase 1 sign-off gates). | resolves_phase: 2 | Phase 2 discuss |
 | ops | `D-CloudflareIPAllowlist` — configure Fly.io `internal_port` allow-list to accept only Cloudflare IP ranges (true network-layer auth boundary). Phase 2 middleware checks `cf-ray` as a soft signal only — header is plain HTTP and trivially spoofable by an attacker who discovers the origin IP. | resolves_phase: post-warmup-hardening | Plan 02-07 |
@@ -123,19 +133,25 @@ None yet.
 | feature | `D-ReferralMechanism` — per-user share-link generation, member dashboard share page, `users.referrer_id` column. Punted from Phase 02.1 (D-14) to a future phase. Rationale: Phase 02.1's gating purpose is QR/UTM measurement before the mail drop; referral is a distinct UX (member-side share page) and conflicts with deferred member self-service. | resolves_phase: future | Plan 02.1-08 |
 | feature | `D-ConsentsRegionPopulation` — Phase 02.1 GeoIP-derived oblast does not populate `consents.region`; deferred to Phase 6 (GDPR-04 / GDPR-05) so consents-audit-table writes stay scoped to the GDPR phase. | resolves_phase: 6 | Plan 02.1-08 |
 | ops | `D-Phase21Plan01-LiveNeonPush` — Plan 02.1-01 swapped `db:push` for `db:generate` (DIRECT_URL unavailable in worktree); migration `0001_grey_umar.sql` is committed but operator must apply against live Neon production via `pnpm db:migrate` (or CI deploy.yml's migrate job already running on push to main). Verify migration ran successfully before next staging/production deploy. | resolves_phase: 02.1-followup-ops | Plan 02.1-01 |
+| legal | `D-LawyerTrack` — both lawyer-dependent items intentionally paused 2026-05-10: (a) Art.9 opinion (gating Phase 3 voting; brief at `.planning/legal/art9-brief-to-counsel.md` still draft, not sent), (b) `D-LawyerReviewLegal` (gating warmup launch; Privacy Policy + Terms review not started). Both resume when a phase about to ship genuinely requires them. Active redirects: Phase 4 to be re-scoped for voting-independent slices (`/gsd-discuss-phase 4`); Phase 6 (GDPR self-service) remains unblocked. Re-activation triggers: operator initiates engagement OR a shipping phase requires the opinion/signed legal text. | resolves_phase: future | Session 2026-05-10 |
+| ops | `D-Phase04Plan01-LiveNeonPush` — Plan 04-01 generated `src/db/migrations/0003_phase04_submissions.sql` and the operator applied it via Neon SQL Editor on 2026-05-10 (production). Migration creates `submissions`, `moderation_log`, `ideas` tables, adds `users.status` + `users.platform_role`, and applies REVOKE UPDATE,DELETE on `moderation_log` and REVOKE DELETE on `submissions`. Verify staging Neon branch parity before next staging deploy with `\d submissions; \d moderation_log; SELECT has_table_privilege(current_user, 'moderation_log', 'UPDATE'); SELECT has_table_privilege(current_user, 'moderation_log', 'DELETE');`. | resolves_phase: 04-followup-ops | Plan 04-01 |
+| ops | `D-EditorialAccountBootstrap` — every new admin_users row (Payload editorial account) MUST also have a users-table row with the SAME email and `platform_role IN ('editor','super_editor')`, otherwise moderation actions write `reviewer_id`/`actor_user_id` NULL in the audit trail. Bootstrapped 2026-05-10 for the first operator (`emoadm@gmail.com` → users.id `36788725-4627-4a36-811b-b1479c33569f`, `platform_role='super_editor'`). Procedure documented in `.planning/phases/04-user-submissions-editorial-moderation/04-OPS-RUNBOOK.md` §1. Add a checklist item before onboarding any new editor. | resolves_phase: ongoing-ops | Phase 4 verification |
+| ci | `D-Phase5-E2E-SeedingHarness` — `tests/e2e/admin-newsletter-composer.spec.ts`, `tests/e2e/community-page.spec.ts` (member-flow), and `tests/e2e/newsletter-preferences.spec.ts` hard-fail in CI without `E2E_EDITOR_EMAIL` / `E2E_EDITOR_PASSWORD` / `E2E_MEMBER_EMAIL` / `TEST_OTP_SINK` env vars + a seeded Payload admin + verified `users` row. CI baseline accepts these 4 failures as known. Needs: ci.yml env block + seed step (Drizzle insert + Payload admin bootstrap) before Playwright invocation, OR a fixture that runs these specs only locally with `--grep` exclusion in CI. | resolves_phase: 5-followup-ci | TRIAGE 260511-15o |
+| ci | `D-PlaywrightBatchC-Други-Label` — TRIAGE Batch C: `tests/e2e/attribution.spec.ts:4` fails because `RegistrationForm.tsx:140-152` renders the conditional "Други" free-text input without a `<Label htmlFor="self_reported_other">` element. Test uses `getByLabel(/Моля, уточнете/)` which does NOT match placeholders. Code-bug (a11y regression). Needs design decision: visible label (new i18n key like `auth.register.source.otherLabel`) vs `sr-only`. ~10 min implementation. | resolves_phase: post-PR2 | TRIAGE 260511-15o Batch C |
+| ci | `D-PlaywrightBatchD-LandingCacheControl` — TRIAGE Batch D: `tests/e2e/landing.spec.ts:22` asserts `Cache-Control: s-maxage=3600` on `/`. The landing page calls `<Header/>` which invokes `auth()` → forces Next.js to emit `Cache-Control: private, no-cache` from origin. The page's own comment (`src/app/(frontend)/page.tsx:11-17`) acknowledges cache lives at Cloudflare edge, not origin. Needs architecture decision: (a) override in `next.config.ts headers()` for `source: '/'` (recommended for fast PR-2 close — origin emits the header for Cloudflare to honour, verify Plan 02-07 Cloudflare cache rule still vary-keys on session cookie), (b) move `auth()` read out of `Header` for anon paths via a Vary-aware split, or (c) re-scope test to assert at CDN layer only. | resolves_phase: post-PR2 | TRIAGE 260511-15o Batch D |
 
 ## Session Continuity
 
-Last session: 2026-05-07T07:32:17.863Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-idea-catalog-voting/03-CONTEXT.md
-Next command: /gsd-verify-work 02.1
+Last session: 2026-05-11T22:55:00Z
+Stopped at: Phase 02.3 closed out — shipped 2026-05-09, human UAT 2026-05-10
+Resume file: .planning/phases/02.3-coalition-agenda-content-slice-2/02.3-HUMAN-UAT.md (audit reference)
+Next command: `/gsd-discuss-phase 6` — Phase 6 (GDPR Self-Service + Hardening) is the only fully-unblocked remaining phase. Phase 3 stays paused on D-LawyerTrack (Art.9 opinion); Phase 4 shipped as PR #2; Phase 5 code-shipping done; Phase 1+2 awaiting operator/coalition deliverables.
 
-**Coalition external dependencies status (run in parallel during execution):**
+**Coalition external dependencies status (carry-forward):**
 
 - D-CoalitionLogoSVG (BLOCKING phase ship)
 - D-CoalitionContent-Hero (placeholder ships, content swaps in)
-- D-CoalitionContent-Agenda (placeholder ships, content swaps in)
+- ~~D-CoalitionContent-Agenda~~ — RESOLVED 2026-05-09 (Phase 02.3 ship: 12/12 chapters live)
 - D-CoalitionChannels (BLOCKING warmup)
-- D-LawyerReviewLegal (BLOCKING warmup)
+- D-LawyerReviewLegal (BLOCKING warmup) — part of D-LawyerTrack pause
 - D-CloudflareIPAllowlist (post-warmup hardening, NEW from plan 02-07 revision)
