@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Phase 02.3 closed out — shipped 2026-05-09, human UAT 2026-05-10
-last_updated: "2026-05-11T22:55:00.000Z"
-last_activity: "2026-05-11 -- Phase 02.3 close-out (shipped 2026-05-09, UAT 2026-05-10); PR #2 CI-fix chain complete (Batches A+B)"
+status: in_progress
+stopped_at: "Phase 04.1 (INSERTED, ops-recovery) — Payload schema reconciliation; prod rolled back to v52 (3e052f5) after Phase 4 deploy crashed admin on 2026-05-11; Phase 4 + Phase 02.3 code preserved on `gsd/phase-04-user-submissions-editorial-moderation`"
+last_updated: "2026-05-12T00:50:00.000Z"
+last_activity: "2026-05-12 -- PR #2 merged + deployed to chastnik.eu; admin shell crashed (Payload schema drift on Pages/Ideas collections); rolled back to v52 image; merge reverted on main; Phase 04.1 inserted to produce missing Payload DDL"
 progress:
-  total_phases: 9
-  completed_phases: 7
+  total_phases: 10
+  completed_phases: 6
   total_plans: 66
   completed_plans: 56
-  percent: 78
+  percent: 60
 ---
 
 # Project State
@@ -21,15 +21,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Когато един собственик на МСП види сайта, разбира идеята достатъчно, за да даде името и имейла си — и след това продължава да се връща, защото гласът му се вижда и брои.
-**Current focus:** Phase 02.3 closed out → next active phase = Phase 6 (GDPR self-service + hardening), the only fully-unblocked remaining phase (Phase 3 still paused under D-LawyerTrack pending Art.9 opinion)
+**Current focus:** Phase 04.1 (INSERTED, ops-recovery) — Payload schema reconciliation. Prod is on v52 (pre-Phase-4 image `3e052f5`); Phase 4 + Phase 02.3 code preserved on `gsd/phase-04-user-submissions-editorial-moderation` but reverted from main pending Payload DDL backfill. Phase 6 (GDPR self-service) remains the next product-track phase after 04.1 resolves.
 
 ## Current Position
 
-Phase: 02.3 — COMPLETE (close-out 2026-05-11)
-Status: Phase 02.3 shipped 2026-05-09 (12/12 agenda chapters live, Alert removed, bg.json cleaned); human UAT 2026-05-10 (2 pass / 1 issue → polish todo, non-blocking)
-Last activity: 2026-05-11 -- Phase 02.3 close-out commit; PR #2 CI-fix chain complete
+Phase: 04.1 — Payload Schema Reconciliation (INSERTED, ops-recovery, started 2026-05-12)
+Status: Scope locked in `.planning/phases/04.1-payload-schema-reconciliation/04.1-SCOPE.md`; not yet planned. Prod restored on v52 after admin shell crashed on `column payload_locked_documents__rels.pages_id does not exist` (Payload v3 expects every new collection to add a `<collection>_id` FK column on every `*__rels` join table; `payload migrate` is disabled in `deploy.yml` per tsx ESM incompat; manual DDL never written for Phase 4's new `Pages` + `Ideas` collections).
+Last activity: 2026-05-12 -- Image rollback to `:deployment-01KR49EAD0V2BE2W8NSYT63V95` (v52); merge `deaadc0` reverted on main with `[skip ci]`; Phase 04.1 inserted with scope doc + ROADMAP entry
 
-Progress: [█████████░] 95% (Phase 02.1 + 02.2 + 02.3 + 04 + 05 code-shipping done; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 3 paused on D-LawyerTrack; Phase 6 unblocked and ahead)
+Progress: [████████░░] 80% (Phase 02.1 + 02.2 done on prod; Phase 02.3 + 04 + 05 code-shipping done but Phase 02.3 + 04 rolled back from prod; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 3 paused on D-LawyerTrack; Phase 04.1 active to unblock re-deploy)
 
 ## Performance Metrics
 
@@ -62,6 +62,7 @@ Progress: [█████████░] 95% (Phase 02.1 + 02.2 + 02.3 + 04 + 
 - 2026-05-08 (Phase 02.2 mid-checkpoint): Two Phase 02-04 latent bugs surfaced and fixed during operator visual verification — (a) `@tailwindcss/typography` plugin was never installed despite `prose prose-slate prose-lg` classes being on the agenda article since `1211bca`; harmless while body was a single placeholder `<p>`, broke list rendering once 02.2 added `<ul>`/`<ol>`/h2 content (commit `8e8d384`). (b) Desktop TOC's `position: sticky` overlapped article body because both lived in a single 768px MainContainer column with no sidebar grid (commit `ce857ee`). Both fixes carry forward to Phase 02.3 — the architectural contract is now: 2-column grid layout `[200px_minmax(0,768px)]` md / `[220px_minmax(0,768px)]` lg, with TableOfContents `variant: 'mobile' | 'desktop' | 'both'` prop.
 - Phase 02.3 inserted (URGENT) after Phase 02.2 on 2026-05-08 — Coalition Agenda Content Slice 2 (final SPIDR slice). Ships remaining ~10 chapters from `agenda-raw.txt:319+` (Енергетика, ресурси и околна среда onward) into `/agenda`, removes the `<Alert>` draftAlert banner, and drops the obsolete `agenda.body` i18n key from `messages/bg.json`. Inherits architectural contract from Phase 02.2. Run `/gsd-mvp-phase 02.3` for SPIDR splitting.
 - 2026-05-11 close-out: Phase 02.3 SHIPPED 2026-05-09 (commits `12d50f8` UI-SPEC → `5e6d6fc` UAT) across 3 plans — plan-01 (4 simple-prose chapters), plan-02 (numbered-policy chapters + test infra), plan-03 (Правосъдие + Защита на ценностите + Alert removal + bg.json cleanup + Playwright spec). Human UAT 2026-05-10: 2 pass, 1 issue (mobile TOC return-nav friction → polish todo `.planning/todos/pending/2026-05-10-agenda-mobile-toc-sticky-fab.md`, non-blocking). Note: phase shipped without a CONTEXT.md — `/gsd-mvp-phase` path bypassed discuss-phase; not retroactively backfilled per user choice 2026-05-11. Resolves D-CoalitionContent-Agenda. ROADMAP.md line 19 marked `[x]`.
+- 2026-05-12 deploy + rollback incident: PR #2 (Phase 4 + Phase 02.3 + CI hardening, 135 commits, merge `deaadc0`) merged to main 2026-05-11 ~22:55 UTC. Drizzle migrate ran (no-op — `0003_phase04_submissions` already in ledger thanks to operator-applied backfill 30 min prior). flyctl rolling deploy succeeded; post-deploy smoke (`/`, `/register`, `/login`) passed. Within ~25 min every authenticated `/admin/*` path threw `column payload_locked_documents__rels.pages_id does not exist`. Root cause: Phase 4 added Payload `Pages` + `Ideas` collections to `payload.config.ts:42`, but `payload migrate` is disabled in `deploy.yml` (tsx ESM incompat per `.planning/todos/payload-tsx-esm-incompat.md`) and the manual DDL convention from project memory `project_payload_schema_constraint.md` was not followed for these collections. Resolution: `flyctl deploy --image registry.fly.io/smbsite-prod:deployment-01KR49EAD0V2BE2W8NSYT63V95 --strategy rolling` rolled prod to v52 (pre-merge `3e052f5`); admin restored within 2 min. Drizzle schema 0003 + ledger row remain in prod (forward-compatible — old code doesn't reference the new tables, and a future re-deploy will see 0003 already in ledger and skip). Phase 04.1 (INSERTED, ops-recovery) created to generate the missing Payload DDL. Merge `deaadc0` reverted on main with `[skip ci]` to keep git aligned with prod and prevent accidental re-deploy from any later main push.
 
 ### Decisions
 
@@ -139,13 +140,14 @@ None yet.
 | ci | `D-Phase5-E2E-SeedingHarness` — `tests/e2e/admin-newsletter-composer.spec.ts`, `tests/e2e/community-page.spec.ts` (member-flow), and `tests/e2e/newsletter-preferences.spec.ts` hard-fail in CI without `E2E_EDITOR_EMAIL` / `E2E_EDITOR_PASSWORD` / `E2E_MEMBER_EMAIL` / `TEST_OTP_SINK` env vars + a seeded Payload admin + verified `users` row. CI baseline accepts these 4 failures as known. Needs: ci.yml env block + seed step (Drizzle insert + Payload admin bootstrap) before Playwright invocation, OR a fixture that runs these specs only locally with `--grep` exclusion in CI. | resolves_phase: 5-followup-ci | TRIAGE 260511-15o |
 | ci | `D-PlaywrightBatchC-Други-Label` — TRIAGE Batch C: `tests/e2e/attribution.spec.ts:4` fails because `RegistrationForm.tsx:140-152` renders the conditional "Други" free-text input without a `<Label htmlFor="self_reported_other">` element. Test uses `getByLabel(/Моля, уточнете/)` which does NOT match placeholders. Code-bug (a11y regression). Needs design decision: visible label (new i18n key like `auth.register.source.otherLabel`) vs `sr-only`. ~10 min implementation. | resolves_phase: post-PR2 | TRIAGE 260511-15o Batch C |
 | ci | `D-PlaywrightBatchD-LandingCacheControl` — TRIAGE Batch D: `tests/e2e/landing.spec.ts:22` asserts `Cache-Control: s-maxage=3600` on `/`. The landing page calls `<Header/>` which invokes `auth()` → forces Next.js to emit `Cache-Control: private, no-cache` from origin. The page's own comment (`src/app/(frontend)/page.tsx:11-17`) acknowledges cache lives at Cloudflare edge, not origin. Needs architecture decision: (a) override in `next.config.ts headers()` for `source: '/'` (recommended for fast PR-2 close — origin emits the header for Cloudflare to honour, verify Plan 02-07 Cloudflare cache rule still vary-keys on session cookie), (b) move `auth()` read out of `Header` for anon paths via a Vary-aware split, or (c) re-scope test to assert at CDN layer only. | resolves_phase: post-PR2 | TRIAGE 260511-15o Batch D |
+| ops | `D-PayloadSchemaDriftPhase04` — Payload v3 expects every new collection to add `<collection>_id` FK columns to `payload_locked_documents__rels` + `payload_preferences__rels` + the collection's own table + sub-tables. Phase 4 added `Pages` + `Ideas` to `payload.config.ts:42` without writing the corresponding manual DDL (per project memory `project_payload_schema_constraint.md`). Caused prod admin shell to crash 2026-05-11 within minutes of deploy; image rolled back to v52. Resolution path: Phase 04.1 (INSERTED, scope at `.planning/phases/04.1-payload-schema-reconciliation/04.1-SCOPE.md`). | resolves_phase: 04.1 | 2026-05-12 deploy incident |
 
 ## Session Continuity
 
-Last session: 2026-05-11T22:55:00Z
-Stopped at: Phase 02.3 closed out — shipped 2026-05-09, human UAT 2026-05-10
-Resume file: .planning/phases/02.3-coalition-agenda-content-slice-2/02.3-HUMAN-UAT.md (audit reference)
-Next command: `/gsd-discuss-phase 6` — Phase 6 (GDPR Self-Service + Hardening) is the only fully-unblocked remaining phase. Phase 3 stays paused on D-LawyerTrack (Art.9 opinion); Phase 4 shipped as PR #2; Phase 5 code-shipping done; Phase 1+2 awaiting operator/coalition deliverables.
+Last session: 2026-05-12T00:50:00Z
+Stopped at: Phase 04.1 (INSERTED, ops-recovery) — scope locked, planning + execution pending
+Resume file: .planning/phases/04.1-payload-schema-reconciliation/04.1-SCOPE.md
+Next command: `/gsd-plan-phase 04.1` — break the scope doc into concrete plans (local Payload schema dump → diff against prod → idempotent backfill SQL → operator-applied DDL → revert-the-revert on main → end-to-end smoke). Until 04.1 ships, prod stays on v52; Phase 4 + Phase 02.3 surfaces are NOT live despite their code being merged-then-reverted.
 
 **Coalition external dependencies status (carry-forward):**
 

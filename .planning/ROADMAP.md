@@ -18,7 +18,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2.2: Coalition Agenda Content** *(INSERTED)* - Walking-skeleton SPIDR slice 1: manifesto + 'Десен консенсус' + 'Икономика' chapters + 3-entry TOC into /agenda. Partially resolves D-CoalitionContent-Agenda. · *Completed: 2026-05-08*
 - [x] **Phase 2.3: Coalition Agenda Content — Slice 2 (final)** *(INSERTED)* - Ship remaining ~10 chapters from agenda-raw.txt:319+ into /agenda; remove draft Alert banner; drop agenda.body i18n key. Final SPIDR slice; resolves remaining D-CoalitionContent-Agenda. · *Completed: 2026-05-09 (human UAT 2026-05-10: 2 pass / 1 polish todo non-blocking)*
 - [ ] **Phase 3: Idea Catalog + Voting** - Editor-published idea catalog, binary voting engine with full anti-abuse stack (requires GDPR Art.9 legal opinion)
-- [ ] **Phase 4: User Submissions + Editorial** - Member proposals, problem reports, full editorial moderation panel
+- [~] **Phase 4: User Submissions + Editorial** - Member proposals, problem reports, full editorial moderation panel · *code-shipping complete on `gsd/phase-04-user-submissions-editorial-moderation` (PR #2); merged + deployed 2026-05-11, ROLLED BACK same day due to Payload schema drift on prod Neon (column `payload_locked_documents__rels.pages_id` missing); blocked on Phase 04.1*
+- [ ] **Phase 04.1: Payload Schema Reconciliation** *(INSERTED, ops-recovery)* - Generate canonical Payload schema, produce idempotent backfill SQL for prod Neon (new tables + `*__rels` columns for Pages/Ideas collections), resolve Drizzle-vs-Payload `ideas` table conflict, re-deploy Phase 4 + Phase 02.3 cleanly
 - [ ] **Phase 5: Notifications** - Async newsletter, WhatsApp/Telegram channel links, member notification preferences
 - [ ] **Phase 6: GDPR Self-Service + Hardening** - Data export, account deletion, audit tables, load testing, operational readiness
 
@@ -211,6 +212,8 @@ Plans:
 
 **Re-scope note (2026-05-10):** Phase 4 absorbs EDIT-01 (admin login + role gating), EDIT-02 (Payload Ideas collection CRUD without voting fields), and the moderation_log schema — originally Phase 3 work — under D-LawyerTrack deferral. PROP-04 becomes a read-only public catalog (D-B1) until Phase 3 voting reactivates. See 04-CONTEXT.md.
 
+**Deploy incident (2026-05-11/12):** PR #2 merged (commit `deaadc0`) and deployed; admin shell crashed within minutes on `column payload_locked_documents__rels.pages_id does not exist`. Phase 4 added Payload `Pages` + `Ideas` collections but `payload migrate` is disabled in `deploy.yml` (tsx ESM incompat), so the Payload-side schema delta never reached prod Neon. Image rolled back to v52 (pre-merge `3e052f5`); merge reverted on main with `[skip ci]`. Drizzle migration `0003_phase04_submissions.sql` and its ledger row remain in prod (forward-compatible). Re-deploy gated on Phase 04.1. Phase 4 code preserved on `gsd/phase-04-user-submissions-editorial-moderation`.
+
 **Success Criteria** (what must be TRUE):
   1. A member can submit a proposal (title, description, topic) or a problem report (with mandatory local/national level tag and municipality/region selector for local issues); the submission is immediately placed in the moderation queue and NOT published publicly
   2. A member can see the current status (awaiting review / approved / rejected + note) of each of their own submissions at any time
@@ -231,6 +234,33 @@ Plans:
 - [x] 04-08-PLAN.md — DSA Article 16 minimum compliance: ReportContentDialog on ProposalCard for logged-in members; submitDsaReport feeds into moderation queue with kind='dsa_report' (no numbered REQ — Phase 4 goal-driven)
 
 **UI hint**: yes
+
+---
+
+### Phase 04.1: Payload Schema Reconciliation (INSERTED, ops-recovery)
+
+**Goal:** Generate the canonical Payload schema delta for the new collections added by Phase 4 (`Pages`, `Ideas`), produce an idempotent backfill SQL file (`*_id` columns on every `payload_*__rels` join table + the collections' own tables + sub-tables), resolve the Drizzle-vs-Payload `ideas` table collision via `dbName` override, apply to prod Neon via SQL Editor, then revert-the-revert on main to re-deploy Phase 4 + Phase 02.3 cleanly.
+
+**Mode:** ops-recovery (no new product surface; restores delivery of work already shipped to code).
+
+**Depends on:** Phase 4 (code preserved on `gsd/phase-04-user-submissions-editorial-moderation`); operator access to prod Neon SQL Editor.
+
+**Requirements:** None new (resolves blocker on PROP-01..04, PROB-01..05, EDIT-03..07 ship).
+
+**Plans:** TBD (run `/gsd-plan-phase 04.1` to generate; scope already locked in `.planning/phases/04.1-payload-schema-reconciliation/04.1-SCOPE.md`)
+
+**Success Criteria** (what must be TRUE):
+  1. A canonical Payload-managed schema dump (`pg_dump --schema-only` against a fresh local Postgres after Payload startup) is committed to `.planning/phases/04.1-payload-schema-reconciliation/canonical-schema.sql` so future Payload schema changes can diff against it.
+  2. An idempotent SQL file at `.planning/ops/2026-05-XX-payload-schema-phase-04-backfill.sql` exists, has been applied to prod Neon, and post-apply verification SELECTs confirm every new table and column.
+  3. The Drizzle-vs-Payload `ideas` collision is resolved in code (Payload's `Ideas` collection uses `dbName: 'payload_ideas'`); Drizzle's `ideas` table is untouched.
+  4. Merge commit `deaadc0`'s revert is itself reverted; deploy.yml runs green; post-deploy smoke gate (`/`, `/register`, `/login`) passes.
+  5. Operator manual smoke confirms `/admin/login`, `/admin/views/moderation-queue`, and an end-to-end approve/reject path all work on prod.
+
+**Out of scope:**
+- Re-enabling `payload migrate` in `deploy.yml` (tracked separately under `.planning/todos/payload-tsx-esm-incompat.md`).
+- New Payload collections, fields, or globals beyond what's already in `payload.config.ts` at `deaadc0`.
+
+**Scope doc:** `.planning/phases/04.1-payload-schema-reconciliation/04.1-SCOPE.md`
 
 ---
 
@@ -299,9 +329,10 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Public Surface (Pre-Warmup) | 9/9 | Code-shipping complete; operator + 5 coalition deliverables pending per 02-SIGNOFF.md | - |
 | 2.1. Attribution + Source Dashboard | 8/8 | Complete — UAT 16/16 passed, VERIFICATION passed (13/13 must-haves), security threats=0 | 2026-05-08 |
 | 2.2. Coalition Agenda Content | 1/1 | Complete — walking-skeleton slice (manifesto + Десен консенсус + Икономика); operator visual verification approved | 2026-05-08 |
-| 2.3. Coalition Agenda Content — Slice 2 (final) | 0/3 | Not started — 3 plans (simple-prose / numbered-policy / h3-subsection+cleanup) | - |
+| 2.3. Coalition Agenda Content — Slice 2 (final) | 3/3 | Complete — shipped 2026-05-09; rolled back from prod 2026-05-12 alongside Phase 4 due to Payload schema drift; code preserved on Phase 4 branch | 2026-05-09 |
 | 3. Idea Catalog + Voting | 0/10 | Not started — planning complete (post-checker revision: 03-05 split into 03-05a/b, 03-07 split into 03-07a/b); HARD-BLOCKED on GDPR Art.9 lawyer opinion before merge | - |
-| 4. User Submissions + Editorial | 0/8 | Not started — 8 plans (schema/i18n/member-flow/status-views/public/queue/lifecycle/dsa) | - |
+| 4. User Submissions + Editorial | 8/8 | Code-shipping complete on `gsd/phase-04-user-submissions-editorial-moderation` (PR #2); deployed + ROLLED BACK 2026-05-11/12 (Payload schema drift — `payload_locked_documents__rels.pages_id` missing); re-deploy blocked on Phase 04.1 | - |
+| 04.1. Payload Schema Reconciliation | 0/TBD | Not started — scope locked in 04.1-SCOPE.md; unblocks Phase 4 + Phase 02.3 re-deploy | - |
 | 5. Notifications | 0/TBD | Not started | - |
 | 6. GDPR Self-Service + Hardening | 0/TBD | Not started | - |
 
