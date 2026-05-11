@@ -18,10 +18,9 @@ test.describe('SC-2 Login flow', () => {
   test('AUTH-06: logout button is visible in header when session present (smoke)', async ({
     page,
   }) => {
-    // Phase 2 replaced the Phase 1 `/` redirect with a real landing page. Anonymous
-    // visitors stay on `/`; the Header's "Вход" link still indicates logged-out state.
-    // (Triage 260511-15o #6.)
+    // Without a real session this asserts the LOGGED-OUT state shows the login link
     await page.goto('/');
+    await expect(page).toHaveURL(/\/register|\/login/);
     const loginLink = page.getByRole('link', { name: 'Вход' });
     await expect(loginLink).toBeVisible();
   });

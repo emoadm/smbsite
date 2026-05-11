@@ -54,8 +54,7 @@ export async function AttributionView({ initPageResult, params, searchParams }: 
     );
   }
   const role = (user as { role?: string }).role ?? '';
-  // Phase 4 EDIT-07 — super_editor inherits attribution access
-  if (!['admin', 'editor', 'super_editor'].includes(role)) {
+  if (!['admin', 'editor'].includes(role)) {
     return (
       <DefaultTemplate i18n={i18n} locale={locale} params={params} payload={payload} visibleEntities={visibleEntities}>
         <Gutter><p>{t.denied}</p></Gutter>

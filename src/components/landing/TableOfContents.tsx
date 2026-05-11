@@ -15,15 +15,11 @@ import { useEffect, useState } from 'react';
 export function TableOfContents({
   items,
   label,
-  variant = 'both',
 }: {
   items: { id: string; label: string }[];
   label: string;
-  variant?: 'mobile' | 'desktop' | 'both';
 }) {
   const [activeId, setActiveId] = useState<string>(items[0]?.id ?? '');
-  const showMobile = variant === 'mobile' || variant === 'both';
-  const showDesktop = variant === 'desktop' || variant === 'both';
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -47,46 +43,44 @@ export function TableOfContents({
 
   return (
     <>
-      {showMobile && (
-        <details className="mb-6 rounded-md border border-border bg-surface p-4 md:hidden">
-          <summary className="font-display text-base">{label}</summary>
-          <ul className="mt-3 space-y-2 text-sm">
-            {items.map((item) => (
-              <li key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  className="text-primary hover:underline"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </details>
-      )}
-      {showDesktop && (
-        <nav
-          aria-label={label}
-          className="sticky top-24 hidden self-start md:block"
-        >
-          <ul className="space-y-3 text-sm">
-            {items.map((item) => (
-              <li key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  className={
-                    item.id === activeId
-                      ? 'font-display text-primary'
-                      : 'text-muted-foreground hover:text-primary'
-                  }
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
+      {/* Mobile: collapsible <details> */}
+      <details className="mb-6 rounded-md border border-border bg-surface p-4 md:hidden">
+        <summary className="font-display text-base">{label}</summary>
+        <ul className="mt-3 space-y-2 text-sm">
+          {items.map((item) => (
+            <li key={item.id}>
+              <a
+                href={`#${item.id}`}
+                className="text-primary hover:underline"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+      {/* Desktop: sticky sidebar */}
+      <nav
+        aria-label={label}
+        className="sticky top-20 hidden self-start md:block"
+      >
+        <ul className="space-y-2 text-sm">
+          {items.map((item) => (
+            <li key={item.id}>
+              <a
+                href={`#${item.id}`}
+                className={
+                  item.id === activeId
+                    ? 'font-display text-primary'
+                    : 'text-muted-foreground hover:text-primary'
+                }
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </>
   );
 }

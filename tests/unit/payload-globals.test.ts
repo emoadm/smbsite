@@ -45,9 +45,7 @@ describe('Phase 5 — payload.config.ts wires Newsletters + CommunityChannels', 
   });
 
   it('collections array contains both Users AND Newsletters', () => {
-    // Phase 4 EDIT-03/EDIT-02 extends the array with Pages + Ideas; assert
-    // only that Users + Newsletters remain in the array (in that order).
-    expect(SRC).toMatch(/collections:\s*\[\s*Users\s*,\s*Newsletters\b/);
+    expect(SRC).toMatch(/collections:\s*\[\s*Users\s*,\s*Newsletters\s*\]/);
   });
 
   it('globals array contains CommunityChannels', () => {

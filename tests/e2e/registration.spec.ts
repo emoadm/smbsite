@@ -26,11 +26,6 @@ test.describe('SC-1 Registration flow', () => {
     await page.getByLabel(/Политиката за поверителност/i).check();
     await page.getByLabel(/бисквитки и анализи/i).check();
 
-    // Phase 2.1 ATTR-06 / D-11 — self_reported_source is required (register.ts:44).
-    // Pick a stable enum value; "qr_letter" → "QR код в писмо" (messages/bg.json:45).
-    await page.getByRole('combobox', { name: /Откъде научихте/i }).click();
-    await page.getByRole('option', { name: 'QR код в писмо' }).click();
-
     // Wait at least 3.5s to satisfy the dwell guard from plan 1.07
     await page.waitForTimeout(3500);
 

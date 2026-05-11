@@ -15,7 +15,7 @@ test.describe('Branding contract — BRAND-02, BRAND-03, BRAND-06', () => {
       '/legal/terms',
     ]) {
       await page.goto(path);
-      const logo = page.getByRole('banner').getByRole('link', { name: 'Синя България' });
+      const logo = page.getByRole('link', { name: 'Синя България' });
       await expect(logo).toBeVisible();
       const img = logo.locator('img');
       await expect(img).toHaveAttribute('alt', 'Синя България');

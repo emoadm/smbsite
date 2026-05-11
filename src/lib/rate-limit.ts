@@ -52,22 +52,6 @@ const otpVerify = new Ratelimit({
   analytics: false,
 });
 
-// Phase 4 T-04-03-01 — submission-specific rate limiters.
-// Per-user: 5 submissions per 24h (strict — one member, one budget).
-// Per-IP:  10 submissions per 24h (more permissive to cover shared offices/coworkings).
-const submissionPerUser = new Ratelimit({
-  redis,
-  prefix: 'submission-user',
-  limiter: Ratelimit.slidingWindow(5, '24 h'),
-  analytics: false,
-});
-const submissionPerIp = new Ratelimit({
-  redis,
-  prefix: 'submission-ip',
-  limiter: Ratelimit.slidingWindow(10, '24 h'),
-  analytics: false,
-});
-
 export type LimitResult = { success: boolean; remaining: number; reset: number };
 
 const ALWAYS_PASS: LimitResult = { success: true, remaining: Number.POSITIVE_INFINITY, reset: 0 };
@@ -96,14 +80,6 @@ export async function checkOtpVerify(otpKey: string): Promise<LimitResult> {
   if (BYPASS) return ALWAYS_PASS;
   return asResult(await otpVerify.limit(otpKey));
 }
-export async function checkSubmissionPerUser(userId: string): Promise<LimitResult> {
-  if (BYPASS) return ALWAYS_PASS;
-  return asResult(await submissionPerUser.limit(userId));
-}
-export async function checkSubmissionPerIp(ip: string): Promise<LimitResult> {
-  if (BYPASS) return ALWAYS_PASS;
-  return asResult(await submissionPerIp.limit(ip));
-}
 
 export const RATE_LIMITS = {
   registrationIp: { limit: 3, window: '24h' },
@@ -111,6 +87,4 @@ export const RATE_LIMITS = {
   loginOtpEmail: { limit: 5, window: '1h' },
   loginOtpIp: { limit: 20, window: '1h' },
   otpVerify: { limit: 5, window: '15m' },
-  submissionPerUser: { limit: 5, window: '24h' },
-  submissionPerIp: { limit: 10, window: '24h' },
 } as const;

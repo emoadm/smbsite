@@ -5,8 +5,6 @@ import { buildConfig } from 'payload';
 import { fileURLToPath } from 'url';
 import { Users } from './collections/Users';
 import { Newsletters } from './collections/Newsletters';      // Phase 5 D-01
-import { Pages } from './collections/Pages';                  // Phase 4 EDIT-03
-import { Ideas } from './collections/Ideas';                  // Phase 4 EDIT-02
 import { CommunityChannels } from './globals/CommunityChannels'; // Phase 5 D-12
 
 const filename = fileURLToPath(import.meta.url);
@@ -16,12 +14,7 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     importMap: {
-      // Project root, NOT src/. Component paths in this config start with
-      // '/src/...', and Payload concatenates baseDir + path. If baseDir is
-      // <root>/src/, the result is <root>/src/src/... — which webpack can't
-      // resolve and the importMap regenerator emits '../../../src/...' that
-      // collapses to src/src/... from src/app/(payload)/admin/importMap.js.
-      baseDir: path.resolve(dirname, '..'),
+      baseDir: path.resolve(dirname),
     },
     // Phase 2.1 ATTR-07 / D-12 / D-13: custom attribution dashboard view.
     // Payload's importMap auto-resolves the Component path at admin shell init.
@@ -31,15 +24,10 @@ export default buildConfig({
           Component: '/src/app/(payload)/admin/views/attribution/AttributionView#AttributionView',
           path: '/views/attribution',
         },
-        // Phase 4 EDIT-04 / EDIT-05 — editorial moderation queue view.
-        moderationQueue: {
-          Component: '/src/app/(payload)/admin/views/moderation-queue/ModerationQueueView#ModerationQueueView',
-          path: '/views/moderation-queue',
-        },
       },
     },
   },
-  collections: [Users, Newsletters, Pages, Ideas], // Phase 5 D-01 adds Newsletters; Phase 4 EDIT-03 adds Pages; Phase 4 EDIT-02 adds Ideas
+  collections: [Users, Newsletters],           // Phase 5 D-01 adds Newsletters
   globals: [CommunityChannels],                // Phase 5 D-12 adds CommunityChannels
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
@@ -50,10 +38,5 @@ export default buildConfig({
     pool: {
       connectionString: process.env.PAYLOAD_DATABASE_URL || '',
     },
-    // Disable drizzle-kit push on dev start — schema is managed manually
-    // via Neon SQL Editor (project memory: project_payload_schema_constraint.md).
-    // The default `push: true` runs a "Pulling schema from database..." diff
-    // step that hangs / exits the dev server in this setup.
-    push: false,
   }),
 });

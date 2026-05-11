@@ -24,13 +24,6 @@ export const users = pgTable(
     // Phase 5 D-07 — informational off-site channel preference (whatsapp | telegram | none | NULL).
     // Nullable: existing members keep NULL until they save a preference on /member/preferences.
     preferred_channel: text('preferred_channel'),
-    // Phase 4 D-A1 — member account state (active | suspended | deleted).
-    // Suspended accounts are blocked at member/layout.tsx (Plan 04-07) and at every Server Action via assertNotSuspended().
-    status: text('status').notNull().default('active'),
-    // Phase 4 D-A2 — editorial role on the application users table.
-    // Values: 'editor' | 'super_editor'. NULL for ordinary members.
-    // SEPARATE from `role` (business role: owner|manager|employee|other from D-10) and from admin_users.role (Payload admin identity in src/collections/Users.ts).
-    platform_role: text('platform_role'),
   },
   (t) => ({
     emailIdx: index('users_email_idx').on(t.email),

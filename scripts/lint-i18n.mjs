@@ -19,10 +19,8 @@ const EXEMPT_DIRS = [
   path.resolve('src/collections'),
   path.resolve('src/globals'),
 ];
-// /agenda content is hardcoded JSX from the coalition PDF; per-line pragmas would dwarf the content. File-level exemption.
 const EXEMPT_FILES = [
   path.resolve('src/lib/oblast-names.ts'),
-  path.resolve('src/app/(frontend)/agenda/page.tsx'),
 ];
 
 const offenders = [];
@@ -72,7 +70,6 @@ if (offenders.length) {
   console.error('Exempt by design:');
   console.error('  - src/collections/, src/globals/  (Payload admin UI labels)');
   console.error('  - src/lib/oblast-names.ts          (proper-noun lookup)');
-  console.error('  - src/app/(frontend)/agenda/page.tsx (coalition agenda content)');
   console.error('  - any line with `// i18n-allow: <reason>` pragma');
   process.exit(1);
 }
