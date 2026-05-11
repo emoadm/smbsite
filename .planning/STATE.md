@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: 04.1 — Payload Schema Reconciliation (INSERTED, ops-recovery, started 2026-05-12)
-Status: Scope locked in `.planning/phases/04.1-payload-schema-reconciliation/04.1-SCOPE.md`; not yet planned. Prod restored on v52 after admin shell crashed on `column payload_locked_documents__rels.pages_id does not exist` (Payload v3 expects every new collection to add a `<collection>_id` FK column on every `*__rels` join table; `payload migrate` is disabled in `deploy.yml` per tsx ESM incompat; manual DDL never written for Phase 4's new `Pages` + `Ideas` collections).
-Last activity: 2026-05-12 -- Image rollback to `:deployment-01KR49EAD0V2BE2W8NSYT63V95` (v52); merge `deaadc0` reverted on main with `[skip ci]`; Phase 04.1 inserted with scope doc + ROADMAP entry
+Phase: 04.1 — Payload Schema Reconciliation (INSERTED, ops-recovery, planned 2026-05-12)
+Status: PLANNED — 6 plans across 6 sequential waves (01 dbName override → 02 canonical-schema dump → 03 diff + idempotent backfill SQL → 04 operator Neon apply BLOCKING → 05 revert-the-revert + deploy → 06 prod E2E smoke + close-out). Plan-checker passed: 0 blocker / 0 warning on the 9 phase-specific rules. Waves 4-6 are `autonomous: false` (manual prod gates). Prod restored on v52 after admin shell crashed on `column payload_locked_documents__rels.pages_id does not exist`.
+Last activity: 2026-05-12 -- Phase 04.1 planning complete; 6 PLAN.md files written (2377 lines total) + verified PASS
 
 Progress: [████████░░] 80% (Phase 02.1 + 02.2 done on prod; Phase 02.3 + 04 + 05 code-shipping done but Phase 02.3 + 04 rolled back from prod; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 3 paused on D-LawyerTrack; Phase 04.1 active to unblock re-deploy)
 
@@ -144,10 +144,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-12T00:50:00Z
-Stopped at: Phase 04.1 (INSERTED, ops-recovery) — scope locked, planning + execution pending
-Resume file: .planning/phases/04.1-payload-schema-reconciliation/04.1-SCOPE.md
-Next command: `/gsd-plan-phase 04.1` — break the scope doc into concrete plans (local Payload schema dump → diff against prod → idempotent backfill SQL → operator-applied DDL → revert-the-revert on main → end-to-end smoke). Until 04.1 ships, prod stays on v52; Phase 4 + Phase 02.3 surfaces are NOT live despite their code being merged-then-reverted.
+Last session: 2026-05-12T01:10:00Z
+Stopped at: Phase 04.1 (INSERTED, ops-recovery) — planning complete, ready for execution
+Resume file: .planning/phases/04.1-payload-schema-reconciliation/04.1-01-PLAN.md
+Next command: `/gsd:execute-phase 04.1` — execute the 6 plans sequentially. Waves 1-3 are autonomous (dbName edit, local Payload schema dump, idempotent backfill SQL generation); Waves 4-6 are manual prod gates (operator pastes SQL into Neon → revert-the-revert on main → prod E2E smoke). Until 04.1 ships, prod stays on v52; Phase 4 + Phase 02.3 surfaces are NOT live despite their code being merged-then-reverted.
 
 **Coalition external dependencies status (carry-forward):**
 
