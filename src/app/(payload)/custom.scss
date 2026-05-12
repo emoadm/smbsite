@@ -97,3 +97,32 @@ nav svg,
 .nav svg {
   display: inline-block;
 }
+
+/* === Phase 04.1 verification round 2: pointer-events click-through ===
+ *
+ * The desktop `<` sidebar toggle is `.template-default__nav-toggler-wrapper`
+ * (NOT `.nav-toggler` — that's the mobile hamburger). The wrapper is:
+ *   position: sticky; z-index: var(--z-modal); height: 0;
+ * Its child container takes `height: var(--app-header-height)`, so the
+ * children visually extend below the wrapper's zero-height box AND have
+ * modal-level z-index. Without preflight that's fine because Payload
+ * implicitly relied on the children being narrow buttons whose actual
+ * pixel area matches their hit area. Tailwind preflight's `svg { display:
+ * block }` and `* { margin: 0; padding: 0; border: 0 solid }` shifted the
+ * intrinsic sizing of the toggle's flex children, leaving an invisible
+ * hit-area band that overlays the first nav link directly below ("Admin
+ * Users" — `/admin/collections/admin_users`).
+ *
+ * Fix: make the wrapper's empty space click-through, and re-enable
+ * pointer-events on the actual visible toggle button. This is a robust
+ * upstream-agnostic fix — even if Payload restructures the wrapper, the
+ * `> *` re-enable keeps the toggle clickable.
+ */
+
+.template-default__nav-toggler-wrapper {
+  pointer-events: none;
+}
+
+.template-default__nav-toggler-wrapper > * {
+  pointer-events: auto;
+}
