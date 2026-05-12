@@ -1,8 +1,99 @@
-/* Payload admin scoped styles.
+/* Payload admin scoped styles — Phase 04.1 fix for sidebar regression.
  *
- * Import the project Tailwind v4 globals so shadcn primitives used by custom
- * admin views (e.g. moderation-queue/ReviewDialog) resolve their design
- * tokens — bg-background, --color-border, --color-ring, etc. Without this
- * the dialogs render transparent and look invisible inside the admin shell.
+ * BACKGROUND: Phase 4 added shadcn-based dialogs (ReviewDialog,
+ * ConfirmActionDialog, SuspendDialog) inside Payload admin views, which use
+ * Tailwind utility classes (bg-background, text-foreground, etc.). To get
+ * those utilities + design tokens into the admin shell, custom.scss imports
+ * the project's globals.css.
+ *
+ * COLLATERAL DAMAGE: globals.css pulls in Tailwind v4's `@layer base`
+ * preflight. CSS layer cascade resolution gives later-declared layers
+ * higher priority — Tailwind's `base` layer is declared after Payload's own
+ * `@layer payload-default`, so Tailwind's `* { padding: 0; margin: 0;
+ * border: 0 solid }` and `svg { display: block }` resets win over Payload's
+ * nav button styling. Result: the `<` NavToggler stretches over the first
+ * 3 nav items, making them unclickable (Phase 04.1 verification, 2026-05-12).
+ *
+ * FIX: keep the globals.css import (so utilities + tokens stay available),
+ * then re-apply Payload's nav button styling at the END, OUTSIDE any
+ * `@layer` declaration. Un-layered rules outrank ALL layered rules in CSS
+ * cascade, so this restoration takes precedence over Tailwind's preflight
+ * regardless of declaration order. The values mirror Payload's own
+ * stylesheets (node_modules/@payloadcms/ui/dist/elements/Nav/NavToggler
+ * /index.scss and NavGroup/index.scss). If Payload upgrades their nav CSS
+ * in a future version, re-sync this block from the updated upstream files.
  */
+
 @import '../../styles/globals.css';
+
+/* === Phase 04.1: restore Payload nav defaults un-layered === */
+
+.nav-toggler {
+  position: relative;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.nav-toggler svg {
+  display: inline-block;
+}
+
+.nav-group {
+  width: 100%;
+  margin-bottom: calc(var(--base, 1rem) * 0.5);
+}
+
+.nav-group__toggle {
+  cursor: pointer;
+  color: var(--theme-elevation-400);
+  background: transparent;
+  padding: 0;
+  border: 0;
+  margin-bottom: calc(var(--base, 1rem) * 0.25);
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--base, 1rem) * 0.5);
+  justify-content: space-between;
+}
+
+.nav-group__toggle svg {
+  flex-shrink: 0;
+  display: inline-block;
+  margin-top: calc(var(--base, 1rem) * -0.2);
+}
+
+.nav-group__toggle:hover,
+.nav-group__toggle:focus-visible {
+  color: var(--theme-elevation-1000);
+}
+
+.nav-group__toggle:hover .stroke,
+.nav-group__toggle:focus-visible .stroke {
+  stroke: var(--theme-elevation-1000);
+}
+
+.nav-group__toggle:focus-visible {
+  outline: none;
+}
+
+.nav-group__indicator {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.nav-group__indicator svg .stroke {
+  stroke: var(--theme-elevation-200);
+}
+
+/* Restore default <svg> display for Payload's other inline icons that
+ * Tailwind's preflight `svg { display: block }` would otherwise stretch.
+ * Scoped to elements with the `nav` ancestor so it only affects sidebar. */
+nav svg,
+.nav svg {
+  display: inline-block;
+}

@@ -1,78 +1,9 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@theme {
-  /* ============ BRAND PALETTE — Sinya Bulgaria (UI-SPEC §4.3) ============ */
-  /* Neutrals (60%) */
-  --color-background: #FFFFFF;
-  --color-foreground: #0F172A;
-  --color-surface: #F1F5F9;
-  --color-card: #FFFFFF;
-  --color-card-foreground: #0F172A;
-  --color-popover: #FFFFFF;
-  --color-popover-foreground: #0F172A;
-  --color-muted: #F1F5F9;
-  --color-muted-foreground: #475569;
-  --color-border: #E2E8F0;
-  --color-input: #E2E8F0;
-  --color-ring: #004A79;
-
-  /* Primary brand (10% — Sinya navy) */
-  --color-primary: #004A79;
-  --color-primary-foreground: #FFFFFF;
-
-  /* Secondary brand (sky — Sinya cyan) */
-  --color-secondary: #3AC7FF;
-  --color-secondary-foreground: #003A60;
-
-  /* Phase-1 backcompat alias (UI-SPEC §4.6 — DO NOT DELETE; Footer text-accent depends on it) */
-  --color-accent: #004A79;
-  --color-accent-foreground: #FFFFFF;
-
-  /* Sky alias retuned to canonical Sinya value (was #00B7ED in Phase 1) */
-  --color-sky: #3AC7FF;
-
-  /* Semantic (status / banner) — retuned for AA contrast on white */
-  --color-destructive: #DC2626;            /* was #E72E4D in Phase 1 (UI-SPEC §4.6) */
-  --color-destructive-foreground: #FFFFFF;
-  --color-success: #059669;                /* was #009F54 in Phase 1 */
-  --color-success-foreground: #FFFFFF;
-  --color-warning: #D97706;                /* reserved; not used in Phase 2 */
-  --color-warning-foreground: #FFFFFF;
-
-  /* Hero/feature dark surface (when text is on imagery overlay) */
-  --color-hero-overlay: rgba(0, 74, 121, 0.65);
-  --color-hero-text: #FFFFFF;
-
-  /* Typography scale — 8 sizes (UI-SPEC §3.3) */
-  --text-xs: 0.8125rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
-  --text-5xl: 3rem;       /* reserved; lint usage via plan 02-09 */
-  --text-6xl: 3.75rem;    /* hero display desktop */
-
-  /* Line-heights */
-  --leading-tight: 1.15;
-  --leading-snug: 1.2;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.6;
-
-  /* Layout containers */
-  --container-form: 480px;
-  --container-legal: 720px;
-  --container-prose: 768px;     /* NEW — /agenda */
-  --container-page: 1140px;
-  --container-wide: 1280px;     /* NEW — forward-compat */
-
-  /* Font families — actual face loaded via next/font in src/lib/fonts.ts */
-  --font-sans: var(--font-roboto), system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
-  --font-display: var(--font-gilroy), var(--font-roboto), Georgia, serif;
-}
+/* Project design tokens — shared with Payload admin via custom.scss.
+ * Single source of truth at theme.css to prevent drift between surfaces. */
+@import "./theme.css";
 
 /* Smooth scroll for anchor jumps; offset for sticky 80px header (UI-SPEC §10.4) */
 html {
