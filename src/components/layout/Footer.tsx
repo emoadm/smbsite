@@ -71,7 +71,7 @@ export async function Footer() {
         <div className="grid gap-8 md:grid-cols-4">
           {/* Column 1: Brand */}
           <div>
-            <Link href="/" aria-label={brand} className="inline-flex items-center">
+            <Link href="/" className="inline-flex items-center">
               <Image
                 src="/logo.svg"
                 alt={brand}

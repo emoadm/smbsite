@@ -1,1 +1,8 @@
-/* Payload admin scoped styles — extend here if needed */
+/* Payload admin scoped styles.
+ *
+ * Import the project Tailwind v4 globals so shadcn primitives used by custom
+ * admin views (e.g. moderation-queue/ReviewDialog) resolve their design
+ * tokens — bg-background, --color-border, --color-ring, etc. Without this
+ * the dialogs render transparent and look invisible inside the admin shell.
+ */
+@import '../../styles/globals.css';
