@@ -320,7 +320,7 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
       const tEmail = loadT('email.submissionStatus.approved');
       const tShared = loadT('email.submissionStatus');
       const origin = process.env.SITE_ORIGIN ?? 'https://chastnik.eu';
-      const emailHtml = await render(
+      const emailElement = (
         <SubmissionStatusEmail
           t={tEmail}
           tShared={tShared}
@@ -330,11 +330,13 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
           siteOrigin={origin}
         />
       );
+      const emailHtml = await render(emailElement);
+      const emailText = await render(emailElement, { plainText: true });
       return sendBrevoEmail({
         to: { email: row.submitter_email, name: row.submitter_full_name },
         subject: tEmail('subject'),
         htmlContent: emailHtml,
-        textContent: '',
+        textContent: emailText,
         from: {
           email: process.env.EMAIL_FROM_TRANSACTIONAL ?? 'no-reply@auth.chastnik.eu',
           name: loadT('email.from')('name'),
@@ -363,7 +365,7 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
       const tEmail = loadT('email.submissionStatus.rejected');
       const tShared = loadT('email.submissionStatus');
       const origin = process.env.SITE_ORIGIN ?? 'https://chastnik.eu';
-      const emailHtml = await render(
+      const emailElement = (
         <SubmissionStatusEmail
           t={tEmail}
           tShared={tShared}
@@ -374,11 +376,13 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
           siteOrigin={origin}
         />
       );
+      const emailHtml = await render(emailElement);
+      const emailText = await render(emailElement, { plainText: true });
       return sendBrevoEmail({
         to: { email: row.submitter_email, name: row.submitter_full_name },
         subject: tEmail('subject'),
         htmlContent: emailHtml,
-        textContent: '',
+        textContent: emailText,
         from: {
           email: process.env.EMAIL_FROM_TRANSACTIONAL ?? 'no-reply@auth.chastnik.eu',
           name: loadT('email.from')('name'),
@@ -388,18 +392,20 @@ async function processor(job: Job<EmailJobPayload>): Promise<ProcessorResult> {
 
     case 'user-suspended': {
       const tEmail = loadT('email.suspended');
-      const emailHtml = await render(
+      const emailElement = (
         <AccountSuspendedEmail
           t={tEmail}
           fullName={job.data.fullName ?? ''}
           reason={job.data.suspensionReason ?? ''}
         />
       );
+      const emailHtml = await render(emailElement);
+      const emailText = await render(emailElement, { plainText: true });
       return sendBrevoEmail({
         to: { email: to, name: fullName },
         subject: tEmail('subject'),
         htmlContent: emailHtml,
-        textContent: '',
+        textContent: emailText,
         from: {
           email: process.env.EMAIL_FROM_TRANSACTIONAL ?? 'no-reply@auth.chastnik.eu',
           name: loadT('email.from')('name'),
