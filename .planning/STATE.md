@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-stopped_at: "Phase 04.1 (INSERTED, ops-recovery) — Payload schema reconciliation; prod rolled back to v52 (3e052f5) after Phase 4 deploy crashed admin on 2026-05-11; Phase 4 + Phase 02.3 code preserved on `gsd/phase-04-user-submissions-editorial-moderation`"
-last_updated: "2026-05-12T00:50:00.000Z"
-last_activity: "2026-05-14 -- Phase 04.1 Wave 6 smoke in progress: Smokes 1-2 PASS (admin shell renders, moderation queue UI renders); Smoke 3 paused after audit-log contract verified but status email never reached Brevo; Quick task 260514-k4x landed on main fixing the textContent regression in 3 Phase 4 email handlers; Fly redeploy pending"
+stopped_at: "Phase 04.1 CLOSED 2026-05-14 — Payload schema reconciled; Phase 4 + Phase 02.3 re-deployed cleanly; end-to-end smoke PASS on all 6 surfaces; next active phase is Phase 5 (Notifications) or Phase 6 (GDPR self-service); D-LawyerTrack continues to pause Phase 3"
+last_updated: "2026-05-14T15:30:00.000Z"
+last_activity: "2026-05-14 -- Phase 04.1 closed: Waves 1-5 shipped through 2026-05-12; Wave 6 operator end-to-end smoke executed today across all 6 surfaces (admin shell, moderation queue UI, approve flow w/ moderation_log INSERT + status email, /predlozheniya, /problemi, /agenda). Surfaced Phase 5 worker textContent regression (Brevo missing_parameter on 3 Phase 4 email kinds); fixed via Quick 260514-k4x landed mid-smoke; second approve cycle confirmed email arrives <20s after approve click. VERIFICATION.md operator-signed."
 progress:
   total_phases: 10
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 66
-  completed_plans: 56
-  percent: 60
+  completed_plans: 62
+  percent: 70
 ---
 
 # Project State
@@ -21,15 +21,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Когато един собственик на МСП види сайта, разбира идеята достатъчно, за да даде името и имейла си — и след това продължава да се връща, защото гласът му се вижда и брои.
-**Current focus:** Phase 04.1 (INSERTED, ops-recovery) — Payload schema reconciliation. Prod is on v52 (pre-Phase-4 image `3e052f5`); Phase 4 + Phase 02.3 code preserved on `gsd/phase-04-user-submissions-editorial-moderation` but reverted from main pending Payload DDL backfill. Phase 6 (GDPR self-service) remains the next product-track phase after 04.1 resolves.
+**Current focus:** Phase 04.1 CLOSED 2026-05-14. Phase 4 + Phase 02.3 surfaces are operational on prod. Phase 6 (GDPR self-service) is the next product-track phase. Phase 3 remains paused under `D-LawyerTrack`. Phase 5 (Notifications) had its first regression surface during 04.1 smoke (textContent missing_parameter on 3 Phase 4 email kinds — fixed via Quick 260514-k4x).
 
 ## Current Position
 
-Phase: 04.1 — Payload Schema Reconciliation (INSERTED, ops-recovery, planned 2026-05-12)
-Status: PLANNED — 6 plans across 6 sequential waves (01 dbName override → 02 canonical-schema dump → 03 diff + idempotent backfill SQL → 04 operator Neon apply BLOCKING → 05 revert-the-revert + deploy → 06 prod E2E smoke + close-out). Plan-checker passed: 0 blocker / 0 warning on the 9 phase-specific rules. Waves 4-6 are `autonomous: false` (manual prod gates). Prod restored on v52 after admin shell crashed on `column payload_locked_documents__rels.pages_id does not exist`.
-Last activity: 2026-05-12 -- Phase 04.1 planning complete; 6 PLAN.md files written (2377 lines total) + verified PASS
+Phase: 04.1 — Payload Schema Reconciliation (CLOSED 2026-05-14)
+Status: 6/6 plans complete. Operator end-to-end smoke PASS on all 6 surfaces — see `.planning/phases/04.1-payload-schema-reconciliation/04.1-VERIFICATION.md`. Phase 4 EDIT-* surfaces (moderation queue, approve flow, audit log) + Phase 4 D-B1/D-D1 public surfaces (/predlozheniya, /problemi) + Phase 02.3 /agenda all operational on prod.
+Last activity: 2026-05-14 -- Phase 04.1 closed. Quick 260514-k4x fixed Phase 5 worker textContent regression (3 email kinds, 6 regression-lock tests added) mid-smoke.
 
-Progress: [████████░░] 80% (Phase 02.1 + 02.2 done on prod; Phase 02.3 + 04 + 05 code-shipping done but Phase 02.3 + 04 rolled back from prod; Phase 1 + Phase 2 code-shipping pending operator/coalition; Phase 3 paused on D-LawyerTrack; Phase 04.1 active to unblock re-deploy)
+Progress: [█████████░] 90% phase-shipping (Phase 1 + Phase 2 code-shipping pending operator/coalition deliverables; Phase 3 paused on D-LawyerTrack; Phase 4 + 04.1 + 02.3 fully on prod and verified; Phase 5 code-shipping done + first regression fixed; Phase 6 next).
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [████████░░] 80% (Phase 02.1 + 02.2 done on prod; 
 
 ### Roadmap Evolution
 
+- 2026-05-14 (Phase 04.1 CLOSE): All 6 Phase 04.1 plans complete. Wave 6 operator end-to-end smoke executed today across `/admin/login` (200 + super_editor login OK), `/admin/views/moderation-queue` (UI renders, tabs by kind, columns correct), end-to-end approve flow (`submissions` UPDATE + `moderation_log` INSERT in same Drizzle tx, status email <20s after approve), `/predlozheniya` (200, anonymized byline), `/problemi` (200, by-design empty-state because no approved reports yet), `/agenda` (200, all 12 Phase 02.3 chapters, draftAlert banner absent). The originally-failing 2026-05-11 surface (`column payload_locked_documents__rels.pages_id does not exist`) is fully restored. Phase 04.1's canonical playbook (canonical-schema dump → diff → idempotent backfill → operator Neon SQL apply → revert-the-revert + redeploy → operator smoke) becomes the reference procedure for the next Payload schema change until `payload migrate` returns to CI. Side-effect: smoke surfaced Phase 5 worker textContent regression — `worker.tsx` passed `textContent: ''` for 3 Phase 4 email kinds, Brevo 400'd with `missing_parameter`. Fixed via Quick 260514-k4x (commits b22669c + 1428dc5 + 5bfe42f) with 6 regression-lock tests. Operator-signed VERIFICATION.md at `.planning/phases/04.1-payload-schema-reconciliation/04.1-VERIFICATION.md`.
 - Phase 02.2 inserted (URGENT) after Phase 02.1 on 2026-05-08 — Coalition Agenda Content (D-CoalitionContent-Agenda); resolves the BLOCKING warmup-launch deferred item. Source: 25-page PDF (`programa-nie-sme-sinq-balgariq-2.pdf`) extracted to `.planning/coalition/agenda-raw.txt` (~12k words). SPIDR-split: 02.2 = walking-skeleton (manifesto + Десен консенсус + Икономика, ~210 source lines), shipped 2026-05-08. Phase 02.3 (TBD insertion) ships remaining ~10 chapters + removes the draftAlert banner + drops the obsolete `agenda.body` i18n key.
 - 2026-05-08 (Phase 02.2 mid-checkpoint): Two Phase 02-04 latent bugs surfaced and fixed during operator visual verification — (a) `@tailwindcss/typography` plugin was never installed despite `prose prose-slate prose-lg` classes being on the agenda article since `1211bca`; harmless while body was a single placeholder `<p>`, broke list rendering once 02.2 added `<ul>`/`<ol>`/h2 content (commit `8e8d384`). (b) Desktop TOC's `position: sticky` overlapped article body because both lived in a single 768px MainContainer column with no sidebar grid (commit `ce857ee`). Both fixes carry forward to Phase 02.3 — the architectural contract is now: 2-column grid layout `[200px_minmax(0,768px)]` md / `[220px_minmax(0,768px)]` lg, with TableOfContents `variant: 'mobile' | 'desktop' | 'both'` prop.
 - Phase 02.3 inserted (URGENT) after Phase 02.2 on 2026-05-08 — Coalition Agenda Content Slice 2 (final SPIDR slice). Ships remaining ~10 chapters from `agenda-raw.txt:319+` (Енергетика, ресурси и околна среда onward) into `/agenda`, removes the `<Alert>` draftAlert banner, and drops the obsolete `agenda.body` i18n key from `messages/bg.json`. Inherits architectural contract from Phase 02.2. Run `/gsd-mvp-phase 02.3` for SPIDR splitting.
@@ -141,7 +142,8 @@ None yet.
 | ci | `D-Phase5-E2E-SeedingHarness` — `tests/e2e/admin-newsletter-composer.spec.ts`, `tests/e2e/community-page.spec.ts` (member-flow), and `tests/e2e/newsletter-preferences.spec.ts` hard-fail in CI without `E2E_EDITOR_EMAIL` / `E2E_EDITOR_PASSWORD` / `E2E_MEMBER_EMAIL` / `TEST_OTP_SINK` env vars + a seeded Payload admin + verified `users` row. CI baseline accepts these 4 failures as known. Needs: ci.yml env block + seed step (Drizzle insert + Payload admin bootstrap) before Playwright invocation, OR a fixture that runs these specs only locally with `--grep` exclusion in CI. | resolves_phase: 5-followup-ci | TRIAGE 260511-15o |
 | ci | `D-PlaywrightBatchC-Други-Label` — TRIAGE Batch C: `tests/e2e/attribution.spec.ts:4` fails because `RegistrationForm.tsx:140-152` renders the conditional "Други" free-text input without a `<Label htmlFor="self_reported_other">` element. Test uses `getByLabel(/Моля, уточнете/)` which does NOT match placeholders. Code-bug (a11y regression). Needs design decision: visible label (new i18n key like `auth.register.source.otherLabel`) vs `sr-only`. ~10 min implementation. | resolves_phase: post-PR2 | TRIAGE 260511-15o Batch C |
 | ci | `D-PlaywrightBatchD-LandingCacheControl` — TRIAGE Batch D: `tests/e2e/landing.spec.ts:22` asserts `Cache-Control: s-maxage=3600` on `/`. The landing page calls `<Header/>` which invokes `auth()` → forces Next.js to emit `Cache-Control: private, no-cache` from origin. The page's own comment (`src/app/(frontend)/page.tsx:11-17`) acknowledges cache lives at Cloudflare edge, not origin. Needs architecture decision: (a) override in `next.config.ts headers()` for `source: '/'` (recommended for fast PR-2 close — origin emits the header for Cloudflare to honour, verify Plan 02-07 Cloudflare cache rule still vary-keys on session cookie), (b) move `auth()` read out of `Header` for anon paths via a Vary-aware split, or (c) re-scope test to assert at CDN layer only. | resolves_phase: post-PR2 | TRIAGE 260511-15o Batch D |
-| ops | `D-PayloadSchemaDriftPhase04` — Payload v3 expects every new collection to add `<collection>_id` FK columns to `payload_locked_documents__rels` + `payload_preferences__rels` + the collection's own table + sub-tables. Phase 4 added `Pages` + `Ideas` to `payload.config.ts:42` without writing the corresponding manual DDL (per project memory `project_payload_schema_constraint.md`). Caused prod admin shell to crash 2026-05-11 within minutes of deploy; image rolled back to v52. Resolution path: Phase 04.1 (INSERTED, scope at `.planning/phases/04.1-payload-schema-reconciliation/04.1-SCOPE.md`). | resolves_phase: 04.1 | 2026-05-12 deploy incident |
+| ops | ~~`D-PayloadSchemaDriftPhase04`~~ — RESOLVED 2026-05-14 (Phase 04.1 close). Backfill SQL applied to prod Neon 2026-05-12 (Wave 4); revert-of-revert + cherry-pick deployed (Wave 5); operator end-to-end smoke confirms admin shell, moderation queue, approve flow, and all public surfaces operational. Canonical schema dump + delta SQL committed to `.planning/phases/04.1-payload-schema-reconciliation/`. | RESOLVED 2026-05-14 (Phase 04.1) | 2026-05-12 deploy incident |
+| ops | `D-EditorNavLinks` — Custom Payload admin views (Attribution Phase 02.1 + Moderation Queue Phase 4) are registered under `admin.components.views.*` in `src/payload.config.ts:29-40` but Payload's side nav only auto-lists Collections + Globals. Editors currently have to know the URLs (`/admin/views/attribution`, `/admin/views/moderation-queue`). Surfaced during Phase 04.1 Wave 6 Smoke 1. Fix: add `admin.components.beforeNavLinks` array with 2 client components. Detailed plan at `.planning/todos/pending/2026-05-14-editor-nav-links-attribution-moderation.md`. | resolves_phase: post-04.1 editor-UX polish | Phase 04.1 smoke 2026-05-14 |
 
 ## Session Continuity
 

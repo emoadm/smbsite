@@ -18,8 +18,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2.2: Coalition Agenda Content** *(INSERTED)* - Walking-skeleton SPIDR slice 1: manifesto + 'Десен консенсус' + 'Икономика' chapters + 3-entry TOC into /agenda. Partially resolves D-CoalitionContent-Agenda. · *Completed: 2026-05-08*
 - [x] **Phase 2.3: Coalition Agenda Content — Slice 2 (final)** *(INSERTED)* - Ship remaining ~10 chapters from agenda-raw.txt:319+ into /agenda; remove draft Alert banner; drop agenda.body i18n key. Final SPIDR slice; resolves remaining D-CoalitionContent-Agenda. · *Completed: 2026-05-09 (human UAT 2026-05-10: 2 pass / 1 polish todo non-blocking)*
 - [ ] **Phase 3: Idea Catalog + Voting** - Editor-published idea catalog, binary voting engine with full anti-abuse stack (requires GDPR Art.9 legal opinion)
-- [~] **Phase 4: User Submissions + Editorial** - Member proposals, problem reports, full editorial moderation panel · *code-shipping complete on `gsd/phase-04-user-submissions-editorial-moderation` (PR #2); merged + deployed 2026-05-11, ROLLED BACK same day due to Payload schema drift on prod Neon (column `payload_locked_documents__rels.pages_id` missing); blocked on Phase 04.1*
-- [ ] **Phase 04.1: Payload Schema Reconciliation** *(INSERTED, ops-recovery)* - Generate canonical Payload schema, produce idempotent backfill SQL for prod Neon (new tables + `*__rels` columns for Pages/Ideas collections), resolve Drizzle-vs-Payload `ideas` table conflict, re-deploy Phase 4 + Phase 02.3 cleanly
+- [x] **Phase 4: User Submissions + Editorial** - Member proposals, problem reports, full editorial moderation panel · *code-shipping complete and DEPLOYED 2026-05-12 after Phase 04.1 schema reconciliation; end-to-end smoke 2026-05-14 PASS (all 6 surfaces incl. approve flow with moderation_log INSERT + status email)*
+- [x] **Phase 04.1: Payload Schema Reconciliation** *(INSERTED, ops-recovery)* - Generated canonical Payload schema, applied idempotent backfill SQL to prod Neon (new tables + `*__rels` columns for Pages/Ideas collections), resolved Drizzle-vs-Payload `ideas` table conflict via dbName override, re-deployed Phase 4 + Phase 02.3 cleanly · *Completed: 2026-05-14*
 - [ ] **Phase 5: Notifications** - Async newsletter, WhatsApp/Telegram channel links, member notification preferences
 - [ ] **Phase 6: GDPR Self-Service + Hardening** - Data export, account deletion, audit tables, load testing, operational readiness
 
@@ -250,12 +250,12 @@ Plans:
 **Plans:** 6 plans
 
 Plans:
-- [ ] 04.1-01-PLAN.md — Ideas collection `dbName: 'payload_ideas'` override (resolves Drizzle-vs-Payload collision per CONTEXT §3 LOCKED option-a)
-- [ ] 04.1-02-PLAN.md — Generate canonical Payload schema dump (pg_dump from fresh-Postgres + Payload `push: true` boot) + reproducible-procedure note
-- [ ] 04.1-03-PLAN.md — Compute schema delta + write idempotent operator-facing backfill SQL (mirrors 0003 ledger-backfill pattern; 2x apply tested)
-- [ ] 04.1-04-PLAN.md — [BLOCKING manual] Apply backfill SQL to prod Neon via SQL Editor; record outcome in APPLY-LOG.md
-- [ ] 04.1-05-PLAN.md — [BLOCKING manual] `git revert 244eb85` on main; cherry-pick Plan 04.1-01 dbName change; approve migrate gate; confirm post-deploy smoke
-- [ ] 04.1-06-PLAN.md — [BLOCKING manual] End-to-end smoke on prod: /admin/login, /admin/views/moderation-queue, approve flow with moderation_log verification, /predlozheniya, /problemi, /agenda (12 chapters)
+- [x] 04.1-01-PLAN.md — Ideas collection `dbName: 'payload_ideas'` override (resolves Drizzle-vs-Payload collision per CONTEXT §3 LOCKED option-a)
+- [x] 04.1-02-PLAN.md — Generate canonical Payload schema dump (pg_dump from fresh-Postgres + Payload `push: true` boot) + reproducible-procedure note
+- [x] 04.1-03-PLAN.md — Compute schema delta + write idempotent operator-facing backfill SQL (mirrors 0003 ledger-backfill pattern; 2x apply tested)
+- [x] 04.1-04-PLAN.md — [BLOCKING manual] Apply backfill SQL to prod Neon via SQL Editor; record outcome in APPLY-LOG.md
+- [x] 04.1-05-PLAN.md — [BLOCKING manual] `git revert 244eb85` on main; cherry-pick Plan 04.1-01 dbName change; approve migrate gate; confirm post-deploy smoke
+- [x] 04.1-06-PLAN.md — [BLOCKING manual] End-to-end smoke on prod: /admin/login, /admin/views/moderation-queue, approve flow with moderation_log verification, /predlozheniya, /problemi, /agenda (12 chapters) — all 6 PASS 2026-05-14; surfaced Phase 5 worker textContent regression as side-effect, fixed via Quick 260514-k4x
 
 **Success Criteria** (what must be TRUE):
   1. A canonical Payload-managed schema dump (`pg_dump --schema-only` against a fresh local Postgres after Payload startup) is committed to `.planning/phases/04.1-payload-schema-reconciliation/canonical-schema.sql` so future Payload schema changes can diff against it.
@@ -339,8 +339,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2.2. Coalition Agenda Content | 1/1 | Complete — walking-skeleton slice (manifesto + Десен консенсус + Икономика); operator visual verification approved | 2026-05-08 |
 | 2.3. Coalition Agenda Content — Slice 2 (final) | 3/3 | Complete — shipped 2026-05-09; rolled back from prod 2026-05-12 alongside Phase 4 due to Payload schema drift; code preserved on Phase 4 branch | 2026-05-09 |
 | 3. Idea Catalog + Voting | 0/10 | Not started — planning complete (post-checker revision: 03-05 split into 03-05a/b, 03-07 split into 03-07a/b); HARD-BLOCKED on GDPR Art.9 lawyer opinion before merge | - |
-| 4. User Submissions + Editorial | 8/8 | Code-shipping complete on `gsd/phase-04-user-submissions-editorial-moderation` (PR #2); deployed + ROLLED BACK 2026-05-11/12 (Payload schema drift — `payload_locked_documents__rels.pages_id` missing); re-deploy blocked on Phase 04.1 | - |
-| 04.1. Payload Schema Reconciliation | 0/6 | Planned 2026-05-12; awaiting execution (Wave 1 code change → Wave 2 dump → Wave 3 backfill SQL → Wave 4 manual prod apply → Wave 5 revert-of-revert deploy → Wave 6 end-to-end smoke) | - |
+| 4. User Submissions + Editorial | 8/8 | Code shipped + DEPLOYED 2026-05-12 after Phase 04.1 schema reconciliation; end-to-end smoke 2026-05-14 PASS (admin shell, moderation queue, approve flow w/ moderation_log INSERT + status email, /predlozheniya, /problemi, /agenda) | 2026-05-14 |
+| 04.1. Payload Schema Reconciliation | 6/6 | Complete — schema reconciled, Phase 4 + Phase 02.3 re-deployed cleanly, end-to-end smoke PASS on all 6 surfaces; surfaced Phase 5 textContent worker regression as side-effect (fixed via Quick 260514-k4x) | 2026-05-14 |
 | 5. Notifications | 0/TBD | Not started | - |
 | 6. GDPR Self-Service + Hardening | 0/TBD | Not started | - |
 
