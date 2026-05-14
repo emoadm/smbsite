@@ -1,7 +1,14 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import * as React from 'react';
+
+// RTL does not auto-cleanup in Vitest unless globals are enabled (we don't
+// set `globals: true`). Without cleanup, each test's render accumulates in
+// document.body and breaks getByRole single-match queries on the 2nd+ test.
+afterEach(() => {
+  cleanup();
+});
 
 // Quick 260514-q3u — Header nav + HeaderMobileNav RTL contract.
 //

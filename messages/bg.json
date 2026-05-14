@@ -85,8 +85,13 @@
     "login": "Вход",
     "logout": "Изход",
     "agenda": "Програма",
+    "proposals": "Предложения",
+    "problems": "Проблеми",
     "faq": "Въпроси",
-    "register": "Регистрация"
+    "register": "Регистрация",
+    "primary": "Основна навигация",
+    "menuOpen": "Отвори менюто",
+    "menuClose": "Затвори менюто"
   },
   "member": {
     "preferences": {
