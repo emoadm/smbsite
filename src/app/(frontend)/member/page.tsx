@@ -48,14 +48,18 @@ export default async function MemberPage() {
           {t('actions.heading')}
         </h2>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <Button asChild size="lg" className="h-auto justify-start px-6 py-4">
+          <Button
+            asChild
+            size="lg"
+            className="h-auto justify-start whitespace-normal px-4 py-3 md:px-6 md:py-4"
+          >
             <Link
               href="/member/predlozhi"
-              className="flex items-start gap-3 text-left"
+              className="flex w-full min-w-0 items-start gap-3 text-left"
             >
               <Send className="mt-0.5 h-5 w-5 shrink-0" strokeWidth={1.5} />
-              <span className="flex flex-col gap-1">
-                <span className="font-display text-lg">
+              <span className="flex min-w-0 flex-col gap-1">
+                <span className="font-display text-base md:text-lg">
                   {t('actions.submitProposal.label')}
                 </span>
                 <span className="text-sm font-normal opacity-90">
@@ -68,18 +72,18 @@ export default async function MemberPage() {
             asChild
             size="lg"
             variant="outline"
-            className="h-auto justify-start px-6 py-4"
+            className="h-auto justify-start whitespace-normal px-4 py-3 md:px-6 md:py-4"
           >
             <Link
               href="/member/signaliziray"
-              className="flex items-start gap-3 text-left"
+              className="flex w-full min-w-0 items-start gap-3 text-left"
             >
               <AlertTriangle
                 className="mt-0.5 h-5 w-5 shrink-0"
                 strokeWidth={1.5}
               />
-              <span className="flex flex-col gap-1">
-                <span className="font-display text-lg">
+              <span className="flex min-w-0 flex-col gap-1">
+                <span className="font-display text-base md:text-lg">
                   {t('actions.reportProblem.label')}
                 </span>
                 <span className="text-sm font-normal opacity-90">
