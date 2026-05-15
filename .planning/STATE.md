@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 6 context gathered
-last_updated: "2026-05-15T12:14:36.153Z"
+stopped_at: Phase 6 planned (15 plans, 5 waves) — verified PASS after 1 revision cycle
+last_updated: "2026-05-15T16:59:52.698Z"
 last_activity: 2026-05-14 -- Phase 04.1 closed. Quick 260514-k4x fixed Phase 5 worker textContent regression (3 email kinds, 6 regression-lock tests added) mid-smoke.
 progress:
   total_phases: 13
   completed_phases: 8
-  total_plans: 72
+  total_plans: 87
   completed_plans: 62
-  percent: 86
+  percent: 71
 ---
 
 # Project State
@@ -148,9 +148,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-15T12:14:36.139Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-gdpr-self-service-hardening/06-CONTEXT.md
+Last session: 2026-05-15T16:59:52.655Z
+Stopped at: Phase 6 planned (15 plans, 5 waves) — verified PASS after 1 revision cycle
+Resume file: .planning/phases/06-gdpr-self-service-hardening/06-01-PLAN.md
 Next command: `/gsd:execute-phase 04.1` — execute the 6 plans sequentially. Waves 1-3 are autonomous (dbName edit, local Payload schema dump, idempotent backfill SQL generation); Waves 4-6 are manual prod gates (operator pastes SQL into Neon → revert-the-revert on main → prod E2E smoke). Until 04.1 ships, prod stays on v52; Phase 4 + Phase 02.3 surfaces are NOT live despite their code being merged-then-reverted.
 
 **Coalition external dependencies status (carry-forward):**
