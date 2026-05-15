@@ -22,15 +22,16 @@ Out of scope (belong elsewhere): editor admin nav links (`D-EditorNavLinks` foll
 - **D-01:** Export delivery = **async via BullMQ → Bunny.net signed URL → transactional email**. User clicks "Заявка за извличане на данни" in `/member/preferences` (or new `/member/data-rights` page) → Server Action enqueues a `data-export` job → worker builds JSON bundle, uploads to Bunny.net with a 7-day signed URL, fires email kind `data-export-ready` (Pattern P6 from Phase 5 transactional templates). Scales for any account size; avoids Fly request-timeout (~30s) and worker-side OOM; audit-friendly (the `export_requested_at` timestamp on `users` + a `deletion_log` (or `data_rights_log`) row captures the event). Reuses Phase 1 BullMQ infrastructure + Phase 5 React Email + Bunny.net (already in stack per CLAUDE.md).
 
 - **D-02:** Export bundle scope = **all PII-bearing rows linked to the user**, in a single JSON file:
-  1. `users` profile (email, full_name, phone, sector, role, status, registration_source)
+  1. `users` profile (email, full_name, sector, role, status, self_reported_source, self_reported_other)
   2. `votes` (all rows where `voter_id = user.id`) — empty until Phase 3 ships
   3. `submissions` (all rows where `submitter_id = user.id`, all kinds: proposal / problem / DSA)
-  4. `consents` (audit trail of consent grants/withdrawals + region after D-09 backfill)
+  4. `consents` (audit trail of consent grants/withdrawals + region after D-10 backfill — INCLUDES all newsletter-preference rows where `kind LIKE 'newsletter_%'`, since Phase 5 D-08 stores newsletter prefs as rows in this table, NOT a separate `newsletter_preferences` table)
   5. `attribution_events` (rows where `user_id = user.id` post-linkage per Phase 02.1 D-07)
-  6. `newsletter_preferences` (per Phase 5 NOTIF-* tables)
-  7. `moderation_log` actions where this user is the `actor_user_id` (editorial users only)
+  6. `moderation_log` actions where this user is the `actor_user_id` (editorial users only)
 
-  Each table = a top-level key in the JSON; emit `null` values for empty arrays so the structure is stable across users. Include a `metadata` block with `exported_at`, `format_version: 1`, `user_id_hash` (for support).
+  Each table = a top-level key in the JSON; emit empty arrays `[]` for tables with no rows so the structure is stable across users. Include a `metadata` block with `exported_at`, `format_version: 1`, `user_id_hash` (for support).
+
+  **Schema correction (Phase 6 revision):** Earlier drafts listed `newsletter_preferences` as a separate bundle key (#6). That table never existed — Phase 5 D-08 stores newsletter preferences as rows in the existing `consents` table with `kind IN ('newsletter_general', 'newsletter_voting', 'newsletter_reports', 'newsletter_events')`. Those rows are already covered by bundle key `consents`. No separate key needed.
 
 - **D-03:** Export bundle format = **single JSON file** (UTF-8, indent 2). NOT CSV-per-table — JSON keeps the relational structure intact (one user could otherwise grep multiple files). NOT ZIP (one file is simpler; signed URL goes direct to the JSON). If the future regulator asks for CSV, add `?format=csv` flag then.
 
@@ -40,15 +41,15 @@ Out of scope (belong elsewhere): editor admin nav links (`D-EditorNavLinks` foll
 
 - **D-05:** Grace period = **30 days; account locked during grace**. Login during grace → user routed to a Bulgarian "Acccount scheduled for deletion on YYYY-MM-DD" page with a "Отказване на изтриването" OTP-protected cancel CTA. Cancel → flips `status` back to `active`, clears `deletion_requested_at`, sends `account-deletion-cancelled` confirmation email. Mirror the existing `/suspended/page.tsx` pattern (Phase 4 D-EDIT-suspension).
 
-- **D-06:** Content fate on deletion (purge job runs on day 30) = **anonymize-and-preserve**. The user's row stays as a tombstone — `email`, `full_name`, `phone`, `registration_source.other` (the freeform variant), `oblast` set to NULL; `status` set to `deleted`; `email_hash` retained for de-dup. Linked submissions/votes/problem-reports KEEP `submitter_id = <tombstone user.id>` so aggregates (vote counts, oblast heat-map, /predlozheniya catalog) stay intact. Per GDPR Art. 17(3) carve-outs (freedom of expression / public interest), this needs lawyer sign-off on the rationale text — captured as deferred under `D-LawyerTrack`. The deletion_log row records `target_user_id_hash` (SHA-256 of original user.id) + `deleted_at` + `deletion_reason` ("user_request") — NO PII, no original user_id.
+- **D-06:** Content fate on deletion (purge job runs on day 30) = **anonymize-and-preserve**. The user's row stays as a tombstone — `email`, `full_name`, `self_reported_source`, `self_reported_other` set to NULL; `status` set to `deleted`; `email_hash` retained for de-dup. (No `phone` or `oblast` columns exist on the users table — those were referenced in earlier draft copy but have never been part of the Phase 1 D-08 minimal-PII set, which is `{name, email, full_name, sector, role}`.) Linked submissions/votes/problem-reports KEEP `submitter_id = <tombstone user.id>` so aggregates (vote counts, oblast heat-map, /predlozheniya catalog) stay intact. Per GDPR Art. 17(3) carve-outs (freedom of expression / public interest), this needs lawyer sign-off on the rationale text — captured as deferred under `D-LawyerTrack`. The deletion_log row records `target_user_id_hash` (SHA-256 of original user.id) + `deleted_at` + `deletion_reason` ("user_request") — NO PII, no original user_id.
 
 - **D-07:** Deletion cascade order (worker job, run on day 30 after a final cancellation check):
-  1. UPDATE `users` SET email=NULL, full_name=NULL, phone=NULL, oblast=NULL, status='deleted'
+  1. UPDATE `users` SET email=NULL, full_name=NULL, self_reported_source=NULL, self_reported_other=NULL, status='deleted' (the `users` table has no `phone` or `oblast` columns — earlier drafts mentioned them in error; only NULL columns that exist on the schema)
   2. UPDATE `attribution_events` SET user_id=NULL WHERE user_id=<id> (unlink, preserve aggregate counts)
-  3. UPDATE `consents` SET region=NULL, email_at_consent=NULL (keep audit trail of consent events but strip PII; `consents` retains user_id_hash if present)
+  3. UPDATE `consents` SET region=NULL WHERE user_id=<id> (keep the append-only audit trail of consent events including all newsletter-preference rows but strip the region PII). No `email_at_consent` column ever shipped on the consents table; earlier drafts referenced it in error.
   4. DELETE FROM `sessions` WHERE userId=<id> (Auth.js)
-  5. DELETE FROM `newsletter_preferences` WHERE user_id=<id>
-  6. Cancel any in-flight BullMQ jobs targeting this user (best-effort; idempotency makes failure safe)
+  5. UPDATE `cookie_consents` SET user_id=NULL WHERE user_id=<id> (the FK has `ON DELETE SET NULL`, but the cascade UPDATEs the users row instead of DELETEing it — the FK trigger does not fire on UPDATE, so explicit NULL here is required to fully detach anonymous cookie-consent history from the tombstoned user). Newsletter-preference rows are NOT separately deleted — they are stored in `consents` (kind LIKE 'newsletter_%'), which is append-only per D-13, and step 3 already strips their region PII.
+  6. Cancel any in-flight BullMQ jobs targeting this user (best-effort; idempotency makes failure safe). Also DELETE FROM `data_export_jobs` WHERE user_id=<id> (after fetching paths so the worker can DELETE the Bunny blobs).
   7. Brevo: call `DELETE /contacts/{email}` to remove from ESP contact list AND add `email_hash` to local suppression list
   8. INSERT INTO `deletion_log` (target_user_id_hash, deleted_at, deletion_reason='user_request')
   9. The `submissions` / `votes` / `problem_reports` rows are NOT touched — anonymization is via the tombstone `users` row (D-06).
@@ -65,7 +66,7 @@ Out of scope (belong elsewhere): editor admin nav links (`D-EditorNavLinks` foll
 
 ### Consents Region Backfill (D-ConsentsRegionPopulation carry-forward)
 
-- **D-10:** `consents.region` backfill = **Server Action + one-time migration** writing the GeoIP-resolved oblast into `consents.region`. New consents always populate region at INSERT time (via the existing Phase 02.1 GeoIP worker — `src/lib/attribution/geoip.ts`). Existing consents rows backfilled via a Drizzle migration step iterating `consents` JOIN `attribution_events ON consents.attr_sid = attribution_events.attr_sid` and copying `first_oblast` into `consents.region`. Depends on `D-MaxMindLicenseKey` being live in prod env (already operational per Phase 02.1 deploy).
+- **D-10:** `consents.region` backfill = **Server Action + one-time migration** writing the GeoIP-resolved oblast into `consents.region`. New consents always populate region at INSERT time (via the existing Phase 02.1 GeoIP worker — `src/lib/geoip.ts`). Existing consents rows backfilled via a Drizzle migration step joining `consents JOIN attribution_events ON consents.user_id = attribution_events.user_id` and copying `first_oblast` into `consents.region` (the `consents` table has NO `attr_sid` column — earlier drafts that joined on `consents.attr_sid = attribution_events.attr_sid` were wrong against the live schema; the join is via `user_id`, which both tables already share post-Phase-02.1 D-07 OTP linkage). Rows for anonymous consents recorded before any user registration have `user_id IS NULL` and stay unmatched — region remains NULL for those rows, which is acceptable for D-10's best-effort intent. Depends on `D-MaxMindLicenseKey` being live in prod env (already operational per Phase 02.1 deploy).
 
 ### WCAG 2.1 AA Compliance (BRAND-04)
 
@@ -128,14 +129,19 @@ Out of scope (belong elsewhere): editor admin nav links (`D-EditorNavLinks` foll
 - `.planning/phases/02-public-surface-pre-warmup/02-CONTEXT.md` — GDPR-01..03 (privacy policy, terms, cookie consent banner) already shipped
 - `.planning/phases/02.1-attribution-source-dashboard/02.1-CONTEXT.md` — D-04..D-08 (attribution_events schema), D-15 (k6 load test), D-18 (legal balancing test), D-19 (no raw IP in Postgres)
 - `.planning/phases/04-user-submissions-editorial-moderation/04-CONTEXT.md` — Phase 4 `moderation_log` REVOKE pattern (D-08 here mirrors it)
+- `.planning/phases/05-notifications/05-CONTEXT.md` §D-08 — newsletter preferences stored as 4 rows in `consents` (kind LIKE 'newsletter_%'), NOT as a separate `newsletter_preferences` table; D-02 + D-07 in this CONTEXT.md reference this storage shape.
 
 ### Domain-specific specs
 - `.planning/legal/attribution-balancing-test.md` — template for Art. 17(3) balancing test text the lawyer signs off on for D-06 anonymization rationale
-- `src/db/schema/consents.ts` — existing `consents` table schema (D-10 backfills `region` column here)
+- `src/db/schema/consents.ts` — existing `consents` table schema (D-10 backfills `region` column here; columns are `{id, user_id, kind, granted, version, granted_at, region}` — NO `attr_sid`, NO `email_at_consent`)
+- `src/db/schema/auth.ts` — existing `users` table columns: `{id, name, email, emailVerified, image, full_name, sector, role, self_reported_source, self_reported_other, created_at, email_verified_at, preferred_channel, status, platform_role}` — NO `phone`, NO `oblast`. D-06 + D-07 step 1 must only NULL columns that exist.
+- `src/db/schema/attribution.ts` — `attribution_events` exposes both `attr_sid` and `user_id`; D-10 backfill joins on `user_id`.
 - `src/db/schema/submissions.ts` — `moderation_log` schema (D-08 pattern reference)
 - `src/db/migrations/0003_phase04_submissions.sql` (specifically lines around REVOKE statement) — the canonical migration pattern for D-08 + the new `deletion_log` REVOKE
 - `src/app/(frontend)/suspended/page.tsx` — UX pattern reference for D-05 grace-period locked-account page
+- `src/app/(frontend)/member/layout.tsx` — Phase 4 D-A1 / D-A2 canonical pattern for status-based redirects from a Server Component layout (Plan 06-10 lockout for `status='pending_deletion'` mirrors this — the Edge-runtime `src/middleware.ts` CANNOT read auth() / db and must not be used for status redirects).
 - `src/lib/email/worker.tsx` — Phase 5 worker; D-01 + D-04 + D-05 add new email kinds (`data-export-ready`, `account-deletion-pending`, `account-deletion-cancelled`) following the post-Quick-260514-k4x `render(element, { plainText: true })` discipline
+- `src/lib/geoip.ts` — Phase 02.1 GeoIP module. Exports `lookupIp(ip): Promise<GeoLookupResult>` where the result has `{oblast, country}` (NOT `lookupRegion`). D-09 cookie-consent route + D-10 backfill consume it. Node runtime only — MUST NOT be imported from Edge middleware.
 
 ### Reference docs
 - `.planning/phases/02.1-attribution-source-dashboard/02.1-LOAD-TEST.md` — Phase 02.1 k6 load test artifact (D-14 reuses this pattern)
@@ -150,7 +156,7 @@ Out of scope (belong elsewhere): editor admin nav links (`D-EditorNavLinks` foll
 - **BullMQ queue + worker** (`src/lib/email/queue.ts`, `src/lib/email/worker.tsx`): D-01 export job, D-07 deletion-cascade job, D-04/D-05 email kinds all live here.
 - **Brevo client** (`src/lib/email/brevo.ts`): D-07 step 7 contact removal API; existing `sendBrevoEmail` for the 3 new email kinds.
 - **Bunny.net integration** (per CLAUDE.md stack; verify existing client at `src/lib/storage/` or similar — researcher to confirm): signed-URL upload for D-01 export bundles.
-- **GeoIP worker** (`src/lib/attribution/geoip.ts`): D-10 consents.region backfill reuses this.
+- **GeoIP worker** (`src/lib/geoip.ts`): D-09 cookie consent route + D-10 consents.region backfill reuse this. Export name is `lookupIp` returning `{oblast, country}`.
 - **`/suspended/page.tsx` pattern**: D-05 grace-period locked-state page reuses the shell + auth-redirect logic.
 - **`moderation_log` REVOKE migration** (`0003_phase04_submissions.sql`): D-08 + new `deletion_log` table follow this exact pattern.
 
@@ -159,11 +165,12 @@ Out of scope (belong elsewhere): editor admin nav links (`D-EditorNavLinks` foll
 - **Worker post-tx email enqueue** (same file, lines 100-106): fire-and-forget pattern with `addEmailJob` AFTER the transaction commits — applied to D-01, D-04, D-05, D-07 step 8 confirmation emails.
 - **Boot-time DB-permission assertion** (`scripts/start-worker.ts` Phase 5 G4 pattern): D-08 deletion_log REVOKE check follows this — verify, fail-loud if regressed.
 - **i18n discipline**: every UI string under `messages/bg.json`; D-04 typed-confirm Cyrillic, D-05 grace-period page Bulgarian copy, D-12 audit fixes preserve i18n contract (per Phase 4 D-25 + Phase 5 i18n linter).
+- **Server-Component status redirect (Phase 4 D-A1 / D-A2)**: `src/app/(frontend)/member/layout.tsx` reads `auth()` + queries `users.status` from Drizzle and `redirect()`s when the status is non-active. This is the canonical pattern for the Phase 6 `pending_deletion` lockout (Plan 06-10) — the Edge-runtime `src/middleware.ts` cannot perform this check because it forbids `auth()` and `@/db` imports.
 
 ### Integration Points
 - **`/member/preferences` page** (`src/app/(frontend)/member/preferences/page.tsx`): D-01 export request button + D-04 destructive delete button live here OR on a new `/member/data-rights` page.
-- **Auth.js session middleware** (`src/middleware.ts` + `src/lib/auth.ts`): D-05 grace-period lockout check (block login if `users.status = 'pending_deletion'`).
-- **Phase 5 newsletter_preferences table**: D-02 export bundle item 6; D-07 deletion-cascade step 5.
+- **Authenticated-area layouts** (`src/app/(frontend)/member/layout.tsx` + any other authenticated route-segment layouts): D-05 grace-period lockout check (block navigation if `users.status = 'pending_deletion'`). NOT in `src/middleware.ts` — the existing middleware is Edge-runtime-only and rejects DB/auth imports.
+- **Phase 5 newsletter preferences in `consents`**: D-02 export bundle key #4 INCLUDES `kind LIKE 'newsletter_%'` rows; D-07 step 3 strips their `region` PII as part of the wider consents region NULL.
 - **`.github/workflows/deploy.yml`**: D-15 Cloudflare purge step appended to the deploy job (after fly deploy + smoke).
 - **Playwright config** (`playwright.config.ts`): D-11 + D-12 a11y specs use existing `cf-ray` bypass header pattern (Quick 260511-0nx).
 
@@ -194,3 +201,4 @@ Out of scope (belong elsewhere): editor admin nav links (`D-EditorNavLinks` foll
 
 *Phase: 06-gdpr-self-service-hardening*
 *Context gathered: 2026-05-15*
+*Schema-shape revision: 2026-05-15 (D-02 bundle item #6, D-06 PII list, D-07 step 1 + 3 + 5 + 5.5, D-10 backfill JOIN — corrected against live schema)*
