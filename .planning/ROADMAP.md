@@ -379,3 +379,34 @@ Category cross-check (all ✓):
 - OPS: 7 → Phase 1 (OPS-01–03, OPS-06, OPS-07) + Phase 2 (OPS-05) + Phase 3 (OPS-04)
 </content>
 </invoke>
+---
+
+## Backlog
+
+Items deferred during `/gsd:next` advancement. Use `/gsd:review-backlog` to promote into the active milestone.
+
+### Phase 999.3: Phase 3 — Idea Catalog + Voting plans (DEFERRED on D-LawyerTrack)
+
+**Goal:** Execute Phase 3 once `D-LawyerTrack` Art.9 legal opinion is obtained from external counsel.
+**Source phase:** 3
+**Deferred at:** 2026-05-15 during `/gsd:next` advancement to Phase 6.
+**Blocked by:** External legal opinion on GDPR Art.9 (political opinion as special-category data). Brief drafted at `.planning/legal/art9-brief-to-counsel.md` (not sent).
+**Plans:** 10 (`03-01-PLAN.md` through `03-10-PLAN.md`) — all drafted, none executed.
+
+### Phase 999.21: Phase 02.1 — Attribution dashboard role-gate test debt
+
+**Goal:** Restore `tests/unit/dashboard-role-gate.test.ts` (file-load ENOENT — readFileSync of `src/app/(payload)/admin/views/attribution/page.tsx` fails). Test file likely references a path that was restructured during Phase 02.1 ship.
+**Source phase:** 02.1
+**Deferred at:** 2026-05-15 during `/gsd:next` advancement.
+**Status:** Phase 02.1 shipped 2026-05-08; 1 verification FAIL recorded in `02.1-VERIFICATION.md` line 172 was not blocking ship.
+**Plans:** None drafted; would be a quick task or a Phase 02.1 follow-on plan.
+
+### Phase 999.4: Phase 4 — super_editor allow-list + i18n string-lock gaps
+
+**Goal:** Close 2 documented `status: failed` items in `04-VERIFICATION.md` gaps section:
+  1. Add `super_editor` to the `['admin', 'editor']` allow-list in `src/collections/Pages.ts` (line 29 `isEditorOrAdmin`) and `src/collections/Ideas.ts` (line 37 `isEditorOrAdmin` + analog functions). Per D-A2: super_editor should do everything editor does PLUS more.
+  2. Remove remaining hardcoded Bulgarian strings from Phase 4 JSX/Server Actions per D-25 (i18n string-lock — every UI string sourced from `messages/bg.json`).
+**Source phase:** 4
+**Deferred at:** 2026-05-15 during `/gsd:next` advancement.
+**Status:** Phase 4 shipped + deployed 2026-05-12; verification overall `status: pass` (14/14 dimensions) but 2 gaps documented; both surfaced during 04.1 smoke 2026-05-14 and chosen to defer (not blocking smoke PASS).
+**Plans:** None drafted; estimated ~30 min quick task.
