@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: "Phase 04.1 CLOSED 2026-05-14 — Payload schema reconciled; Phase 4 + Phase 02.3 re-deployed cleanly; end-to-end smoke PASS on all 6 surfaces; next active phase is Phase 5 (Notifications) or Phase 6 (GDPR self-service); D-LawyerTrack continues to pause Phase 3"
-last_updated: "2026-05-14T15:30:00.000Z"
-last_activity: "2026-05-14 -- Phase 04.1 closed + 2 follow-on quick tasks: 260514-k4x (Phase 5 worker textContent fix) + 260514-q3u (Header nav + member dashboard CTAs wiring 6 orphan surfaces, 9 unit tests added). Both pushed to main; Fly redeploys."
+status: planning
+stopped_at: Phase 6 context gathered
+last_updated: "2026-05-15T12:14:36.153Z"
+last_activity: 2026-05-14 -- Phase 04.1 closed. Quick 260514-k4x fixed Phase 5 worker textContent regression (3 email kinds, 6 regression-lock tests added) mid-smoke.
 progress:
-  total_phases: 10
-  completed_phases: 7
-  total_plans: 66
+  total_phases: 13
+  completed_phases: 8
+  total_plans: 72
   completed_plans: 62
-  percent: 70
+  percent: 86
 ---
 
 # Project State
@@ -148,9 +148,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-12T01:10:00Z
-Stopped at: Phase 04.1 (INSERTED, ops-recovery) — planning complete, ready for execution
-Resume file: .planning/phases/04.1-payload-schema-reconciliation/04.1-01-PLAN.md
+Last session: 2026-05-15T12:14:36.139Z
+Stopped at: Phase 6 context gathered
+Resume file: .planning/phases/06-gdpr-self-service-hardening/06-CONTEXT.md
 Next command: `/gsd:execute-phase 04.1` — execute the 6 plans sequentially. Waves 1-3 are autonomous (dbName edit, local Payload schema dump, idempotent backfill SQL generation); Waves 4-6 are manual prod gates (operator pastes SQL into Neon → revert-the-revert on main → prod E2E smoke). Until 04.1 ships, prod stays on v52; Phase 4 + Phase 02.3 surfaces are NOT live despite their code being merged-then-reverted.
 
 **Coalition external dependencies status (carry-forward):**
